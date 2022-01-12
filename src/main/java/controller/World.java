@@ -17,16 +17,21 @@ public class World {
         this.map = new GameMap();
         this.time = new WorldTime();
         time.start();
-        while (true) {
-            System.out.println(time.getCurrentTime());
+    }
+
+    public void multiSpawn() {
+        int nbr = new Random().nextInt(5) + 1;
+        for (int i = 0 ; i < nbr ; i++) {
+            spawnWorker();
         }
     }
 
     public void spawnWorker() {
         int hp = new Random().nextInt((50 - 25) + 1) + 25;
         int will = hp - (new Random().nextInt((hp - 20) + 1) + 20);
-        double radius = new Random().nextInt(10);
-        new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).buildFollower();
+        double radius = new Random().nextInt(10) + 1;
+        Worker worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).buildFollower();
+        this.map.addWorkerToMap(worker);
     }
 
     public void changeWorkerState(Worker worker) {
