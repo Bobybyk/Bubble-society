@@ -3,12 +3,12 @@ package controller;
 import java.util.Random;
 import java.util.Timer;
 
-import model.Follower;
 import model.GameMap;
-import model.Insurgent;
-import model.Worker;
-import model.WorkerBuilder;
-import model.SpawnTimer;
+import model.timer.SpawnTimer;
+import model.worker.Follower;
+import model.worker.Insurgent;
+import model.worker.Worker;
+import model.worker.WorkerBuilder;
 
 public class World {
     private GameMap map;

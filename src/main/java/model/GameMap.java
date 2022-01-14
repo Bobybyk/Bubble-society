@@ -3,6 +3,8 @@ package model;
 import java.util.HashMap;
 import java.util.Random;
 
+import model.worker.Worker;
+
 public class GameMap {
     private HashMap<Worker, Double[]> workersToCenterRadius;
 
