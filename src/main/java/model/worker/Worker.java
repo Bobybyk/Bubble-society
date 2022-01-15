@@ -8,6 +8,7 @@ public abstract class Worker {
     protected double radius;
     protected int speed;
     protected int dps;
+    protected boolean wanderState;
 
     public Worker (WorkerBuilder worker) {
         this.hp = worker.getHp();
@@ -16,6 +17,7 @@ public abstract class Worker {
         this.radius = worker.getRadius();
         this.speed = worker.getSpeed();
         this.dps = worker.getDps();
+        this.wanderState = worker.getWanderState();
     }
 
     public int getHp() {
@@ -35,6 +37,9 @@ public abstract class Worker {
     }
     public int getDps() {
         return this.dps;
+    }
+    public boolean getWanderState() {
+        return this.wanderState;
     }
 
     public void decreaseHp() {

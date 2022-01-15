@@ -7,6 +7,7 @@ import java.util.Timer;
 
 import model.GameMap;
 import model.timer.LifeTimer;
+import model.timer.ShiftTimer;
 import model.timer.SpawnTimer;
 import model.worker.Follower;
 import model.worker.Insurgent;
@@ -26,7 +27,7 @@ public class World {
 		Timer chrono = new Timer();
         chrono.schedule(new SpawnTimer(this), 0, 5000);
         chrono.schedule(new LifeTimer(this), 0, 10000);
-        chrono.schedule(new LifeTimer(this), 0, 100);
+        chrono.schedule(new ShiftTimer(map), 0, 100);
     }
 
     /*

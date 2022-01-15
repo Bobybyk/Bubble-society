@@ -9,9 +9,11 @@ import model.worker.Worker;
 
 public class GameMap {
     private HashMap<Worker, Double[]> workersToCenterRadius;
+    private Pathfinding pathfindingManager;
 
     public GameMap() {
         this.workersToCenterRadius = new HashMap<Worker, Double[]>();
+        this.pathfindingManager = new Pathfinding();
     }
 
     /*
@@ -57,6 +59,18 @@ public class GameMap {
         System.out.println("    radius : " + coordinateX + " ; " + coordinateY);
         Double[] coordinatesCouple = {coordinateX, coordinateY};
         workersToCenterRadius.putIfAbsent(worker, coordinatesCouple);
+    }
+
+    public void wander() {
+        if (getNbrWorkers() == 0) {
+            return;
+        }
+        // for each worker coordinates wandering : wander
+        for (HashMap.Entry<Worker, Double[]> worker : workersToCenterRadius.entrySet()) {
+            if (worker.getKey().getWanderState()) {
+                workersToCenterRadius.put(worker.getKey(), pathfindingManager.wander(worker.getValue()));
+            }
+        } 
     }
 
     /*
