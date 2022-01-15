@@ -58,6 +58,24 @@ public class World {
         return true;
     }
 
+    public void testMeeting() {
+        if (map.getNbrWorkers() == 0) {
+            return;
+        }
+        //DEBBUG
+        System.out.println("WORKERS MEETING");
+        for (HashMap.Entry<Worker, Double[]> w1 : map.getMapList().entrySet()) {
+            for (HashMap.Entry<Worker, Double[]> w2 : map.getMapList().entrySet()) { 
+                if (w1 != w2) {
+                    ArrayList<Worker> workersMet = map.workerMeeting(w1.getKey(), w2.getKey());
+                    for (Worker worker : workersMet) {
+                        System.out.println(worker.getRadius() + " met a worker");
+                    }
+                }
+            }
+        }
+    }
+
     /*
      * spawn random number of workers (1 to 5)
      */

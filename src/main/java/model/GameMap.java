@@ -1,7 +1,9 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import java.lang.Math;
 
 import model.worker.Worker;
 
@@ -18,6 +20,21 @@ public class GameMap {
     public void removeWorker(Worker worker) {
         this.workersToCenterRadius.remove(worker);
         worker = null;
+    }
+
+    public ArrayList<Worker> workerMeeting(Worker w1, Worker w2) {
+        double x = Math.abs(workersToCenterRadius.get(w2)[0]-workersToCenterRadius.get(w1)[0]);
+        x *= x;
+        double y = Math.abs(workersToCenterRadius.get(w2)[1]-workersToCenterRadius.get(w1)[1]);
+        y *= y;
+        ArrayList<Worker> ret = new ArrayList<Worker>();
+        if (Math.sqrt(x+y) < w1.getRadius()) {
+            ret.add(w1);
+        } 
+        if (Math.sqrt(x+y) > w1.getRadius()) {
+            ret.add(w2);
+        }
+        return ret;
     }
 
     /*
