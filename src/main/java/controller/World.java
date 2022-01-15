@@ -60,6 +60,9 @@ public class World {
         return true;
     }
 
+    /*
+     * for each worker of the map, check if it encount an other worker
+     */
     public void testMeeting() {
         if (map.getNbrWorkers() == 0) {
             return;

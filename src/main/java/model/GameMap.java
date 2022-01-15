@@ -1,6 +1,5 @@
 package model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 import java.lang.Math;
@@ -24,6 +23,10 @@ public class GameMap {
         worker = null;
     }
 
+    /*
+     * check for two workers if their's a meeting
+     * and then add them to the list (first the one which detects)
+     */
     public HashMap<Worker, Worker> workerMeeting(Worker w1, Worker w2) {
         double x = Math.abs(workersToCenterRadius.get(w2)[0]-workersToCenterRadius.get(w1)[0]);
         x *= x;

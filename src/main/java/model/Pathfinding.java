@@ -4,6 +4,10 @@ import java.util.Random;
 
 public class Pathfinding {
     
+    /*
+     * return random coordinates applicated to
+     * coordinates given by args
+     */
     public Double[] wander(Double[] coordinates) {
         double factorX;
         double factorY;
