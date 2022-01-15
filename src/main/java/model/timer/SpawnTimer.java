@@ -5,10 +5,9 @@ import java.util.TimerTask;
 import controller.World;
 
 public class SpawnTimer extends TimerTask {
-	int currentTime = 0; // 49 jours avant bug
-	int currentTimeSec = 0;
-
 	private World world;
+
+	int counter = 10;
 
 	public SpawnTimer(World world) {
 		this.world = world;
@@ -16,20 +15,11 @@ public class SpawnTimer extends TimerTask {
 
 	@Override
 	public void run() {
-		currentTimeSec+=1;
-
-		if (currentTimeSec%5 == 0) {
-			System.out.println("SPAWN");
-			world.multiSpawn();
+		System.out.println("SPAWN");
+		world.multiSpawn();
+		counter--;
+		if (counter < 1) {
+			cancel();
 		}
-
-	}
-
-	public int getCurrentTime() {
-		return currentTime;
-	}
-
-	public int getCurrentTimeSec() {
-		return currentTimeSec;
 	}
 }

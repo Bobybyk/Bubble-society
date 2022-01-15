@@ -27,4 +27,11 @@ public abstract class Worker {
         return this.radius;
     }
 
+    public void decreaseHp() {
+        this.hp--;
+    }
+    public void increaseHp() {
+        this.hp++;
+    }
+
 }

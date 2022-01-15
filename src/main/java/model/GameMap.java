@@ -14,6 +14,7 @@ public class GameMap {
 
     public void removeWorker(Worker worker) {
         this.workersToCenterRadius.remove(worker);
+        worker = null;
     }
 
     public void addWorkerToMap(Worker worker) {
@@ -27,12 +28,16 @@ public class GameMap {
         if (sign == 0) {
             radiusY *= -1;
         }
-        System.out.println("radius : " + radiusX + " ; " + radiusY);
+        System.out.println("    radius : " + radiusX + " ; " + radiusY);
         Double[] radiusCouple = {radiusX, radiusY};
         workersToCenterRadius.putIfAbsent(worker, radiusCouple);
     }
 
     public int getNbrWorkers() {
         return workersToCenterRadius.size();
+    }
+
+    public HashMap<Worker, Double[]> getMapList() {
+        return workersToCenterRadius;
     }
 }

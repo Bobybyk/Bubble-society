@@ -1,9 +1,12 @@
 package controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.Timer;
 
 import model.GameMap;
+import model.timer.LifeTimer;
 import model.timer.SpawnTimer;
 import model.worker.Follower;
 import model.worker.Insurgent;
@@ -15,9 +18,31 @@ public class World {
 
     public World() {
         this.map = new GameMap();
-        System.out.println(this.map.getNbrWorkers());
+
 		Timer chrono = new Timer();
-        chrono.schedule(new SpawnTimer(this), 0, 1000);
+        chrono.schedule(new SpawnTimer(this), 0, 5000);
+        chrono.schedule(new LifeTimer(this), 0, 10000);
+    }
+
+    public boolean decreaseHpForMap() {
+        if (map.getNbrWorkers() == 0) {
+            return false;
+        }
+        System.out.println("WORKERS LIFE");
+        ArrayList<Worker> workersToErase = new ArrayList<Worker>();
+        for (HashMap.Entry<Worker, Double[]> w : map.getMapList().entrySet()) {
+            if (!w.getKey().getZone()) {
+                w.getKey().decreaseHp();
+            }
+            if (w.getKey().getHp() < 1) {
+                workersToErase.add(w.getKey());
+            }
+            System.out.println("    " + w.getKey().getHp());
+        }
+        for (Worker we : workersToErase) {
+            map.removeWorker(we);
+        }
+        return true;
     }
 
     public void multiSpawn() {
@@ -25,7 +50,7 @@ public class World {
         for (int i = 0 ; i < nbr ; i++) {
             spawnWorker();
         }
-        System.out.println(nbr + " : " + this.map.getNbrWorkers());
+        System.out.println("    " + nbr + " : " + this.map.getNbrWorkers());
     }
 
     public void spawnWorker() {
@@ -40,11 +65,9 @@ public class World {
         if (worker instanceof Follower) {
             map.addWorkerToMap(new WorkerBuilder().setHp(worker.getHp()).setWill(worker.getWill()).setZone(worker.getZone()).setRadius(worker.getRadius()).buildInsurgent());
             map.removeWorker(worker);
-            worker = null;
         } else if (worker instanceof Insurgent) {
             map.addWorkerToMap(new WorkerBuilder().setHp(worker.getHp()).setWill(worker.getWill()).setZone(worker.getZone()).setRadius(worker.getRadius()).buildFollower());
             map.removeWorker(worker);
-            worker = null;
         }
     }
 }
