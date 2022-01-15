@@ -6,12 +6,16 @@ public abstract class Worker {
     protected int will_power; // [10 ; 20] - état initial
     protected boolean zone;
     protected double radius;
+    protected int speed;
+    protected int dps;
 
     public Worker (WorkerBuilder worker) {
         this.hp = worker.getHp();
         this.will_power = worker.getWill();
         this.zone = worker.getZone();
         this.radius = worker.getRadius();
+        this.speed = worker.getSpeed();
+        this.dps = worker.getDps();
     }
 
     public int getHp() {
@@ -26,12 +30,32 @@ public abstract class Worker {
     public double getRadius() {
         return this.radius;
     }
+    public int getSpeed() {
+        return this.speed;
+    }
+    public int getDps() {
+        return this.dps;
+    }
 
     public void decreaseHp() {
         this.hp--;
     }
     public void increaseHp() {
         this.hp++;
+    }
+    public boolean isInsurgent() {
+        if (this instanceof Insurgent) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public boolean isFollower() {
+        if (this instanceof Follower) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

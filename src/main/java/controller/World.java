@@ -26,6 +26,7 @@ public class World {
 		Timer chrono = new Timer();
         chrono.schedule(new SpawnTimer(this), 0, 5000);
         chrono.schedule(new LifeTimer(this), 0, 10000);
+        chrono.schedule(new LifeTimer(this), 0, 100);
     }
 
     /*
@@ -67,9 +68,14 @@ public class World {
         for (HashMap.Entry<Worker, Double[]> w1 : map.getMapList().entrySet()) {
             for (HashMap.Entry<Worker, Double[]> w2 : map.getMapList().entrySet()) { 
                 if (w1 != w2) {
-                    ArrayList<Worker> workersMet = map.workerMeeting(w1.getKey(), w2.getKey());
-                    for (Worker worker : workersMet) {
-                        System.out.println(worker.getRadius() + " met a worker");
+                    HashMap<Worker, Worker> workersMet = map.workerMeeting(w1.getKey(), w2.getKey());
+                    for (HashMap.Entry<Worker, Worker> worker : workersMet.entrySet()) {
+                        if(worker.getKey().isInsurgent() && worker.getValue().isFollower()) {
+                            //attaque
+                        }
+                        if(worker.getKey().isInsurgent() && worker.getValue().isFollower()) {
+                            //fuite
+                        }
                     }
                 }
             }

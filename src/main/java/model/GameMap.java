@@ -22,17 +22,17 @@ public class GameMap {
         worker = null;
     }
 
-    public ArrayList<Worker> workerMeeting(Worker w1, Worker w2) {
+    public HashMap<Worker, Worker> workerMeeting(Worker w1, Worker w2) {
         double x = Math.abs(workersToCenterRadius.get(w2)[0]-workersToCenterRadius.get(w1)[0]);
         x *= x;
         double y = Math.abs(workersToCenterRadius.get(w2)[1]-workersToCenterRadius.get(w1)[1]);
         y *= y;
-        ArrayList<Worker> ret = new ArrayList<Worker>();
+        HashMap<Worker, Worker> ret = new HashMap<Worker, Worker>();
         if (Math.sqrt(x+y) < w1.getRadius()) {
-            ret.add(w1);
+            ret.put(w1, w2);
         } 
         if (Math.sqrt(x+y) > w1.getRadius()) {
-            ret.add(w2);
+            ret.put(w2, w1);
         }
         return ret;
     }
