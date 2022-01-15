@@ -15,6 +15,7 @@ public class SpawnTimer extends TimerTask {
 
 	@Override
 	public void run() {
+		// DEBBUG
 		System.out.println("SPAWN");
 		world.multiSpawn();
 		counter--;

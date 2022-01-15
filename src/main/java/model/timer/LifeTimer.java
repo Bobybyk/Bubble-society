@@ -13,6 +13,7 @@ public class LifeTimer extends TimerTask {
 
     @Override
 	public void run() {
+        // if decreaseHPForMap() return false, every workers are dead
         if(world.decreaseHpForMap() == false) {
             cancel();
         }
