@@ -7,6 +7,7 @@ import java.util.Timer;
 
 import model.GameMap;
 import model.timer.LifeTimer;
+import model.timer.ShiftTimer;
 import model.timer.SpawnTimer;
 import model.worker.Follower;
 import model.worker.Insurgent;
@@ -26,6 +27,7 @@ public class World {
 		Timer chrono = new Timer();
         chrono.schedule(new SpawnTimer(this), 0, 5000);
         chrono.schedule(new LifeTimer(this), 0, 10000);
+        chrono.schedule(new ShiftTimer(map), 0, 100);
     }
 
     /*
@@ -56,6 +58,32 @@ public class World {
             map.removeWorker(we);
         }
         return true;
+    }
+
+    /*
+     * for each worker of the map, check if it encount an other worker
+     */
+    public void testMeeting() {
+        if (map.getNbrWorkers() == 0) {
+            return;
+        }
+        //DEBBUG
+        System.out.println("WORKERS MEETING");
+        for (HashMap.Entry<Worker, Double[]> w1 : map.getMapList().entrySet()) {
+            for (HashMap.Entry<Worker, Double[]> w2 : map.getMapList().entrySet()) { 
+                if (w1 != w2) {
+                    HashMap<Worker, Worker> workersMet = map.workerMeeting(w1.getKey(), w2.getKey());
+                    for (HashMap.Entry<Worker, Worker> worker : workersMet.entrySet()) {
+                        if(worker.getKey().isInsurgent() && worker.getValue().isFollower()) {
+                            //attaque
+                        }
+                        if(worker.getKey().isInsurgent() && worker.getValue().isFollower()) {
+                            //fuite
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /*
