@@ -18,6 +18,7 @@ public class SpawnTimer extends TimerTask {
 		// DEBBUG
 		System.out.println("SPAWN");
 		world.multiSpawn();
+		world.testMeeting();
 		counter--;
 		if (counter < 1) {
 			cancel();

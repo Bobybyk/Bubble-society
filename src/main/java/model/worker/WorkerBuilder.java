@@ -6,23 +6,36 @@ public class WorkerBuilder {
     private int will_power; // [10 ; 20] - état initial
     private boolean zone;
     private double radius;
+    private int speed;
+    private int dps;
+    private boolean wanderState;
 
     public WorkerBuilder setHp(int hp) {
         this.hp = hp;
         return this;
     }
-
     public WorkerBuilder setWill(int will_power) {
         this.will_power = will_power;
         return this;
     }
-
     public WorkerBuilder setZone(boolean zone) {
         this.zone = zone;
         return this;
     }
     public WorkerBuilder setRadius(double radius) {
         this.radius = radius;
+        return this;
+    }
+    public WorkerBuilder setSpeed(int speed) {
+        this.speed = speed;
+        return this;
+    }
+    public WorkerBuilder setDps(int dps) {
+        this.dps = dps;
+        return this;
+    }
+    public WorkerBuilder setWanderState(boolean wanderState) {
+        this.wanderState = wanderState;
         return this;
     }
 
@@ -45,5 +58,13 @@ public class WorkerBuilder {
     public double getRadius() {
         return this.radius;
     }
-
+    public int getSpeed() {
+        return this.speed;
+    }
+    public int getDps() {
+        return this.dps;
+    }
+    public boolean getWanderState() {
+        return this.wanderState;
+    }
 }
