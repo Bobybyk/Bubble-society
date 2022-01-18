@@ -15,33 +15,45 @@ public class Main {
 			System.exit(1);
 		}
 
-		long window = glfwCreateWindow(640, 480, "view", 0, 0);
+		long window = glfwCreateWindow(1920, 1080, "view", 0, 0);
 		glfwShowWindow(window);
 
 		glfwMakeContextCurrent(window);
 
 		GL.createCapabilities();
 
-		// define custom init color
-		//glClearColor(red, green, blue, alpha);
+		float x = 0;
+		float color_red = 1;
+		float color_blue = 0;
 
 		while(!glfwWindowShouldClose(window)) {
+
+			if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GL_TRUE) {
+				glfwDestroyWindow(window);
+			}
+
+			if (glfwGetMouseButton(window, 0) == GL_TRUE) {
+				color_red = 0.25f;
+				color_blue = 1;
+			} else {
+				color_red = 1;
+				color_blue = 0.25f;
+			}
+
+			if(glfwGetKey(window, GLFW_KEY_A) == GL_TRUE) {
+				x+=0.001f;
+			}
+
 			glfwPollEvents();
-			
+
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			glBegin(GL_QUADS);
-				glColor4f(1, 0, 0, 0);
-				glVertex2f(-0.5f, 0.5f);
-				
-				glColor4f(0, 1, 0, 0);
-				glVertex2f(0.5f, 0.5f);
-				
-				glColor4f(0, 0, 1, 0);
-				glVertex2f(0.5f, -0.5f);
-				
-				glColor4f(1, 1, 1, 0);
-				glVertex2f(-0.5f, -0.5f);
+				glColor4f(color_red, 0, color_blue, 0);
+				glVertex2f(-0.5f+x, 0.5f);
+				glVertex2f(0.5f+x, 0.5f);
+				glVertex2f(0.5f+x, -0.5f);
+				glVertex2f(-0.5f+x, -0.5f);
 			glEnd();
 
 			glfwSwapBuffers(window);
