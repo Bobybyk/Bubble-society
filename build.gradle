@@ -3,9 +3,19 @@ apply plugin: 'application'
 
 mainClassName = 'application.Main'
 
+import org.gradle.internal.os.OperatingSystem
+
 project.ext.lwjglVersion = "3.3.0"
 project.ext.jomlVersion = "1.10.3"
-project.ext.lwjglNatives = "natives-windows"
+
+switch (OperatingSystem.current()) {
+	case OperatingSystem.LINUX:
+		project.ext.lwjglNatives = "natives-linux"
+		break
+	case OperatingSystem.WINDOWS:
+		project.ext.lwjglNatives = "natives-windows"
+		break
+}
 
 repositories {
 	mavenCentral()
@@ -73,7 +83,7 @@ dependencies {
 	runtimeOnly "org.lwjgl:lwjgl-opengles::$lwjglNatives"
 	runtimeOnly "org.lwjgl:lwjgl-openvr::$lwjglNatives"
 	runtimeOnly "org.lwjgl:lwjgl-opus::$lwjglNatives"
-	runtimeOnly "org.lwjgl:lwjgl-ovr::$lwjglNatives"
+	if (lwjglNatives == "natives-windows") runtimeOnly "org.lwjgl:lwjgl-ovr::$lwjglNatives"
 	runtimeOnly "org.lwjgl:lwjgl-par::$lwjglNatives"
 	runtimeOnly "org.lwjgl:lwjgl-remotery::$lwjglNatives"
 	runtimeOnly "org.lwjgl:lwjgl-rpmalloc::$lwjglNatives"
