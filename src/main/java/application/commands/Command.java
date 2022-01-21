@@ -1,21 +1,12 @@
 package application.commands;
 
-import java.io.PrintWriter;
-
 public abstract class Command {
 
-	private String label;
-	private PrintWriter out;
+	private String commandId;
 
-	public Command(String label,PrintWriter pw) {
-		this.label = label;
-		this.out = pw;
+	public Command(String id) {
+		this.commandId = id;
 	}
 
-	public void sendMessage(String message) {
-		out.println(message);
-		out.flush();
-	}
-
-	public abstract void execute(/* SomeObject obj, */ String[] args);
+	public abstract void execute(String[] args);
 }

@@ -17,7 +17,7 @@ public class SpawnTimer extends TimerTask {
 	@Override
 	public void run() {
 		// DEBBUG
-		if (DevMode.debbug) System.out.println("SPAWN");
+		if (DevMode.debug) System.out.println("SPAWN");
 		world.multiSpawn();
 		world.testMeeting();
 		counter--;

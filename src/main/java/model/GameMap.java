@@ -62,7 +62,7 @@ public class GameMap {
             coordinateY *= -1;
         }
         // DEBBUG
-        if (DevMode.debbug) System.out.println("    radius : " + coordinateX + " ; " + coordinateY);
+        if (DevMode.debug) System.out.println("    radius : " + coordinateX + " ; " + coordinateY);
         Double[] coordinatesCouple = {coordinateX, coordinateY};
         workersToCenterRadius.putIfAbsent(worker, coordinatesCouple);
     }

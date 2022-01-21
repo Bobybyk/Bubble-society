@@ -1,6 +1,6 @@
 package application;
 
 public class DevMode {
-    public static boolean debbug = false;
+    public static boolean debug = false;
     
 }

@@ -115,9 +115,9 @@ public class Main {
 
 	public static void main(String[] args) {
 		TestLoadAverage.testCompute();
-		Console cons = new Console(new World());
-		cons.start();
-		new Main().run();
+		new World();
+		new Console().start();
+		//new Main().run();
 	}
 
 }

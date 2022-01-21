@@ -40,7 +40,7 @@ public class World {
             return false;
         }
         // DEBBUG
-        if (DevMode.debbug) System.out.println("WORKERS LIFE");
+        if (DevMode.debug) System.out.println("WORKERS LIFE");
         ArrayList<Worker> workersToErase = new ArrayList<Worker>();
         for (HashMap.Entry<Worker, Double[]> w : map.getMapList().entrySet()) {
             // if worker is not in a zone, decrease hp
@@ -52,7 +52,7 @@ public class World {
                 workersToErase.add(w.getKey());
             }
             // DEBBUG
-            if (DevMode.debbug) System.out.println("    " + w.getKey().getHp());
+            if (DevMode.debug) System.out.println("    " + w.getKey().getHp());
         }
         // delete every workers in workersToErase list in world list
         for (Worker we : workersToErase) {
@@ -69,7 +69,7 @@ public class World {
             return;
         }
         //DEBBUG
-        if (DevMode.debbug) System.out.println("WORKERS MEETING");
+        if (DevMode.debug) System.out.println("WORKERS MEETING");
         for (HashMap.Entry<Worker, Double[]> w1 : map.getMapList().entrySet()) {
             for (HashMap.Entry<Worker, Double[]> w2 : map.getMapList().entrySet()) { 
                 if (w1 != w2) {
@@ -96,7 +96,7 @@ public class World {
             spawnWorker();
         }
         // DEBBUG
-        if (DevMode.debbug) System.out.println("    " + nbr + " : " + this.map.getNbrWorkers());
+        if (DevMode.debug) System.out.println("    " + nbr + " : " + this.map.getNbrWorkers());
     }
 
     /*
