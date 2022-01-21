@@ -22,6 +22,8 @@ public class Main {
 
 		GL.createCapabilities();
 
+		//Texture tex = new Texture("./assets/text");
+
 		float x = 0;
 		float color_red = 1;
 		float color_blue = 0;
@@ -30,6 +32,7 @@ public class Main {
 
 			if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GL_TRUE) {
 				glfwDestroyWindow(window);
+				break;
 			}
 
 			if (glfwGetMouseButton(window, 0) == GL_TRUE) {
