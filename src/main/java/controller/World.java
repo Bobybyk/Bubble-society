@@ -76,9 +76,19 @@ public class World {
                     HashMap<Worker, Worker> workersMet = map.workerMeeting(w1.getKey(), w2.getKey());
                     for (HashMap.Entry<Worker, Worker> worker : workersMet.entrySet()) {
                         if(worker.getKey().isInsurgent() && worker.getValue().isFollower()) {
+                            System.out.println("    insurgent meets follower");
                             //attaque
                         }
                         if(worker.getKey().isInsurgent() && worker.getValue().isFollower()) {
+                            System.out.println("    follower meets insurgent");
+                            //fuite
+                        }
+                        if(worker.getKey().isInsurgent() && worker.getValue().isInsurgent()) {
+                            System.out.println("    insurgent meets insurgent");
+                            //fuite
+                        }
+                        if(worker.getKey().isFollower() && worker.getValue().isFollower()) {
+                            System.out.println("    follower meets follower");
                             //fuite
                         }
                     }
