@@ -2,6 +2,7 @@ package model.timer;
 
 import java.util.TimerTask;
 
+import application.DevMode;
 import controller.World;
 
 public class SpawnTimer extends TimerTask {
@@ -16,7 +17,7 @@ public class SpawnTimer extends TimerTask {
 	@Override
 	public void run() {
 		// DEBBUG
-		System.out.println("SPAWN");
+		if (DevMode.debbug) System.out.println("SPAWN");
 		world.multiSpawn();
 		world.testMeeting();
 		counter--;
