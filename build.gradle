@@ -5,7 +5,7 @@ mainClassName = 'application.Main'
 
 project.ext.lwjglVersion = "3.3.0"
 project.ext.jomlVersion = "1.10.3"
-project.ext.lwjglNatives = "natives-windows"
+project.ext.lwjglNatives = "natives-linux"
 
 repositories {
 	mavenCentral()
@@ -38,7 +38,6 @@ dependencies {
 	implementation "org.lwjgl:lwjgl-opengles"
 	implementation "org.lwjgl:lwjgl-openvr"
 	implementation "org.lwjgl:lwjgl-opus"
-	implementation "org.lwjgl:lwjgl-ovr"
 	implementation "org.lwjgl:lwjgl-par"
 	implementation "org.lwjgl:lwjgl-remotery"
 	implementation "org.lwjgl:lwjgl-rpmalloc"
@@ -73,7 +72,6 @@ dependencies {
 	runtimeOnly "org.lwjgl:lwjgl-opengles::$lwjglNatives"
 	runtimeOnly "org.lwjgl:lwjgl-openvr::$lwjglNatives"
 	runtimeOnly "org.lwjgl:lwjgl-opus::$lwjglNatives"
-	runtimeOnly "org.lwjgl:lwjgl-ovr::$lwjglNatives"
 	runtimeOnly "org.lwjgl:lwjgl-par::$lwjglNatives"
 	runtimeOnly "org.lwjgl:lwjgl-remotery::$lwjglNatives"
 	runtimeOnly "org.lwjgl:lwjgl-rpmalloc::$lwjglNatives"
