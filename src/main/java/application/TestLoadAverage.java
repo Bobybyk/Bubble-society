@@ -15,7 +15,7 @@ public class TestLoadAverage {
         System.out.println("Operating system name : " + bean.getName());
         System.out.println("Operating system version : " + bean.getVersion());
         System.out.println("############################");
-        System.out.println("System load average for the last minute : "+bean.getSystemLoadAverage());
+        //System.out.println("System load average for the last minute : "+bean.getSystemLoadAverage());
     }
 
     public static int getNumberOfProcessor() {
