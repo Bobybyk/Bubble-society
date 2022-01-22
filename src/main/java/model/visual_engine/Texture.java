@@ -1,4 +1,4 @@
-package view;
+package model.visual_engine;
 
 import static org.lwjgl.opengl.GL11.*;
 

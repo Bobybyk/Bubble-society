@@ -8,7 +8,8 @@ import org.lwjgl.opengl.GL;
 
 import controller.World;
 import controller.shell.Console;
-import view.Texture;
+import model.visual_engine.Texture;
+import model.visual_engine.VBO;
 
 import java.nio.*;
 
@@ -38,6 +39,28 @@ public class Main {
 
 		Texture tex = new Texture("./src/main/assets/UI_button.png");
 
+		float[] vertices = new float[] {
+			-0.5f, 0.5f, 0, // TOP LEFT
+			0.5f, 0.5f, 0,	// TOP RIGHT
+			0.5f, -0.5f, 0, // BOTTOM RIGHT
+
+			0.5f, -0.5f, 0, // BOTTOM RIGHT
+			-0.5f, -0.5f, 0, // BOTTOM LEFT
+			-0.5f, 0.5f, 0, // TOP LEFT
+		};
+
+		float[] texture = new float[] {
+			0, 0,
+			1, 0,
+			1, 1,
+
+			1, 1,
+			0, 1,
+			0, 0
+		};
+
+		VBO modelTexture = new VBO(vertices, texture);
+
 		while(!glfwWindowShouldClose(window)) {
 
 			if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GL_TRUE) {
@@ -51,7 +74,9 @@ public class Main {
 
 			tex.bind();
 			
-			glBegin(GL_QUADS);
+			modelTexture.render();
+
+			/* glBegin(GL_QUADS);
 				glTexCoord2f(0, 0);
 				glVertex2f(-0.5f, 0.5f);
 
@@ -63,7 +88,7 @@ public class Main {
 
 				glTexCoord2f(0, 1);
 				glVertex2f(-0.5f, -0.5f);
-			glEnd();
+			glEnd(); */
 
 			glfwSwapBuffers(window);
 		}
