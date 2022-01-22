@@ -6,6 +6,7 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
 import controller.World;
+import controller.shell.Console;
 
 import java.nio.*;
 
@@ -115,8 +116,8 @@ public class Main {
 	public static void main(String[] args) {
 		TestLoadAverage.testCompute();
 		new World();
-
-		new Main().run();
+		new Console().start();
+		//new Main().run();
 	}
 
 }

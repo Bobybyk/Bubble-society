@@ -2,6 +2,9 @@ package model;
 
 import java.util.HashMap;
 import java.util.Random;
+
+import application.DevMode;
+
 import java.lang.Math;
 
 import model.worker.Worker;
@@ -59,7 +62,7 @@ public class GameMap {
             coordinateY *= -1;
         }
         // DEBBUG
-        System.out.println("    radius : " + coordinateX + " ; " + coordinateY);
+        if (DevMode.debug) System.out.println("    radius : " + coordinateX + " ; " + coordinateY);
         Double[] coordinatesCouple = {coordinateX, coordinateY};
         workersToCenterRadius.putIfAbsent(worker, coordinatesCouple);
     }
