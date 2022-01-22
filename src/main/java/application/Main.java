@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL;
 
 import controller.World;
 import controller.shell.Console;
+import view.Texture;
 
 import java.nio.*;
 
@@ -33,11 +34,9 @@ public class Main {
 
 		GL.createCapabilities();
 
-		//Texture tex = new Texture("./assets/text");
+		glEnable(GL_TEXTURE_2D);
 
-		float x = 0;
-		float color_red = 1;
-		float color_blue = 0;
+		Texture tex = new Texture("./src/main/assets/UI_button.png");
 
 		while(!glfwWindowShouldClose(window)) {
 
@@ -46,28 +45,24 @@ public class Main {
 				break;
 			}
 
-			if (glfwGetMouseButton(window, 0) == GL_TRUE) {
-				color_red = 0.25f;
-				color_blue = 1;
-			} else {
-				color_red = 1;
-				color_blue = 0.25f;
-			}
-
-			if(glfwGetKey(window, GLFW_KEY_A) == GL_TRUE) {
-				x+=0.001f;
-			}
-
 			glfwPollEvents();
 
 			glClear(GL_COLOR_BUFFER_BIT);
 
+			tex.bind();
+			
 			glBegin(GL_QUADS);
-				glColor4f(color_red, 0, color_blue, 0);
-				glVertex2f(-0.5f+x, 0.5f);
-				glVertex2f(0.5f+x, 0.5f);
-				glVertex2f(0.5f+x, -0.5f);
-				glVertex2f(-0.5f+x, -0.5f);
+				glTexCoord2f(0, 0);
+				glVertex2f(-0.5f, 0.5f);
+
+				glTexCoord2f(1, 0);
+				glVertex2f(0.5f, 0.5f);
+
+				glTexCoord2f(1, 1);
+				glVertex2f(0.5f, -0.5f);
+
+				glTexCoord2f(0, 1);
+				glVertex2f(-0.5f, -0.5f);
 			glEnd();
 
 			glfwSwapBuffers(window);
