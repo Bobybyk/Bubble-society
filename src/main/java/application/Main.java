@@ -81,7 +81,7 @@ public class Main {
 		TestLoadAverage.testCompute();
 		new World();
 		new Console().start();
-		new Main().run();
+		new Main();
 	}
 
 }
