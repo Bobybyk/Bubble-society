@@ -37,7 +37,7 @@ public class Main {
 
 		glEnable(GL_TEXTURE_2D);
 
-		Texture tex = new Texture("./src/main/assets/UI_button.png");
+		Texture tex = new Texture("./src/main/assets/logo.png");
 
 		float[] vertices = new float[] {
 			-0.5f, 0.5f, 0, // TOP LEFT
