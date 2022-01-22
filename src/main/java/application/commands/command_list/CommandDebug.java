@@ -6,7 +6,7 @@ import application.commands.Command;
 public class CommandDebug extends Command {
 
     public CommandDebug() {
-        super("100");
+        super("110");
     }
 
     @Override
@@ -16,7 +16,18 @@ public class CommandDebug extends Command {
             try {
                 value = Integer.parseInt(args[1]);
             } catch(NumberFormatException e) {
-                value = -1;
+                if (args[1].equals("enable")) {
+                    DevMode.debug = true;
+                    System.out.println("debug mode : enabled");
+                    return;
+                }
+                if (args[1].equals("disable")) {
+                    DevMode.debug = false;
+                    System.out.println("debug mode : disabled");
+                    return;   
+                } else {
+                    value = -1;
+                }
             }
             if (value == 0) {
                 DevMode.debug = false;

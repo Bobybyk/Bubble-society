@@ -5,12 +5,16 @@ import java.util.Scanner;
 
 import application.commands.Command;
 import application.commands.command_list.CommandDebug;
+import application.commands.command_list.CommandHelp;
+import application.commands.command_list.CommandKill;
 
 public class Console extends Thread {
     private HashMap<String,Command> commandList = new HashMap<String,Command>();
 
     public Console() {
         commandList.put("debug", new CommandDebug());
+        commandList.put("help", new CommandHelp());
+        commandList.put("kill", new CommandKill());
     }
 
     @Override
@@ -19,6 +23,9 @@ public class Console extends Thread {
         while(true) {
             try {
                 Thread.sleep(1);
+                System.out.print("\u001B[31m");
+                System.out.print("Society_debug> ");
+                System.out.print("\u001B[37m");
                 String input = sc.nextLine();
                 processCommand(input);
             } catch(InterruptedException e) {
