@@ -59,7 +59,7 @@ public class Main {
 
 		VBO modelTexture = new VBO(vertices, texture, indices);
 		Shader shader = new Shader("shader");
-		//Texture tex = new Texture("./resources/assets/logo.png");
+		Texture tex = new Texture("./resources/assets/logo.png");
 
 		while(!glfwWindowShouldClose(window)) {
 
@@ -72,8 +72,9 @@ public class Main {
 
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			//tex.bind();
 			shader.bind();
+			shader.setUniform("sampler", 0);
+			tex.bind(0);
 			modelTexture.render();
 
 			glfwSwapBuffers(window);

@@ -2,6 +2,7 @@ package model.visual_engine;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.*;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -40,14 +41,14 @@ public class VBO {
     }
 
     public void render() {
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
         
         glBindBuffer(GL_ARRAY_BUFFER, vertexId);
-        glVertexPointer(3, GL_FLOAT, 0, 0); // 3 for 3D
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0); // 3 for 3D
 
         glBindBuffer(GL_ARRAY_BUFFER, textureId);
-        glTexCoordPointer(2, GL_FLOAT, 0, 0);
+        glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0); // 2 for 2D
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesId);
         glDrawElements(GL_TRIANGLES, drawCount, GL_UNSIGNED_INT, 0);
@@ -55,8 +56,8 @@ public class VBO {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
     }
 
     private FloatBuffer createBuffer(float[] data) {

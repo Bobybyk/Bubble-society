@@ -35,6 +35,7 @@ public class Shader {
         glAttachShader(program, fragmentShader);
 
         glBindAttribLocation(program, 0, "vertices");
+        glBindAttribLocation(program, 1, "textures");
         
         glLinkProgram(program);
         if(glGetProgrami(program, GL_LINK_STATUS) != 1) {
@@ -45,6 +46,13 @@ public class Shader {
         if(glGetProgrami(program, GL_VALIDATE_STATUS) != 1) {
             System.err.println(glGetProgramInfoLog(program));
             System.exit(1);
+        }
+    }
+
+    public void setUniform(String name, int value) {
+        int gcLocation = glGetUniformLocation(program, name); // location in the graphic card
+        if (gcLocation != -1) {
+            glUniform1i(gcLocation, value);
         }
     }
 
