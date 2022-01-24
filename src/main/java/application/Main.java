@@ -1,5 +1,6 @@
 package application;
 
+import org.joml.Matrix4f;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -29,7 +30,7 @@ public class Main {
 			System.exit(1);
 		}
 
-		long window = glfwCreateWindow(1920, 1080, "view", 0, 0);
+		long window = glfwCreateWindow(640, 480, "view", 0, 0);
 		glfwShowWindow(window);
 
 		glfwMakeContextCurrent(window);
@@ -61,6 +62,12 @@ public class Main {
 		Shader shader = new Shader("shader");
 		Texture tex = new Texture("./resources/assets/logo.png");
 
+		Matrix4f projection = new Matrix4f().ortho2D(-640/2, 640/2, -480/2, 480/2);
+		Matrix4f scale = new Matrix4f().scale(64);
+		Matrix4f target = new Matrix4f();
+
+		projection.mul(scale, target);
+
 		while(!glfwWindowShouldClose(window)) {
 
 			if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GL_TRUE) {
@@ -74,6 +81,7 @@ public class Main {
 
 			shader.bind();
 			shader.setUniform("sampler", 0);
+			shader.setUniform("projection", target);
 			tex.bind(0);
 			modelTexture.render();
 

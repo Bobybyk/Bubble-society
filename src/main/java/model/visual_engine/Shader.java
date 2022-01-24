@@ -6,6 +6,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.FloatBuffer;
+
+import org.joml.Matrix4f;
+import org.lwjgl.BufferUtils;
 
 public class Shader {
     private int program;
@@ -53,6 +57,15 @@ public class Shader {
         int gcLocation = glGetUniformLocation(program, name); // location in the graphic card
         if (gcLocation != -1) {
             glUniform1i(gcLocation, value);
+        }
+    }
+
+    public void setUniform(String name, Matrix4f value) {
+        int gcLocation = glGetUniformLocation(program, name); // location in the graphic card
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(16); // 4*4 colums*rows of data
+        value.get(buffer);
+        if (gcLocation != -1) {
+            glUniformMatrix4fv(gcLocation, false, buffer);
         }
     }
 
