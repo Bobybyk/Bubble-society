@@ -40,26 +40,25 @@ public class Main {
 		Texture tex = new Texture("./src/main/assets/logo.png");
 
 		float[] vertices = new float[] {
-			-0.5f, 0.5f, 0, // TOP LEFT
-			0.5f, 0.5f, 0,	// TOP RIGHT
-			0.5f, -0.5f, 0, // BOTTOM RIGHT
-
-			0.5f, -0.5f, 0, // BOTTOM RIGHT
-			-0.5f, -0.5f, 0, // BOTTOM LEFT
-			-0.5f, 0.5f, 0, // TOP LEFT
+			-0.5f, 0.5f, 0, // TOP LEFT       0
+			0.5f, 0.5f, 0,	// TOP RIGHT      1
+			0.5f, -0.5f, 0, // BOTTOM RIGHT   2
+			-0.5f, -0.5f, 0, // BOTTOM LEFT   3
 		};
 
 		float[] texture = new float[] {
 			0, 0,
 			1, 0,
 			1, 1,
-
-			1, 1,
 			0, 1,
-			0, 0
 		};
 
-		VBO modelTexture = new VBO(vertices, texture);
+		int[] indices = new int[] {
+			0,1,2,
+			2,3,0
+		};
+
+		VBO modelTexture = new VBO(vertices, texture, indices);
 
 		while(!glfwWindowShouldClose(window)) {
 

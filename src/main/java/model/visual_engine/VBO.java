@@ -4,19 +4,21 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 
 public class VBO {
-    private int draw_count;
+    private int drawCount;
     private int vertexId;
     private int textureId;
 
-    public VBO(float[] vertices, float[] textureCoords) {
-        this.draw_count = vertices.length / 3;
+    private int indicesId;
+
+    public VBO(float[] vertices, float[] textureCoords, int[] indices) {
+        this.drawCount = indices.length;
 
         this.vertexId = glGenBuffers();
-
         glBindBuffer(GL_ARRAY_BUFFER, vertexId); 
         glBufferData(GL_ARRAY_BUFFER, createBuffer(vertices), GL_STATIC_DRAW);
 
@@ -24,6 +26,16 @@ public class VBO {
         glBindBuffer(GL_ARRAY_BUFFER, textureId);
         glBufferData(GL_ARRAY_BUFFER, createBuffer(textureCoords), GL_STATIC_DRAW);
 
+        indicesId = glGenBuffers();
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesId);
+
+        IntBuffer buffer = BufferUtils.createIntBuffer(indices.length);
+        buffer.put(indices);
+        buffer.flip();
+
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
+        
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0); 
     }
 
@@ -37,8 +49,10 @@ public class VBO {
         glBindBuffer(GL_ARRAY_BUFFER, textureId);
         glTexCoordPointer(2, GL_FLOAT, 0, 0);
 
-        glDrawArrays(GL_TRIANGLES, 0, draw_count);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesId);
+        glDrawElements(GL_TRIANGLES, drawCount, GL_UNSIGNED_INT, 0);
 
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         glDisableClientState(GL_VERTEX_ARRAY);
