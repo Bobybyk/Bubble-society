@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL;
 
 import controller.World;
 import controller.shell.Console;
+import model.visual_engine.Shader;
 import model.visual_engine.Texture;
 import model.visual_engine.VBO;
 
@@ -37,8 +38,6 @@ public class Main {
 
 		glEnable(GL_TEXTURE_2D);
 
-		Texture tex = new Texture("./src/main/assets/logo.png");
-
 		float[] vertices = new float[] {
 			-0.5f, 0.5f, 0, // TOP LEFT       0
 			0.5f, 0.5f, 0,	// TOP RIGHT      1
@@ -59,6 +58,8 @@ public class Main {
 		};
 
 		VBO modelTexture = new VBO(vertices, texture, indices);
+		Shader shader = new Shader("shader");
+		//Texture tex = new Texture("./resources/assets/logo.png");
 
 		while(!glfwWindowShouldClose(window)) {
 
@@ -71,23 +72,9 @@ public class Main {
 
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			tex.bind();
-			
+			//tex.bind();
+			shader.bind();
 			modelTexture.render();
-
-			/* glBegin(GL_QUADS);
-				glTexCoord2f(0, 0);
-				glVertex2f(-0.5f, 0.5f);
-
-				glTexCoord2f(1, 0);
-				glVertex2f(0.5f, 0.5f);
-
-				glTexCoord2f(1, 1);
-				glVertex2f(0.5f, -0.5f);
-
-				glTexCoord2f(0, 1);
-				glVertex2f(-0.5f, -0.5f);
-			glEnd(); */
 
 			glfwSwapBuffers(window);
 		}
