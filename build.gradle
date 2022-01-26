@@ -21,6 +21,14 @@ repositories {
 	mavenCentral()
 }
 
+sourceSets {
+  main {
+    resources {
+        srcDirs = ["src/main/assets"]
+    }
+  }
+}
+
 dependencies {
 	implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
 
