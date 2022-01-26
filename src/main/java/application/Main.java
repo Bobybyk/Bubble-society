@@ -1,6 +1,7 @@
 package application;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -9,6 +10,7 @@ import org.lwjgl.opengl.GL;
 
 import controller.World;
 import controller.shell.Console;
+import model.visual_engine.Camera;
 import model.visual_engine.Shader;
 import model.visual_engine.Texture;
 import model.visual_engine.VBO;
@@ -37,6 +39,8 @@ public class Main {
 
 		GL.createCapabilities();
 
+		Camera camera = new Camera(640, 480);
+
 		glEnable(GL_TEXTURE_2D);
 
 		float[] vertices = new float[] {
@@ -62,14 +66,15 @@ public class Main {
 		Shader shader = new Shader("shader");
 		Texture tex = new Texture("./resources/assets/logo.png");
 
-		Matrix4f projection = new Matrix4f().ortho2D(-640/2, 640/2, -480/2, 480/2);
-		Matrix4f scale = new Matrix4f().scale(64);
+		Matrix4f scale = new Matrix4f()
+				.translate(new Vector3f(100, 0, 0))
+				.scale(64);
 		Matrix4f target = new Matrix4f();
 
-		projection.mul(scale, target);
+		camera.setPosition(new Vector3f(-100, 0, 0));
 
 		while(!glfwWindowShouldClose(window)) {
-
+			target = scale;
 			if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GL_TRUE) {
 				glfwDestroyWindow(window);
 				break;
@@ -81,9 +86,9 @@ public class Main {
 
 			shader.bind();
 			shader.setUniform("sampler", 0);
-			shader.setUniform("projection", target);
-			tex.bind(0);
+			shader.setUniform("projection", camera.getProjection().mul(target));
 			modelTexture.render();
+			tex.bind(0);
 
 			glfwSwapBuffers(window);
 		}
@@ -94,7 +99,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		TestLoadAverage.testCompute();
-		new World();
+		//new World();
 		new Console().start();
 		new Main();
 	}
