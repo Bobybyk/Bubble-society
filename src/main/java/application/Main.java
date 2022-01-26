@@ -35,11 +35,14 @@ public class Main {
 		}
 
 		Window win = new Window();
+		GLFWVidMode vid = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		win.setSize(vid.width(), vid.height());
+		win.setFullScreen(true);
 		win.createWindow("Society");
 
 		GL.createCapabilities();
 
-		Camera camera = new Camera(640, 480);
+		Camera camera = new Camera(win.getWidth(), win.getHeight());
 
 		glEnable(GL_TEXTURE_2D);
 
@@ -96,10 +99,9 @@ public class Main {
 				canRender = true;
 				target = scale;
 
-				/* if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GL_TRUE) {
-					glfwDestroyWindow(window);
-					break;
-				}	*/
+				if(glfwGetKey(win.getWindow(), GLFW_KEY_ESCAPE) == GL_TRUE) {
+					glfwSetWindowShouldClose(win.getWindow(), true);
+				}
 				glfwPollEvents();
 				if (FrameTime >= 1.0) {
 					FrameTime = 0;
