@@ -1,13 +1,12 @@
-package model;
+package game.model;
 
 import java.util.HashMap;
 import java.util.Random;
 
 import application.DevMode;
+import game.model.worker.Worker;
 
 import java.lang.Math;
-
-import model.worker.Worker;
 
 public class GameMap {
     private HashMap<Worker, Double[]> workersToCenterRadius;

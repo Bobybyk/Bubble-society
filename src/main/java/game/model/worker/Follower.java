@@ -1,4 +1,4 @@
-package model.worker;
+package game.model.worker;
 
 public class Follower extends Worker {
     
