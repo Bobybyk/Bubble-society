@@ -13,6 +13,7 @@ import controller.shell.Console;
 import model.visual_engine.Camera;
 import model.visual_engine.Shader;
 import model.visual_engine.Texture;
+import model.visual_engine.Timer;
 import model.visual_engine.VBO;
 
 import java.nio.*;
@@ -73,24 +74,56 @@ public class Main {
 
 		camera.setPosition(new Vector3f(-100, 0, 0));
 
+		double frameCap = 1.0/60.0; // 60fps
+		
+		double FrameTime = 0;
+		int frames = 0;
+
+		double time = Timer.getTime();
+		double unprocessed = 0; // time while progam hasn't been processed 
+
 		while(!glfwWindowShouldClose(window)) {
-			target = scale;
-			if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GL_TRUE) {
-				glfwDestroyWindow(window);
-				break;
+			boolean canRender = false;
+
+			double time2 = Timer.getTime();
+			double passed = time2 - time;
+			unprocessed+=passed;
+			FrameTime += passed;
+			time = time2;
+
+			// doesn't have to be rendered
+			while(unprocessed >= frameCap) {
+				unprocessed-=frameCap;
+				canRender = true;
+				target = scale;
+
+				if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GL_TRUE) {
+					glfwDestroyWindow(window);
+					break;
+				}	
+				glfwPollEvents();
+				if (FrameTime >= 1.0) {
+					FrameTime = 0;
+					System.out.println("FPS: " + frames);
+					frames = 0;
+				}
+			}
+			/*
+			 * Render system
+			 */
+			if(canRender) {
+				glClear(GL_COLOR_BUFFER_BIT);
+
+				shader.bind();
+				shader.setUniform("sampler", 0);
+				shader.setUniform("projection", camera.getProjection().mul(target));
+				modelTexture.render();
+				tex.bind(0);
+	
+				glfwSwapBuffers(window);
+				frames++;
 			}
 
-			glfwPollEvents();
-
-			glClear(GL_COLOR_BUFFER_BIT);
-
-			shader.bind();
-			shader.setUniform("sampler", 0);
-			shader.setUniform("projection", camera.getProjection().mul(target));
-			modelTexture.render();
-			tex.bind(0);
-
-			glfwSwapBuffers(window);
 		}
 
 		glfwTerminate();
