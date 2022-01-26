@@ -29,12 +29,15 @@ public class Main {
 
 	public Main() {
 
+		Window.setCallBacks();
+
 		if (!glfwInit()) {
 			System.err.println("Failed to initialize GLFW");
 			System.exit(1);
 		}
 
 		Window win = new Window();
+		// watch later to create an instance
 		GLFWVidMode vid = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		win.setSize(vid.width(), vid.height());
 		win.setFullScreen(true);
