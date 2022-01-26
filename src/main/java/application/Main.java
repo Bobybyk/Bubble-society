@@ -15,6 +15,7 @@ import model.visual_engine.Shader;
 import model.visual_engine.Texture;
 import model.visual_engine.Timer;
 import model.visual_engine.VBO;
+import model.visual_engine.Window;
 
 import java.nio.*;
 
@@ -28,19 +29,23 @@ public class Main {
 
 	public Main() {
 
+		Window.setCallBacks();
+
 		if (!glfwInit()) {
 			System.err.println("Failed to initialize GLFW");
 			System.exit(1);
 		}
 
-		long window = glfwCreateWindow(640, 480, "view", 0, 0);
-		glfwShowWindow(window);
-
-		glfwMakeContextCurrent(window);
+		Window win = new Window();
+		// watch later to create an instance
+		GLFWVidMode vid = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		win.setSize(vid.width(), vid.height());
+		win.setFullScreen(true);
+		win.createWindow("Society");
 
 		GL.createCapabilities();
 
-		Camera camera = new Camera(640, 480);
+		Camera camera = new Camera(win.getWidth(), win.getHeight());
 
 		glEnable(GL_TEXTURE_2D);
 
@@ -82,7 +87,7 @@ public class Main {
 		double time = Timer.getTime();
 		double unprocessed = 0; // time while progam hasn't been processed 
 
-		while(!glfwWindowShouldClose(window)) {
+		while(!win.shouldClose()) {
 			boolean canRender = false;
 
 			double time2 = Timer.getTime();
@@ -97,10 +102,9 @@ public class Main {
 				canRender = true;
 				target = scale;
 
-				if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GL_TRUE) {
-					glfwDestroyWindow(window);
-					break;
-				}	
+				if(glfwGetKey(win.getWindow(), GLFW_KEY_ESCAPE) == GL_TRUE) {
+					glfwSetWindowShouldClose(win.getWindow(), true);
+				}
 				glfwPollEvents();
 				if (FrameTime >= 1.0) {
 					FrameTime = 0;
@@ -119,8 +123,7 @@ public class Main {
 				shader.setUniform("projection", camera.getProjection().mul(target));
 				modelTexture.render();
 				tex.bind(0);
-	
-				glfwSwapBuffers(window);
+				win.swapBuffers();
 				frames++;
 			}
 
