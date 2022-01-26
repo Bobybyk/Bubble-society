@@ -102,7 +102,7 @@ public class Main {
 				canRender = true;
 				target = scale;
 
-				if(glfwGetKey(win.getWindow(), GLFW_KEY_ESCAPE) == GL_TRUE) {
+				if(win.getInput().isKeyDown(GLFW_KEY_ESCAPE)) {
 					glfwSetWindowShouldClose(win.getWindow(), true);
 				}
 				glfwPollEvents();
