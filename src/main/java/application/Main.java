@@ -15,6 +15,7 @@ import model.visual_engine.Shader;
 import model.visual_engine.Texture;
 import model.visual_engine.Timer;
 import model.visual_engine.VBO;
+import model.visual_engine.Window;
 
 import java.nio.*;
 
@@ -33,10 +34,8 @@ public class Main {
 			System.exit(1);
 		}
 
-		long window = glfwCreateWindow(640, 480, "view", 0, 0);
-		glfwShowWindow(window);
-
-		glfwMakeContextCurrent(window);
+		Window win = new Window();
+		win.createWindow("Society");
 
 		GL.createCapabilities();
 
@@ -82,7 +81,7 @@ public class Main {
 		double time = Timer.getTime();
 		double unprocessed = 0; // time while progam hasn't been processed 
 
-		while(!glfwWindowShouldClose(window)) {
+		while(!win.shouldClose()) {
 			boolean canRender = false;
 
 			double time2 = Timer.getTime();
@@ -97,10 +96,10 @@ public class Main {
 				canRender = true;
 				target = scale;
 
-				if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GL_TRUE) {
+				/* if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GL_TRUE) {
 					glfwDestroyWindow(window);
 					break;
-				}	
+				}	*/
 				glfwPollEvents();
 				if (FrameTime >= 1.0) {
 					FrameTime = 0;
@@ -119,8 +118,7 @@ public class Main {
 				shader.setUniform("projection", camera.getProjection().mul(target));
 				modelTexture.render();
 				tex.bind(0);
-	
-				glfwSwapBuffers(window);
+				win.swapBuffers();
 				frames++;
 			}
 
