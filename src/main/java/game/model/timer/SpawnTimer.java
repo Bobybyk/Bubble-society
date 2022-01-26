@@ -1,9 +1,9 @@
-package model.timer;
+package game.model.timer;
 
 import java.util.TimerTask;
 
 import application.DevMode;
-import controller.World;
+import game.World;
 
 public class SpawnTimer extends TimerTask {
 	private World world;

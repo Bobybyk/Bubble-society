@@ -1,8 +1,8 @@
-package model.timer;
+package game.model.timer;
 
 import java.util.TimerTask;
 
-import model.GameMap;
+import game.model.GameMap;
 
 public class ShiftTimer extends TimerTask {
     private GameMap map;

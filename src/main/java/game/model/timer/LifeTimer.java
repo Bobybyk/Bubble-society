@@ -1,8 +1,8 @@
-package model.timer;
+package game.model.timer;
 
 import java.util.TimerTask;
 
-import controller.World;
+import game.World;
 
 public class LifeTimer extends TimerTask {
     private World world;

@@ -1,4 +1,4 @@
-package controller;
+package game;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,14 +6,14 @@ import java.util.Random;
 import java.util.Timer;
 
 import application.DevMode;
-import model.GameMap;
-import model.timer.LifeTimer;
-import model.timer.ShiftTimer;
-import model.timer.SpawnTimer;
-import model.worker.Follower;
-import model.worker.Insurgent;
-import model.worker.Worker;
-import model.worker.WorkerBuilder;
+import game.model.GameMap;
+import game.model.timer.LifeTimer;
+import game.model.timer.ShiftTimer;
+import game.model.timer.SpawnTimer;
+import game.model.worker.Follower;
+import game.model.worker.Insurgent;
+import game.model.worker.Worker;
+import game.model.worker.WorkerBuilder;
 
 public class World {
     private GameMap map;

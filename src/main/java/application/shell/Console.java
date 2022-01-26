@@ -1,4 +1,4 @@
-package controller.shell;
+package application.shell;
 
 import java.util.HashMap;
 import java.util.Scanner;

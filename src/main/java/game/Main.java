@@ -1,4 +1,4 @@
-package application;
+package game;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -6,24 +6,24 @@ import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
+
+import application.TestLoadAverage;
+import application.shell.Console;
+
 import org.lwjgl.opengl.GL;
 
-import controller.World;
-import controller.shell.Console;
-import model.visual_engine.Camera;
-import model.visual_engine.Shader;
-import model.visual_engine.Texture;
-import model.visual_engine.Timer;
-import model.visual_engine.VBO;
-import model.visual_engine.Window;
+import io.Timer;
+import io.Window;
+import render.Camera;
+import render.Shader;
+import render.Texture;
+import render.VBO;
 
 import java.nio.*;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-
-import controller.World;
 
 public class Main {
 
