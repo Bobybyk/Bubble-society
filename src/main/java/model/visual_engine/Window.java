@@ -69,6 +69,11 @@ public class Window {
         this.fullscreen = fullscreen;
     }
 
+    public void update() {
+        input.update();
+        glfwPollEvents();
+    }
+
     public int getWidth() {
         return width;
     }
