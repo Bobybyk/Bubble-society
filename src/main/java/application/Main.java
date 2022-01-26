@@ -102,10 +102,10 @@ public class Main {
 				canRender = true;
 				target = scale;
 
-				if(glfwGetKey(win.getWindow(), GLFW_KEY_ESCAPE) == GL_TRUE) {
+				if(win.getInput().isKeyReleased(GLFW_KEY_ESCAPE)) {
 					glfwSetWindowShouldClose(win.getWindow(), true);
 				}
-				glfwPollEvents();
+				win.update();
 				if (FrameTime >= 1.0) {
 					FrameTime = 0;
 					System.out.println("FPS: " + frames);
