@@ -40,16 +40,16 @@ public class Main {
 			System.exit(1);
 		}
 
-		Window win = new Window();
+		Window window = new Window();
 		// watch later to create an instance
 		GLFWVidMode vid = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		win.setSize(vid.width(), vid.height());
-		win.setFullScreen(true);
-		win.createWindow("Society");
+		window.setSize(vid.width(), vid.height());
+		window.setFullScreen(true);
+		window.createWindow("Society");
 
 		GL.createCapabilities();
 
-		Camera camera = new Camera(win.getWidth(), win.getHeight());
+		Camera camera = new Camera(window.getWidth(), window.getHeight());
 
 		glEnable(GL_TEXTURE_2D);
 
@@ -72,7 +72,7 @@ public class Main {
 		double time = Timer.getTime();
 		double unprocessed = 0; // time while progam hasn't been processed 
 
-		while(!win.shouldClose()) {
+		while(!window.shouldClose()) {
 			boolean canRender = false;
 
 			double time2 = Timer.getTime();
@@ -86,26 +86,26 @@ public class Main {
 				unprocessed-=frameCap;
 				canRender = true;
 
-				if(win.getInput().isKeyReleased(GLFW_KEY_ESCAPE)) {
-					glfwSetWindowShouldClose(win.getWindow(), true);
+				if(window.getInput().isKeyReleased(GLFW_KEY_ESCAPE)) {
+					glfwSetWindowShouldClose(window.getWindow(), true);
 				}
 
-				if (win.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
+				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
 					camera.getPosition().sub(new Vector3f(-5, 0, 0));
 				}
-				if (win.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
+				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
 					camera.getPosition().sub(new Vector3f(5, 0, 0));
 				}
-				if (win.getInput().isKeyDown(GLFW.GLFW_KEY_W)) {
+				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_W)) {
 					camera.getPosition().sub(new Vector3f(0, 5, 0));
 				}
-				if (win.getInput().isKeyDown(GLFW.GLFW_KEY_S)) {
+				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_S)) {
 					camera.getPosition().sub(new Vector3f(0, -5, 0));
 				}
 
-				world.correctCamera(camera, win);
+				world.correctCamera(camera, window);
 
-				win.update();
+				window.update();
 
 				if (FrameTime >= 1.0) {
 					FrameTime = 0;
@@ -122,9 +122,9 @@ public class Main {
 			if(canRender) {
 				glClear(GL_COLOR_BUFFER_BIT);
 
-				world.render(tiles, shader, camera);
+				world.render(tiles, shader, camera, window);
 
-				win.swapBuffers();
+				window.swapBuffers();
 				frames++;
 			}
 
