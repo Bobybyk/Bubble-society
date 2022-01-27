@@ -12,7 +12,9 @@ import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
 
-public class Texture {
+import java.lang.Object;
+
+public class Texture /* implements AutoCloseable */ {
     private int id;
     private int width;
     private int height;
@@ -52,10 +54,20 @@ public class Texture {
         }
     }
 
+    public void finalyze() throws Throwable {
+        glDeleteTextures(id);
+        // close();
+    }
+
     public void bind(int sampler) {
         if (sampler >= 0 && sampler <= 31) {
             glActiveTexture(GL_TEXTURE0 + sampler);
             glBindTexture(GL_TEXTURE_2D, id);
         }
     }
+
+    /* @Override
+    public void close() throws Exception {
+        // TODO Auto-generated method stub
+    } */
 }
