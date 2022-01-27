@@ -2,14 +2,17 @@ package world;
 
 public class Tile {
     public static Tile tiles[] = new Tile[16];
+    public static byte numberOfTiles = 0;
 
-    public static final Tile tile = new Tile((byte) 0, "background");
+    public static final Tile backgroundTile = new Tile("background");
+    public static final Tile markerTile = new Tile("UI_button_clicked");
 
     private byte id;
     private String texture;
 
-    public Tile(byte id, String texture) {
-        this.id = id;
+    public Tile(String texture) {
+        this.id = numberOfTiles;
+        numberOfTiles++;
         this.texture = texture;
         if (tiles[id] != null) {
             throw new IllegalStateException("Tiles at: [" + id + "] is already being used...");
@@ -23,6 +26,5 @@ public class Tile {
     public String getTexture() {
         return this.texture;
     }
-
 
 }

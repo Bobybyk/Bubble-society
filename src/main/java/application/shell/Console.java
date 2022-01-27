@@ -23,15 +23,19 @@ public class Console extends Thread {
         while(true) {
             try {
                 Thread.sleep(1);
-                System.out.print("\u001B[31m");
-                System.out.print("Society_debug> ");
-                System.out.print("\u001B[37m");
+                layout();
                 String input = sc.nextLine();
                 processCommand(input);
             } catch(InterruptedException e) {
 
             }
         }   
+    }
+
+    public static void layout() {
+        System.out.print("\u001B[31m");
+        System.out.print("Society_debug> ");
+        System.out.print("\u001B[37m");
     }
 
     private void processCommand(String command) {
