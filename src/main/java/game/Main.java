@@ -18,6 +18,7 @@ import render.Camera;
 import render.Shader;
 import render.Texture;
 import render.VBO;
+import world.TileRenderer;
 
 import java.nio.*;
 
@@ -49,7 +50,9 @@ public class Main {
 
 		glEnable(GL_TEXTURE_2D);
 
-		float[] vertices = new float[] {
+		TileRenderer tiles = new TileRenderer();
+
+		/* float[] vertices = new float[] {
 			-0.5f, 0.5f, 0, // TOP LEFT       0
 			0.5f, 0.5f, 0,	// TOP RIGHT      1
 			0.5f, -0.5f, 0, // BOTTOM RIGHT   2
@@ -67,14 +70,14 @@ public class Main {
 			0,1,2,
 			2,3,0
 		};
+		VBO modelTexture = new VBO(vertices, texture, indices); */
 
-		VBO modelTexture = new VBO(vertices, texture, indices);
 		Shader shader = new Shader("shader");
-		Texture tex = new Texture("./resources/assets/logo.png");
+		Texture tex = new Texture("background");
 
 		Matrix4f scale = new Matrix4f()
-				.translate(new Vector3f(100, 0, 0))
-				.scale(64);
+				.translate(new Vector3f(0, 0, 0))
+				.scale(16);
 		Matrix4f target = new Matrix4f();
 
 		camera.setPosition(new Vector3f(-100, 0, 0));
@@ -118,11 +121,18 @@ public class Main {
 			if(canRender) {
 				glClear(GL_COLOR_BUFFER_BIT);
 
-				shader.bind();
+				/* shader.bind();
 				shader.setUniform("sampler", 0);
 				shader.setUniform("projection", camera.getProjection().mul(target));
 				modelTexture.render();
-				tex.bind(0);
+				tex.bind(0); */
+
+				for (int i = 0 ; i < 8 ; i++) {
+					for (int j = 0 ; j < 4 ; j++) {
+						tiles.renderTile((byte)0, i, j, shader, scale, camera);
+					}
+				}
+
 				win.swapBuffers();
 				frames++;
 			}
