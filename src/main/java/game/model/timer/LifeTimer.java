@@ -2,12 +2,12 @@ package game.model.timer;
 
 import java.util.TimerTask;
 
-import game.World;
+import game.GM;
 
 public class LifeTimer extends TimerTask {
-    private World world;
+    private GM world;
 
-    public LifeTimer(World world) {
+    public LifeTimer(GM world) {
         this.world = world;
     }
 

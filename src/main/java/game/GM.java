@@ -15,10 +15,10 @@ import game.model.worker.Insurgent;
 import game.model.worker.Worker;
 import game.model.worker.WorkerBuilder;
 
-public class World {
+public class GM {
     private GameMap map;
 
-    public World() {
+    public GM() {
         this.map = new GameMap();
 
         /*

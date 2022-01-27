@@ -18,6 +18,8 @@ import render.Camera;
 import render.Shader;
 import render.Texture;
 import render.VBO;
+import world.TileRenderer;
+import world.World;
 
 import java.nio.*;
 
@@ -49,7 +51,9 @@ public class Main {
 
 		glEnable(GL_TEXTURE_2D);
 
-		float[] vertices = new float[] {
+		TileRenderer tiles = new TileRenderer();
+
+		/* float[] vertices = new float[] {
 			-0.5f, 0.5f, 0, // TOP LEFT       0
 			0.5f, 0.5f, 0,	// TOP RIGHT      1
 			0.5f, -0.5f, 0, // BOTTOM RIGHT   2
@@ -67,15 +71,12 @@ public class Main {
 			0,1,2,
 			2,3,0
 		};
+		VBO modelTexture = new VBO(vertices, texture, indices); */
 
-		VBO modelTexture = new VBO(vertices, texture, indices);
 		Shader shader = new Shader("shader");
-		Texture tex = new Texture("./resources/assets/logo.png");
+		Texture tex = new Texture("background");
 
-		Matrix4f scale = new Matrix4f()
-				.translate(new Vector3f(100, 0, 0))
-				.scale(64);
-		Matrix4f target = new Matrix4f();
+		World world = new World();
 
 		camera.setPosition(new Vector3f(-100, 0, 0));
 
@@ -100,12 +101,26 @@ public class Main {
 			while(unprocessed >= frameCap) {
 				unprocessed-=frameCap;
 				canRender = true;
-				target = scale;
 
 				if(win.getInput().isKeyReleased(GLFW_KEY_ESCAPE)) {
 					glfwSetWindowShouldClose(win.getWindow(), true);
 				}
+
+				if (win.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
+					camera.getPosition().sub(new Vector3f(-5, 0, 0));
+				}
+				if (win.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
+					camera.getPosition().sub(new Vector3f(5, 0, 0));
+				}
+				if (win.getInput().isKeyDown(GLFW.GLFW_KEY_W)) {
+					camera.getPosition().sub(new Vector3f(0, 5, 0));
+				}
+				if (win.getInput().isKeyDown(GLFW.GLFW_KEY_S)) {
+					camera.getPosition().sub(new Vector3f(0, -5, 0));
+				}
+
 				win.update();
+
 				if (FrameTime >= 1.0) {
 					FrameTime = 0;
 					System.out.println("FPS: " + frames);
@@ -118,11 +133,14 @@ public class Main {
 			if(canRender) {
 				glClear(GL_COLOR_BUFFER_BIT);
 
-				shader.bind();
+				/* shader.bind();
 				shader.setUniform("sampler", 0);
 				shader.setUniform("projection", camera.getProjection().mul(target));
 				modelTexture.render();
-				tex.bind(0);
+				tex.bind(0); */
+
+				world.render(tiles, shader, camera);
+
 				win.swapBuffers();
 				frames++;
 			}
