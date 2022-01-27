@@ -7,6 +7,7 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
+import application.DevMode;
 import application.TestLoadAverage;
 import application.shell.Console;
 
@@ -18,6 +19,7 @@ import render.Camera;
 import render.Shader;
 import render.Texture;
 import render.VBO;
+import world.Tile;
 import world.TileRenderer;
 import world.World;
 
@@ -53,32 +55,14 @@ public class Main {
 
 		TileRenderer tiles = new TileRenderer();
 
-		/* float[] vertices = new float[] {
-			-0.5f, 0.5f, 0, // TOP LEFT       0
-			0.5f, 0.5f, 0,	// TOP RIGHT      1
-			0.5f, -0.5f, 0, // BOTTOM RIGHT   2
-			-0.5f, -0.5f, 0, // BOTTOM LEFT   3
-		};
-
-		float[] texture = new float[] {
-			0, 0,
-			1, 0,
-			1, 1,
-			0, 1,
-		};
-
-		int[] indices = new int[] {
-			0,1,2,
-			2,3,0
-		};
-		VBO modelTexture = new VBO(vertices, texture, indices); */
-
 		Shader shader = new Shader("shader");
-		Texture tex = new Texture("background");
 
 		World world = new World();
 
-		camera.setPosition(new Vector3f(-100, 0, 0));
+		world.setTile(Tile.markerTile, 0, 0); // 0, 0 : coordonates into the map
+		world.setTile(Tile.markerTile, 63, 63);
+		world.setTile(Tile.markerTile, 0, 63);
+		world.setTile(Tile.markerTile, 63, 0);
 
 		double frameCap = 1.0/60.0; // 60fps
 		
@@ -119,11 +103,16 @@ public class Main {
 					camera.getPosition().sub(new Vector3f(0, -5, 0));
 				}
 
+				world.correctCamera(camera, win);
+
 				win.update();
 
 				if (FrameTime >= 1.0) {
 					FrameTime = 0;
-					System.out.println("FPS: " + frames);
+					if (DevMode.debug) {
+						System.out.println("FPS: " + frames);
+						Console.layout();
+					}
 					frames = 0;
 				}
 			}
@@ -132,12 +121,6 @@ public class Main {
 			 */
 			if(canRender) {
 				glClear(GL_COLOR_BUFFER_BIT);
-
-				/* shader.bind();
-				shader.setUniform("sampler", 0);
-				shader.setUniform("projection", camera.getProjection().mul(target));
-				modelTexture.render();
-				tex.bind(0); */
 
 				world.render(tiles, shader, camera);
 
