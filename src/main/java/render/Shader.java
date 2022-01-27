@@ -60,6 +60,14 @@ public class Shader {
         }
     }
 
+    protected void finalize() {
+        glDetachShader(program, vertexShader);
+        glDetachShader(program, fragmentShader);
+        glDeleteShader(vertexShader);
+        glDeleteShader(fragmentShader);
+        glDeleteProgram(program);
+    }
+
     public void setUniform(String name, Matrix4f value) {
         int gcLocation = glGetUniformLocation(program, name); // location in the graphic card
         FloatBuffer buffer = BufferUtils.createFloatBuffer(16); // 4*4 colums*rows of data
