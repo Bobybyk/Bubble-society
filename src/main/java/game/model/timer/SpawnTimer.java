@@ -3,14 +3,14 @@ package game.model.timer;
 import java.util.TimerTask;
 
 import application.DevMode;
-import game.World;
+import game.GM;
 
 public class SpawnTimer extends TimerTask {
-	private World world;
+	private GM world;
 
 	int counter = 10;
 
-	public SpawnTimer(World world) {
+	public SpawnTimer(GM world) {
 		this.world = world;
 	}
 

@@ -19,6 +19,7 @@ import render.Shader;
 import render.Texture;
 import render.VBO;
 import world.TileRenderer;
+import world.World;
 
 import java.nio.*;
 
@@ -75,10 +76,7 @@ public class Main {
 		Shader shader = new Shader("shader");
 		Texture tex = new Texture("background");
 
-		Matrix4f scale = new Matrix4f()
-				.translate(new Vector3f(0, 0, 0))
-				.scale(16);
-		Matrix4f target = new Matrix4f();
+		World world = new World();
 
 		camera.setPosition(new Vector3f(-100, 0, 0));
 
@@ -103,12 +101,26 @@ public class Main {
 			while(unprocessed >= frameCap) {
 				unprocessed-=frameCap;
 				canRender = true;
-				target = scale;
 
 				if(win.getInput().isKeyReleased(GLFW_KEY_ESCAPE)) {
 					glfwSetWindowShouldClose(win.getWindow(), true);
 				}
+
+				if (win.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
+					camera.getPosition().sub(new Vector3f(-5, 0, 0));
+				}
+				if (win.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
+					camera.getPosition().sub(new Vector3f(5, 0, 0));
+				}
+				if (win.getInput().isKeyDown(GLFW.GLFW_KEY_W)) {
+					camera.getPosition().sub(new Vector3f(0, 5, 0));
+				}
+				if (win.getInput().isKeyDown(GLFW.GLFW_KEY_S)) {
+					camera.getPosition().sub(new Vector3f(0, -5, 0));
+				}
+
 				win.update();
+
 				if (FrameTime >= 1.0) {
 					FrameTime = 0;
 					System.out.println("FPS: " + frames);
@@ -127,11 +139,7 @@ public class Main {
 				modelTexture.render();
 				tex.bind(0); */
 
-				for (int i = 0 ; i < 8 ; i++) {
-					for (int j = 0 ; j < 4 ; j++) {
-						tiles.renderTile((byte)0, i, j, shader, scale, camera);
-					}
-				}
+				world.render(tiles, shader, camera);
 
 				win.swapBuffers();
 				frames++;
