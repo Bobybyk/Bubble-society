@@ -1,6 +1,7 @@
 package entity;
 
 import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFW;
 
 import io.Window;
 import render.Camera;
@@ -41,7 +42,21 @@ public class WorkerDisplay {
     }
 
     public void update(float delta, Window window, Camera camera, World world) {
+        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
+            transform.pos.add(new Vector3f(-5*delta, 0, 0));
+        }
+        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
+            transform.pos.add(new Vector3f(5*delta, 0, 0));
+        }
+        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_W)) {
+            transform.pos.add(new Vector3f(0, 5*delta, 0));
+        }
+        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_S)) {
+            transform.pos.add(new Vector3f(0, -5*delta, 0));
+        }
 
+        //to follow the worker
+        camera.setPosition(transform.pos.mul(-world.getScale(), new Vector3f()));
     }
 
     public void render(Shader shader, Camera camera) {

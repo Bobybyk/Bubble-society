@@ -93,7 +93,7 @@ public class Main {
 					glfwSetWindowShouldClose(window.getWindow(), true);
 				}
 
-				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
+				/* if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
 					camera.getPosition().sub(new Vector3f(-5, 0, 0));
 				}
 				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
@@ -104,7 +104,7 @@ public class Main {
 				}
 				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_S)) {
 					camera.getPosition().sub(new Vector3f(0, -5, 0));
-				}
+				} */
 
 				worker.update((float)frameCap, window, camera, world);
 
