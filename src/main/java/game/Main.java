@@ -10,6 +10,7 @@ import org.lwjgl.system.*;
 import application.DevMode;
 import application.TestLoadAverage;
 import application.shell.Console;
+import entity.WorkerDisplay;
 
 import org.lwjgl.opengl.GL;
 
@@ -59,6 +60,8 @@ public class Main {
 
 		World world = new World();
 
+		WorkerDisplay worker = new WorkerDisplay();
+
 		world.setTile(Tile.markerTile, 0, 0); // 0, 0 : coordonates into the map
 		world.setTile(Tile.markerTile, 63, 63);
 		world.setTile(Tile.markerTile, 0, 63);
@@ -103,6 +106,8 @@ public class Main {
 					camera.getPosition().sub(new Vector3f(0, -5, 0));
 				}
 
+				worker.update((float)frameCap, window, camera, world);
+
 				world.correctCamera(camera, window);
 
 				window.update();
@@ -124,6 +129,8 @@ public class Main {
 				glClear(GL_COLOR_BUFFER_BIT);
 
 				world.render(tiles, shader, camera, window);
+
+				worker.render(shader, camera);
 
 				window.swapBuffers();
 				frames++;
