@@ -113,6 +113,7 @@ public class Main {
 						System.out.println("FPS: " + frames);
 						Console.layout();
 					}
+					// DebugLogger.print(DebugType.ERROR, "FPS Dosabmed")
 					frames = 0;
 				}
 			}
