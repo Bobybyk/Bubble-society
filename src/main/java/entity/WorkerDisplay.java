@@ -53,21 +53,21 @@ public class WorkerDisplay {
         } */
 
         // follows a trend (passed by function to transform position)
-        if (function != null) {
+        /* if (function != null) {
             transform.pos.add(function);
-        }
+        } */
             
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_LEFT)) {
-            transform.pos.add(new Vector3f(-5*delta, 0, 0));
+            transform.pos.add(new Vector3f(-10*delta, 0, 0));
         }
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_RIGHT)) {
-            transform.pos.add(new Vector3f(5*delta, 0, 0));
+            transform.pos.add(new Vector3f(10*delta, 0, 0));
         }
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_UP)) {
-            transform.pos.add(new Vector3f(0, 5*delta, 0));
+            transform.pos.add(new Vector3f(0, 10*delta, 0));
         }
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_DOWN)) {
-            transform.pos.add(new Vector3f(0, -5*delta, 0));
+            transform.pos.add(new Vector3f(0, -10*delta, 0));
         }
         
 
