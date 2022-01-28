@@ -3,6 +3,8 @@ package entity;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.Random;
+
 import io.Window;
 import render.Camera;
 import render.Shader;
@@ -41,19 +43,35 @@ public class WorkerDisplay {
         this.transform.scale = new Vector3f(16, 16, 1);
     }
 
-    public void update(float delta, Window window, Camera camera, World world) {
-        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
+    public void update(float delta, Window window, Camera camera, World world, Vector3f function) {
+       /* int vect = new Random().nextInt(4);
+        switch(vect) {
+            case 0: transform.pos.add(new Vector3f(-5*delta, 0, 0)); break;
+            case 1: transform.pos.add(new Vector3f(5*delta, 0, 0)); break;
+            case 2: transform.pos.add(new Vector3f(0, 5*delta, 0)); break;
+            case 3: transform.pos.add(new Vector3f(0, -5*delta, 0)); break;
+        } */
+
+        // follows a trend (passed by function to transform position)
+        if (function != null) {
+            transform.pos.add(function);
+        }
+            
+        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_LEFT)) {
             transform.pos.add(new Vector3f(-5*delta, 0, 0));
         }
-        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
+        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_RIGHT)) {
             transform.pos.add(new Vector3f(5*delta, 0, 0));
         }
-        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_W)) {
+        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_UP)) {
             transform.pos.add(new Vector3f(0, 5*delta, 0));
         }
-        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_S)) {
+        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_DOWN)) {
             transform.pos.add(new Vector3f(0, -5*delta, 0));
         }
+        
+
+
 
         //to follow the worker
         camera.setPosition(transform.pos.mul(-world.getScale(), new Vector3f()));

@@ -26,8 +26,8 @@ public class GM {
          * (class timer line, start, period)
          */
 		Timer chrono = new Timer();
-        chrono.schedule(new SpawnTimer(this), 0, 5000);
-        chrono.schedule(new LifeTimer(this), 0, 10000);
+        //chrono.schedule(new SpawnTimer(this), 0, 5000);
+        //chrono.schedule(new LifeTimer(this), 0, 10000);
         chrono.schedule(new ShiftTimer(map), 0, 100);
     }
 
