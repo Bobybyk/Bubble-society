@@ -10,6 +10,7 @@ import org.lwjgl.system.*;
 import application.DevMode;
 import application.TestLoadAverage;
 import application.shell.Console;
+import entity.WorkerDisplay;
 
 import org.lwjgl.opengl.GL;
 
@@ -31,7 +32,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Main {
 
-	public Main() {
+	public Main(GM processor) {
 
 		Window.setCallBacks();
 
@@ -58,6 +59,8 @@ public class Main {
 		Shader shader = new Shader("shader");
 
 		World world = new World();
+
+		WorkerDisplay worker = new WorkerDisplay();
 
 		world.setTile(Tile.markerTile, 0, 0); // 0, 0 : coordonates into the map
 		world.setTile(Tile.markerTile, 63, 63);
@@ -90,7 +93,7 @@ public class Main {
 					glfwSetWindowShouldClose(window.getWindow(), true);
 				}
 
-				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
+				/* if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
 					camera.getPosition().sub(new Vector3f(-5, 0, 0));
 				}
 				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
@@ -101,7 +104,10 @@ public class Main {
 				}
 				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_S)) {
 					camera.getPosition().sub(new Vector3f(0, -5, 0));
-				}
+				} */
+
+				// blocks camera shifting
+				worker.update((float)frameCap, window, camera, world, null);
 
 				world.correctCamera(camera, window);
 
@@ -125,6 +131,8 @@ public class Main {
 
 				world.render(tiles, shader, camera, window);
 
+				worker.render(shader, camera);
+
 				window.swapBuffers();
 				frames++;
 			}
@@ -137,9 +145,8 @@ public class Main {
 
 	public static void main(String[] args) {
 		TestLoadAverage.testCompute();
-		//new World();
 		new Console().start();
-		new Main();
+		new Main(new GM());
 	}
 
 }
