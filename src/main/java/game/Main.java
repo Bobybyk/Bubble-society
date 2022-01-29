@@ -1,6 +1,7 @@
 package game;
 
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
@@ -10,6 +11,7 @@ import org.lwjgl.system.*;
 import application.DevMode;
 import application.TestLoadAverage;
 import application.shell.Console;
+import collision.AABB;
 import entity.WorkerDisplay;
 
 import org.lwjgl.opengl.GL;
@@ -62,11 +64,12 @@ public class Main {
 
 		WorkerDisplay worker = new WorkerDisplay();
 
-		world.setTile(Tile.markerTile, 0, 0); // 0, 0 : coordonates into the map
-		world.setTile(Tile.markerTile, 63, 63);
-		world.setTile(Tile.markerTile, 0, 63);
-		world.setTile(Tile.markerTile, 63, 0);
-
+		world.setTile(Tile.markerTile, 5, 0);
+		world.setTile(Tile.markerTile, 6, 0);
+		world.setTile(Tile.markerTile, 7, 0);
+		world.setTile(Tile.markerTile, 7, 1);
+		world.setTile(Tile.markerTile, 7, 2);
+		
 		double frameCap = 1.0/60.0; // 60fps
 		
 		double FrameTime = 0;
@@ -93,7 +96,7 @@ public class Main {
 					glfwSetWindowShouldClose(window.getWindow(), true);
 				}
 
-				/* if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
+				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
 					camera.getPosition().sub(new Vector3f(-5, 0, 0));
 				}
 				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
@@ -104,7 +107,7 @@ public class Main {
 				}
 				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_S)) {
 					camera.getPosition().sub(new Vector3f(0, -5, 0));
-				} */
+				}
 
 				// blocks camera shifting
 				worker.update((float)frameCap, window, camera, world, null);
