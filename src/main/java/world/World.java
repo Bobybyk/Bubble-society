@@ -19,8 +19,8 @@ public class World {
     private Matrix4f world;
     
     public World() {
-        this.width = 64;
-        this.height = 64;
+        this.width = 128;
+        this.height = 128;
         this.scale = 16;
 
         this.tiles = new byte[width * height];

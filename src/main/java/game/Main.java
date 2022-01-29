@@ -64,8 +64,11 @@ public class Main {
 
 		WorkerDisplay worker = new WorkerDisplay();
 
-		world.setTile(Tile.markerTile, 5, 0); // 0, 0 : coordonates into the map
+		world.setTile(Tile.markerTile, 5, 0);
 		world.setTile(Tile.markerTile, 6, 0);
+		world.setTile(Tile.markerTile, 7, 0);
+		world.setTile(Tile.markerTile, 7, 1);
+		world.setTile(Tile.markerTile, 7, 2);
 		
 		double frameCap = 1.0/60.0; // 60fps
 		

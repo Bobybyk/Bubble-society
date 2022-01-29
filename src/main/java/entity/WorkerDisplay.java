@@ -133,7 +133,7 @@ public class WorkerDisplay {
         } // END OF UNCLIPING SYSTEM
 
         //to follow the worker (comment it to be able to move the camera)
-        camera.setPosition(transform.pos.mul(-world.getScale(), new Vector3f()));
+        camera.getPosition().lerp(transform.pos.mul(-world.getScale(), new Vector3f()), 0.05f); //decrease the float value to have even more smoother camera following the object
     }
 
     public void render(Shader shader, Camera camera) {
