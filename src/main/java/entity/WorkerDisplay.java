@@ -6,6 +6,7 @@ import org.lwjgl.glfw.GLFW;
 import java.util.Random;
 
 import io.Window;
+import render.Animation;
 import render.Camera;
 import render.Shader;
 import render.VBO;
@@ -14,7 +15,8 @@ import render.Texture;
 
 public class WorkerDisplay {
     private VBO modelTexture;
-    private Texture texture;
+    //private Texture texture;
+    private Animation texture;
     private Transform transform;
 
     public WorkerDisplay() {
@@ -38,7 +40,7 @@ public class WorkerDisplay {
 		};
 
         this.modelTexture = new VBO(vertices, texture, indices);
-        this.texture = new Texture("follower.png");
+        this.texture = new Animation(10, 6, "follower"); // Animation(number of frames, fps, name without id)
         this.transform = new Transform();
         this.transform.scale = new Vector3f(16, 16, 1);
     }
