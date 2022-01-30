@@ -44,6 +44,7 @@ public class World {
             for (int y = 0 ; y < height ; y++) {
                 for (int x = 0 ; x < width ; x++) {
                     int red = (colorTileSheet[x + y * width] >> 16) & 0xFF;
+                    
                     Tile t;
                     try {
                         t = Tile.tiles[red];
@@ -70,6 +71,10 @@ public class World {
         this.boudingBoxes = new AABB[width * height];
         this.world = new Matrix4f().setTranslation(new Vector3f(0));
         this.world.scale(scale);
+    }
+
+    public Matrix4f getWorldMatrix4f() {
+        return world;
     }
 
     public void render(TileRenderer render, Shader shader, Camera cam, Window window) {

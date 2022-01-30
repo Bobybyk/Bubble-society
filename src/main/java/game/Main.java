@@ -12,6 +12,8 @@ import application.DevMode;
 import application.TestLoadAverage;
 import application.shell.Console;
 import collision.AABB;
+import entity.Entity;
+import entity.Transform;
 import entity.WorkerDisplay;
 
 import org.lwjgl.opengl.GL;
@@ -57,12 +59,13 @@ public class Main {
 		glEnable(GL_TEXTURE_2D);
 
 		TileRenderer tiles = new TileRenderer();
+		Entity.initAsset();
 
 		Shader shader = new Shader("shader");
 
 		World world = new World("test_level");
 
-		WorkerDisplay worker = new WorkerDisplay();
+		WorkerDisplay worker = new WorkerDisplay(new Transform());
 
 		/* world.setTile(Tile.markerTile, 5, 0);
 		world.setTile(Tile.markerTile, 6, 0);
@@ -134,13 +137,15 @@ public class Main {
 
 				world.render(tiles, shader, camera, window);
 
-				worker.render(shader, camera);
+				worker.render(shader, camera, world);
 
 				window.swapBuffers();
 				frames++;
 			}
 
 		}
+
+		Entity.deleteAsset();
 
 		glfwTerminate();
 
