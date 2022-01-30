@@ -1,5 +1,11 @@
 package world;
 
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -18,6 +24,43 @@ public class World {
     private int scale;
     private Matrix4f world;
     
+    public World(String world) {
+        try {
+            BufferedImage tileSheet = ImageIO.read(new File("./levels/" + world + "/tiles.png"));
+            // BufferedImage entitySheet = ImageIO.read(new File("./levels/" + world + "_entity.png")); // unuse for now
+
+            width = tileSheet.getWidth();
+            height = tileSheet.getHeight();
+            scale = 16;
+
+            this.world = new Matrix4f().setTranslation(new Vector3f(0));
+            this.world.scale(scale);
+
+            int[] colorTileSheet = tileSheet.getRGB(0, 0, width, height, null, 0, width);
+
+            tiles = new byte[width * height];
+            boudingBoxes = new AABB[width * height];
+
+            for (int y = 0 ; y < height ; y++) {
+                for (int x = 0 ; x < width ; x++) {
+                    int red = (colorTileSheet[x + y * width] >> 16) & 0xFF;
+                    Tile t;
+                    try {
+                        t = Tile.tiles[red];
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        t = null;
+                    }
+                    if (t != null) {
+                        setTile(t, x, y);
+                    }
+                }
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public World() {
         this.width = 128;
         this.height = 128;
