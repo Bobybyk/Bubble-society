@@ -60,15 +60,15 @@ public class Main {
 
 		Shader shader = new Shader("shader");
 
-		World world = new World();
+		World world = new World("test_level");
 
 		WorkerDisplay worker = new WorkerDisplay();
 
-		world.setTile(Tile.markerTile, 5, 0);
+		/* world.setTile(Tile.markerTile, 5, 0);
 		world.setTile(Tile.markerTile, 6, 0);
 		world.setTile(Tile.markerTile, 7, 0);
 		world.setTile(Tile.markerTile, 7, 1);
-		world.setTile(Tile.markerTile, 7, 2);
+		world.setTile(Tile.markerTile, 7, 2); */
 		
 		double frameCap = 1.0/60.0; // 60fps
 		
@@ -110,7 +110,7 @@ public class Main {
 				}
 
 				// blocks camera shifting
-				worker.update((float)frameCap, window, camera, world, null);
+				worker.update((float)frameCap, window, camera, world);
 
 				world.correctCamera(camera, window);
 
