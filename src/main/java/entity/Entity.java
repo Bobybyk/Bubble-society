@@ -129,8 +129,12 @@ public abstract class Entity {
     public void collideWithEntity(Entity entity) {
         Collision collision = boudingBoxes.getCollision(entity.boudingBoxes);
         if (collision.isIntersecting) {
+            collision.distance.x /= 2;
+            collision.distance.y /= 2;
             boudingBoxes.correctPosition(entity.boudingBoxes, collision);
             transform.pos.set(boudingBoxes.getCenter().x, boudingBoxes.getCenter().y, 0);
+            entity.boudingBoxes.correctPosition(boudingBoxes, collision);
+            entity.transform.pos.set(entity.boudingBoxes.getCenter().x, entity.boudingBoxes.getCenter().y, 0);
         }
     }
 }
