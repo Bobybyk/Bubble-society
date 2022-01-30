@@ -64,14 +64,6 @@ public class Main {
 		Shader shader = new Shader("shader");
 
 		World world = new World("test_level");
-
-		WorkerDisplay worker = new WorkerDisplay(new Transform());
-
-		/* world.setTile(Tile.markerTile, 5, 0);
-		world.setTile(Tile.markerTile, 6, 0);
-		world.setTile(Tile.markerTile, 7, 0);
-		world.setTile(Tile.markerTile, 7, 1);
-		world.setTile(Tile.markerTile, 7, 2); */
 		
 		double frameCap = 1.0/60.0; // 60fps
 		
@@ -113,7 +105,7 @@ public class Main {
 				}
 
 				// blocks camera shifting
-				worker.update((float)frameCap, window, camera, world);
+				world.update((float)frameCap, window, camera);
 
 				world.correctCamera(camera, window);
 
@@ -136,8 +128,6 @@ public class Main {
 				glClear(GL_COLOR_BUFFER_BIT);
 
 				world.render(tiles, shader, camera, window);
-
-				worker.render(shader, camera, world);
 
 				window.swapBuffers();
 				frames++;

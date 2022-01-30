@@ -15,12 +15,12 @@ import render.Shader;
 import render.VBO;
 import world.World;
 
-public class Entity {
+public abstract class Entity {
     private static VBO modelTexture;
-    private AABB boudingBoxes;
+    protected AABB boudingBoxes;
     //private Texture texture;
-    private Animation texture;
-    private Transform transform;
+    protected Animation texture;
+    protected Transform transform;
 
     public Entity(Animation animation, Transform transform) {
         this.texture = animation;
@@ -33,7 +33,7 @@ public class Entity {
         boudingBoxes.getCenter().set(transform.pos.x, transform.pos.y);
     }
 
-    public void update(float delta, Window window, Camera camera, World world) {
+    public void collideWithTiles(World world) {
         //set hitboxe : 5*5 around
         AABB[] boxes = new AABB[25];
         for (int i = 0 ; i < 5 ; i++) {
@@ -85,10 +85,9 @@ public class Entity {
                 transform.pos.set(boudingBoxes.getCenter(), 0);
             }
         } // END OF UNCLIPING SYSTEM
-
-        //to follow the worker (comment it to be able to move the camera)
-        camera.getPosition().lerp(transform.pos.mul(-world.getScale(), new Vector3f()), 0.05f); //decrease the float value to have even more smoother camera following the object
     }
+
+    public abstract void update(float delta, Window window, Camera camera, World world);
 
     public void render(Shader shader, Camera camera, World world) {
         Matrix4f target = camera.getProjection();
@@ -125,6 +124,14 @@ public class Entity {
 
     public static void deleteAsset() {
         modelTexture = null;
+    }
+
+    public void collideWithEntity(Entity entity) {
+        Collision collision = boudingBoxes.getCollision(entity.boudingBoxes);
+        if (collision.isIntersecting) {
+            boudingBoxes.correctPosition(entity.boudingBoxes, collision);
+            transform.pos.set(boudingBoxes.getCenter().x, boudingBoxes.getCenter().y, 0);
+        }
     }
 }
 
