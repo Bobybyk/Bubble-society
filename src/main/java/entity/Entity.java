@@ -19,13 +19,23 @@ public abstract class Entity {
     private static VBO modelTexture;
     protected AABB boudingBoxes;
     //private Texture texture;
-    protected Animation texture;
+    protected Animation[] animations;
     protected Transform transform;
+    private int useAnimation;
 
-    public Entity(Animation animation, Transform transform) {
-        this.texture = animation;
+    public Entity(int maxAnimations, Transform transform) {
+        this.animations = new Animation[maxAnimations];
         this.transform = transform;
+        this.useAnimation = 0;
         this.boudingBoxes = new AABB(new Vector2f(transform.pos.x, transform.pos.y), new Vector2f(transform.scale.x, transform.scale.y));
+    }
+
+    protected void setAnimation(int index, Animation animation) {
+        animations[index] = animation;
+    }
+
+    public void useAnimation(int index) {
+        this.useAnimation = index;
     }
 
     public void move(Vector2f direction) {
@@ -95,7 +105,7 @@ public abstract class Entity {
         shader.bind();
         shader.setUniform("sampler", 0);
         shader.setUniform("projection", transform.getProjection(target));
-        texture.bind(0);
+        animations[useAnimation].bind(0);
         modelTexture.render();
     }
 

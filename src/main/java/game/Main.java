@@ -54,6 +54,9 @@ public class Main {
 
 		GL.createCapabilities();
 
+		glEnable(GL_BLEND); // for transparency
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 		Camera camera = new Camera(window.getWidth(), window.getHeight());
 
 		glEnable(GL_TEXTURE_2D);

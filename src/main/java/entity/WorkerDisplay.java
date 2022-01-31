@@ -11,9 +11,12 @@ import world.World;
 import org.lwjgl.glfw.GLFW;
 
 public class WorkerDisplay extends Entity {
+    public static final int ANIM_IDLE = 0;
+    public static final int ANIM_SIZE = 1;
 
     public WorkerDisplay(Transform transform) {
-        super(new Animation(10, 6, "follower"), transform);// Animation(number of frames, fps, name without id)
+        super(ANIM_SIZE, transform);
+        setAnimation(ANIM_IDLE, new Animation(20, 9, "follower/idle")); // Animation(number of frames, fps, name without id)
     }
 
     @Override
