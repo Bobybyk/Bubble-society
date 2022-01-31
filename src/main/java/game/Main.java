@@ -12,6 +12,8 @@ import application.DevMode;
 import application.TestLoadAverage;
 import application.shell.Console;
 import collision.AABB;
+import entity.Entity;
+import entity.Transform;
 import entity.WorkerDisplay;
 
 import org.lwjgl.opengl.GL;
@@ -57,18 +59,11 @@ public class Main {
 		glEnable(GL_TEXTURE_2D);
 
 		TileRenderer tiles = new TileRenderer();
+		Entity.initAsset();
 
 		Shader shader = new Shader("shader");
 
 		World world = new World("test_level");
-
-		WorkerDisplay worker = new WorkerDisplay();
-
-		/* world.setTile(Tile.markerTile, 5, 0);
-		world.setTile(Tile.markerTile, 6, 0);
-		world.setTile(Tile.markerTile, 7, 0);
-		world.setTile(Tile.markerTile, 7, 1);
-		world.setTile(Tile.markerTile, 7, 2); */
 		
 		double frameCap = 1.0/60.0; // 60fps
 		
@@ -110,7 +105,7 @@ public class Main {
 				}
 
 				// blocks camera shifting
-				worker.update((float)frameCap, window, camera, world);
+				world.update((float)frameCap, window, camera);
 
 				world.correctCamera(camera, window);
 
@@ -134,13 +129,13 @@ public class Main {
 
 				world.render(tiles, shader, camera, window);
 
-				worker.render(shader, camera);
-
 				window.swapBuffers();
 				frames++;
 			}
 
 		}
+
+		Entity.deleteAsset();
 
 		glfwTerminate();
 
