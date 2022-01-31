@@ -38,7 +38,7 @@ public class World {
 
             width = tileSheet.getWidth();
             height = tileSheet.getHeight();
-            scale = 16;
+            scale = 48;
 
             this.world = new Matrix4f().setTranslation(new Vector3f(0));
             this.world.scale(scale);
