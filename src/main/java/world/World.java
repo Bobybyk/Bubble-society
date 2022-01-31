@@ -38,7 +38,7 @@ public class World {
 
             width = tileSheet.getWidth();
             height = tileSheet.getHeight();
-            scale = 16;
+            scale = 48;
 
             this.world = new Matrix4f().setTranslation(new Vector3f(0));
             this.world.scale(scale);
@@ -68,18 +68,6 @@ public class World {
 
             entities.add(new WorkerDisplay(new Transform()));
             
-            // START add new entity for test
-            Transform t = new Transform();
-            t.pos.x = 0;
-            t.pos.y = -4;
-
-            entities.add(new Entity(new Animation(10, 6, "follower"), t) {
-                @Override
-                public void update(float delta, Window window, Camera camera, World world) {
-                    move(new Vector2f(5*delta, 0));
-                }
-            });
-            // END
 
         } catch (IOException e) {
             e.printStackTrace();
