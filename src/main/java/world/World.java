@@ -31,29 +31,34 @@ public class World {
     private int scale;
     private Matrix4f world;
     
-    public World(String world) {
+    public World(String world, Camera camera) {
         try {
             BufferedImage tileSheet = ImageIO.read(new File("./levels/" + world + "/tiles.png"));
-            // BufferedImage entitySheet = ImageIO.read(new File("./levels/" + world + "_entity.png")); // unuse for now
+            BufferedImage entitySheet = ImageIO.read(new File("./levels/" + world + "/entities.png"));
 
             width = tileSheet.getWidth();
             height = tileSheet.getHeight();
-            scale = 48;
+            scale = 16;
 
             this.world = new Matrix4f().setTranslation(new Vector3f(0));
             this.world.scale(scale);
 
             int[] colorTileSheet = tileSheet.getRGB(0, 0, width, height, null, 0, width);
+            int[] colorEntitySheet = entitySheet.getRGB(0, 0, width, height, null, 0, width);
 
             tiles = new byte[width * height];
             boudingBoxes = new AABB[width * height];
             entities = new ArrayList<Entity>();
 
+            Transform transform;
+
             // level loader
             for (int y = 0 ; y < height ; y++) {
                 for (int x = 0 ; x < width ; x++) {
                     int red = (colorTileSheet[x + y * width] >> 16) & 0xFF;
-                    
+                    int entityIndex = (colorEntitySheet[x + y * width] >> 16) & 0xFF;
+                    int entityAlpha = (colorEntitySheet[x + y * width] >> 24) & 0xFF;
+
                     Tile t;
                     try {
                         t = Tile.tiles[red];
@@ -63,12 +68,22 @@ public class World {
                     if (t != null) {
                         setTile(t, x, y);
                     }
+                    if (entityAlpha > 0) {
+                        transform = new Transform();
+                        // set default position in the world for the entity
+                        transform.pos.x = x*2;
+                        transform.pos.y = -y*2;
+                        switch(entityIndex) {
+                            case 1: WorkerDisplay worker = new WorkerDisplay(transform); 
+                                    entities.add(worker); 
+                                    camera.getPosition().set(transform.pos.mul(-scale, new Vector3f()));
+
+                                    break;
+                            default : break;
+                        }
+                    }
                 }
-            }
-
-            entities.add(new WorkerDisplay(new Transform()));
-            
-
+            }     
         } catch (IOException e) {
             e.printStackTrace();
         }
