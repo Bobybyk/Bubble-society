@@ -4,11 +4,14 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.glfw.GLFWWindowSizeCallback;
 
 public class Window {
     private long window;
     private int width, height;
     private boolean fullscreen;
+    private boolean hasResized;
+    private GLFWWindowSizeCallback windowSizeCallback;
     private Input input;
 
     public static void setCallBacks() {
@@ -20,9 +23,22 @@ public class Window {
         });
     }
 
+    private void setLocalCallbacks() {
+        windowSizeCallback = new GLFWWindowSizeCallback() {
+            @Override
+            public void invoke(long argWindow, int argWidth, int argHeight) {
+                width = argWidth;
+                height = argHeight;
+                hasResized = true;
+            } 
+        };
+        glfwSetWindowSizeCallback(window, windowSizeCallback);
+    }
+
     public Window() {
         setSize(640, 480);
         setFullScreen(false);
+        hasResized = false;
     }
 
     public void createWindow(String title) {
@@ -50,6 +66,11 @@ public class Window {
         }
         glfwMakeContextCurrent(window);
         input = new Input(window);
+        setLocalCallbacks();
+    }
+
+    public void cleanUp() {
+        windowSizeCallback.close();
     }
 
     public boolean shouldClose() {
@@ -68,8 +89,17 @@ public class Window {
     public void setFullScreen(boolean fullscreen) {
         this.fullscreen = fullscreen;
     }
+    public void changeScreenMode() {
+        if (fullscreen) {
+            fullscreen = false;
+        } else {
+            fullscreen = true;
+        }
+       
+    }
 
     public void update() {
+        hasResized = false;
         input.update();
         glfwPollEvents();
     }
@@ -79,6 +109,9 @@ public class Window {
     }
     public int getHeight() {
         return height;
+    }
+    public boolean hasResized() {
+        return hasResized;
     }
     public boolean isFullScreen() {
         return fullscreen;

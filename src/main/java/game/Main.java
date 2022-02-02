@@ -49,7 +49,7 @@ public class Main {
 		// watch later to create an instance
 		GLFWVidMode vid = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		window.setSize(vid.width(), vid.height());
-		window.setFullScreen(true);
+		//window.setFullScreen(true);
 		window.createWindow("Society");
 
 		GL.createCapabilities();
@@ -67,7 +67,8 @@ public class Main {
 		Shader shader = new Shader("shader");
 
 		World world = new World("test_level", camera);
-		
+		world.calculateView(window);
+
 		double frameCap = 1.0/60.0; // 60fps
 		
 		double FrameTime = 0;
@@ -87,11 +88,22 @@ public class Main {
 
 			// doesn't have to be rendered
 			while(unprocessed >= frameCap) {
+
+				if (window.hasResized()) {
+					camera.setProjection(window.getWidth(), window.getHeight());
+					world.calculateView(window);
+					glViewport(0, 0, window.getWidth(), window.getHeight());
+				}
+
 				unprocessed-=frameCap;
 				canRender = true;
 
 				if(window.getInput().isKeyReleased(GLFW_KEY_ESCAPE)) {
 					glfwSetWindowShouldClose(window.getWindow(), true);
+				}
+				if(window.getInput().isKeyReleased(GLFW_KEY_F11)) {
+					window.changeScreenMode();
+					System.out.println("OK");
 				}
 
 				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
@@ -130,7 +142,7 @@ public class Main {
 			if(canRender) {
 				glClear(GL_COLOR_BUFFER_BIT);
 
-				world.render(tiles, shader, camera, window);
+				world.render(tiles, shader, camera);
 
 				window.swapBuffers();
 				frames++;

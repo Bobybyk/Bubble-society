@@ -47,6 +47,6 @@ public class WorkerDisplay extends Entity {
         }
         
         //to follow the worker (comment it to be able to move the camera)
-        camera.getPosition().lerp(transform.pos.mul(-world.getScale(), new Vector3f()), 0.05f); //decrease the float value to have even more smoother camera following the object
+        camera.getPosition().lerp(transform.pos.mul(-world.getScale(), new Vector3f()), 0.01f); //decrease the float value to have even more smoother camera following the object
     }
 }
