@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 
 public class Shader {
@@ -60,12 +61,11 @@ public class Shader {
         }
     }
 
-    protected void finalize() {
-        glDetachShader(program, vertexShader);
-        glDetachShader(program, fragmentShader);
-        glDeleteShader(vertexShader);
-        glDeleteShader(fragmentShader);
-        glDeleteProgram(program);
+    public void setUniform(String uniformName, Vector4f value) {
+        int gcLocation = glGetUniformLocation(program, uniformName); // location in the graphic card
+        if (gcLocation != -1) {
+            glUniform4f(gcLocation, value.x, value.y, value.z, value.w);
+        }
     }
 
     public void setUniform(String name, Matrix4f value) {
@@ -75,6 +75,14 @@ public class Shader {
         if (gcLocation != -1) {
             glUniformMatrix4fv(gcLocation, false, buffer);
         }
+    }
+
+    protected void finalize() {
+        glDetachShader(program, vertexShader);
+        glDetachShader(program, fragmentShader);
+        glDeleteShader(vertexShader);
+        glDeleteShader(fragmentShader);
+        glDeleteProgram(program);
     }
 
     public void bind() {

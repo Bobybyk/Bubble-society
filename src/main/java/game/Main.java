@@ -11,10 +11,12 @@ import org.lwjgl.system.*;
 import application.DevMode;
 import application.TestLoadAverage;
 import application.shell.Console;
+import assets.Assets;
 import collision.AABB;
 import entity.Entity;
 import entity.Transform;
 import entity.WorkerDisplay;
+import gui.Gui;
 
 import org.lwjgl.opengl.GL;
 
@@ -62,12 +64,14 @@ public class Main {
 		glEnable(GL_TEXTURE_2D);
 
 		TileRenderer tiles = new TileRenderer();
-		Entity.initAsset();
+		Assets.initAsset();
 
 		Shader shader = new Shader("shader");
 
 		World world = new World("test_level", camera);
 		world.calculateView(window);
+
+		Gui gui = new Gui(window);
 
 		double frameCap = 1.0/60.0; // 60fps
 		
@@ -91,6 +95,7 @@ public class Main {
 
 				if (window.hasResized()) {
 					camera.setProjection(window.getWidth(), window.getHeight());
+					gui.resizeCamera(window);
 					world.calculateView(window);
 					glViewport(0, 0, window.getWidth(), window.getHeight());
 				}
@@ -144,13 +149,15 @@ public class Main {
 
 				world.render(tiles, shader, camera);
 
+				gui.render();
+
 				window.swapBuffers();
 				frames++;
 			}
 
 		}
 
-		Entity.deleteAsset();
+		Assets.deleteAsset();
 
 		glfwTerminate();
 

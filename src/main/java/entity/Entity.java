@@ -4,7 +4,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-
+import assets.Assets;
 import collision.AABB;
 import collision.Collision;
 
@@ -12,11 +12,9 @@ import io.Window;
 import render.Animation;
 import render.Camera;
 import render.Shader;
-import render.VBO;
 import world.World;
 
 public abstract class Entity {
-    private static VBO modelTexture;
     protected AABB boudingBoxes;
     //private Texture texture;
     protected Animation[] animations;
@@ -106,34 +104,7 @@ public abstract class Entity {
         shader.setUniform("sampler", 0);
         shader.setUniform("projection", transform.getProjection(target));
         animations[useAnimation].bind(0);
-        modelTexture.render();
-    }
-
-    public static void initAsset() {
-        float[] vertices = new float[] {
-			-1f, 1f, 0, // TOP LEFT       0
-			1f, 1f, 0,	// TOP RIGHT      1
-			1f, -1f, 0, // BOTTOM RIGHT   2
-			-1f, -1f, 0, // BOTTOM LEFT   3
-		};
-
-		float[] texture = new float[] {
-			0, 0,
-			1, 0,
-			1, 1,
-			0, 1,
-		};
-
-		int[] indices = new int[] {
-			0,1,2,
-			2,3,0
-		};
-
-        modelTexture = new VBO(vertices, texture, indices);
-    }
-
-    public static void deleteAsset() {
-        modelTexture = null;
+        Assets.getModel().render();
     }
 
     public void collideWithEntity(Entity entity) {
