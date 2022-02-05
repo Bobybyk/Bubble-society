@@ -16,6 +16,7 @@ import collision.AABB;
 import entity.Entity;
 import entity.Transform;
 import entity.WorkerDisplay;
+import gui.Gui;
 
 import org.lwjgl.opengl.GL;
 
@@ -69,6 +70,8 @@ public class Main {
 
 		World world = new World("test_level", camera);
 		world.calculateView(window);
+
+		Gui gui = new Gui();
 
 		double frameCap = 1.0/60.0; // 60fps
 		
@@ -144,6 +147,8 @@ public class Main {
 				glClear(GL_COLOR_BUFFER_BIT);
 
 				world.render(tiles, shader, camera);
+
+				gui.render(camera);
 
 				window.swapBuffers();
 				frames++;
