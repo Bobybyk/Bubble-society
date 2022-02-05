@@ -4,19 +4,26 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 import assets.Assets;
+import io.Window;
 import render.Camera;
 import render.Shader;
 
 public class Gui {
     private Shader shader;
+    private Camera camera;
 
-    public Gui() {
+    public Gui(Window window) {
         this.shader = new Shader("gui");
+        camera = new Camera(window.getWidth(), window.getHeight());
     }
 
-    public void render(Camera camera) {
+    public void resizeCamera(Window window) {
+        camera.setProjection(window.getWidth(), window.getHeight());
+    }
+
+    public void render() {
         Matrix4f matrix = new Matrix4f();
-        camera.getUntransformedProjection().scale(87, matrix);
+        camera.getProjection().scale(87, matrix);
         matrix.translate(-3, -3, 0);
         shader.bind();
         shader.setUniform("projection", matrix);
