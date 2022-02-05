@@ -11,6 +11,7 @@ import org.lwjgl.system.*;
 import application.DevMode;
 import application.TestLoadAverage;
 import application.shell.Console;
+import assets.Assets;
 import collision.AABB;
 import entity.Entity;
 import entity.Transform;
@@ -62,7 +63,7 @@ public class Main {
 		glEnable(GL_TEXTURE_2D);
 
 		TileRenderer tiles = new TileRenderer();
-		Entity.initAsset();
+		Assets.initAsset();
 
 		Shader shader = new Shader("shader");
 
@@ -150,7 +151,7 @@ public class Main {
 
 		}
 
-		Entity.deleteAsset();
+		Assets.deleteAsset();
 
 		glfwTerminate();
 
