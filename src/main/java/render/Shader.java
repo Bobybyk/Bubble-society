@@ -77,14 +77,6 @@ public class Shader {
         }
     }
 
-    protected void finalize() {
-        glDetachShader(program, vertexShader);
-        glDetachShader(program, fragmentShader);
-        glDeleteShader(vertexShader);
-        glDeleteShader(fragmentShader);
-        glDeleteProgram(program);
-    }
-
     public void bind() {
         glUseProgram(program);
     }

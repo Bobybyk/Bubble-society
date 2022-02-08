@@ -52,11 +52,6 @@ public class Texture /* implements AutoCloseable */ {
         }
     }
 
-    public void finalyze() throws Throwable {
-        glDeleteTextures(id);
-        // close();
-    }
-
     public void bind(int sampler) {
         if (sampler >= 0 && sampler <= 31) {
             glActiveTexture(GL_TEXTURE0 + sampler);
