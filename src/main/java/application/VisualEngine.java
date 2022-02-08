@@ -33,7 +33,6 @@ public class VisualEngine {
 		}
 
 		Window window = new Window();
-		// watch later to create an instance
 		GLFWVidMode vid = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		window.setSize(vid.width(), vid.height());
 		//window.setFullScreen(true);
@@ -41,7 +40,8 @@ public class VisualEngine {
 
 		GL.createCapabilities();
 
-		glEnable(GL_BLEND); // for transparency
+		// for texture transparency
+		glEnable(GL_BLEND); 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		Camera camera = new Camera(window.getWidth(), window.getHeight());
@@ -56,7 +56,7 @@ public class VisualEngine {
 		World world = new World("test_level", camera);
 		world.calculateView(window);
 
-		Gui gui = new Gui(window);
+		//Gui gui = new Gui(window);
 
 		double frameCap = 1.0/60.0; // 60fps
 		
@@ -80,7 +80,7 @@ public class VisualEngine {
 
 				if (window.hasResized()) {
 					camera.setProjection(window.getWidth(), window.getHeight());
-					gui.resizeCamera(window);
+					//gui.resizeCamera(window);
 					world.calculateView(window);
 					glViewport(0, 0, window.getWidth(), window.getHeight());
 				}
@@ -91,9 +91,10 @@ public class VisualEngine {
 				if(window.getInput().isKeyReleased(GLFW_KEY_ESCAPE)) {
 					glfwSetWindowShouldClose(window.getWindow(), true);
 				}
-				if(window.getInput().isKeyReleased(GLFW_KEY_F11)) {
-					window.changeScreenMode();
-					System.out.println("OK");
+				if(window.getInput().isKeyReleased(GLFW_KEY_F10)) {
+					if (world.getWorkerDisplay() != null) {
+						world.getWorkerDisplay().changeCameraMod();
+					}
 				}
 
 				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
@@ -134,7 +135,7 @@ public class VisualEngine {
 
 				world.render(tiles, shader, camera);
 
-				gui.render();
+				//gui.render();
 
 				window.swapBuffers();
 				frames++;

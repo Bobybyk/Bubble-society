@@ -16,6 +16,8 @@ public class WorkerDisplay extends Entity {
     public static final int ANIM_MOVE = 1;
     public static final int ANIM_SIZE = 2;
 
+    private boolean cameraOnWorker;
+
     public WorkerDisplay(Transform transform) {
         super(ANIM_SIZE, transform);
         setAnimation(ANIM_IDLE, new Animation(20, 9, "follower/idle")); // Animation(number of frames, fps, name without id)
@@ -47,7 +49,16 @@ public class WorkerDisplay extends Entity {
             useAnimation(ANIM_IDLE);
         }
         
-        //to follow the worker (comment it to be able to move the camera)
-        camera.getPosition().lerp(transform.pos.mul(-world.getScale(), new Vector3f()), 0.01f); //decrease the float value to have even more smoother camera following the object
+        if (cameraOnWorker) {
+            camera.getPosition().lerp(transform.pos.mul(-world.getScale(), new Vector3f()), 0.01f);
+        }
+    }
+
+    public void changeCameraMod() {
+        if(cameraOnWorker) {
+            cameraOnWorker = false;
+        } else {
+            cameraOnWorker = true;
+        }
     }
 }
