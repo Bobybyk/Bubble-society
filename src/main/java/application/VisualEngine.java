@@ -53,7 +53,7 @@ public class VisualEngine {
 
 		Shader shader = new Shader("shader");
 
-		World world = new World("test_level", camera);
+		World world = new World("vanilla", camera);
 		world.calculateView(window);
 
 		//Gui gui = new Gui(window);
@@ -64,7 +64,9 @@ public class VisualEngine {
 		int frames = 0;
 
 		double time = Timer.getTime();
-		double unprocessed = 0; // time while progam hasn't been processed 
+
+		// time while progam hasn't been processed 
+		double unprocessed = 0;
 
 		while(!window.shouldClose()) {
 			boolean canRender = false;
@@ -127,6 +129,7 @@ public class VisualEngine {
 					frames = 0;
 				}
 			}
+
 			/*
 			 * Render system
 			 */
