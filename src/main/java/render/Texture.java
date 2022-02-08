@@ -12,8 +12,6 @@ import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
 
-import java.lang.Object;
-
 public class Texture /* implements AutoCloseable */ {
     private int id;
     private int width;
@@ -66,8 +64,4 @@ public class Texture /* implements AutoCloseable */ {
         }
     }
 
-    /* @Override
-    public void close() throws Exception {
-        // TODO Auto-generated method stub
-    } */
 }
