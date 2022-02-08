@@ -1,4 +1,4 @@
-package game;
+package application;
 
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -8,14 +8,13 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
-import application.DevMode;
-import application.TestLoadAverage;
 import application.shell.Console;
 import assets.Assets;
 import collision.AABB;
 import entity.Entity;
 import entity.Transform;
 import entity.WorkerDisplay;
+import game.GM;
 import gui.Gui;
 
 import org.lwjgl.opengl.GL;
@@ -36,9 +35,10 @@ import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
-public class Main {
 
-	public Main(GM processor) {
+public class VisualEngine {
+	
+    public VisualEngine(GM processor) {
 
 		Window.setCallBacks();
 
@@ -162,11 +162,4 @@ public class Main {
 		glfwTerminate();
 
 	}
-
-	public static void main(String[] args) {
-		TestLoadAverage.testCompute();
-		new Console().start();
-		new Main(new GM());
-	}
-
 }

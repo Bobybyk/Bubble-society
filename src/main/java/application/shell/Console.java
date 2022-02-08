@@ -3,10 +3,12 @@ package application.shell;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import application.VisualEngine;
 import application.commands.Command;
 import application.commands.command_list.CommandDebug;
 import application.commands.command_list.CommandHelp;
 import application.commands.command_list.CommandKill;
+import game.GM;
 
 public class Console extends Thread {
     private HashMap<String,Command> commandList = new HashMap<String,Command>();
@@ -20,6 +22,7 @@ public class Console extends Thread {
     @Override
     public void run() {
         Scanner sc = new Scanner(System.in);
+        createView();
         while(true) {
             try {
                 Thread.sleep(1);
@@ -27,9 +30,12 @@ public class Console extends Thread {
                 String input = sc.nextLine();
                 processCommand(input);
             } catch(InterruptedException e) {
-
             }
         }   
+    }
+
+    private void createView() {
+        new VisualEngine(new GM());
     }
 
     public static void layout() {
