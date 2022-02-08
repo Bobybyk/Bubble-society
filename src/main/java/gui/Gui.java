@@ -1,6 +1,7 @@
 package gui;
 
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 import assets.Assets;
 import io.Window;
@@ -29,7 +30,9 @@ public class Gui {
         matrix.translate(-3, -3, 0);
         shader.bind();
         shader.setUniform("projection", matrix);
+        // tile sheet dimensions
         sheet.bindTile(shader, 5);
+        //shader.setUniform("color", new Vector4f(0, 0, 0, 0.4f));
         Assets.getModel().render();
     }
 }
