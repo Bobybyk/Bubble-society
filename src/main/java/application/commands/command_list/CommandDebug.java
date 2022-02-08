@@ -3,6 +3,7 @@ package application.commands.command_list;
 import application.DevMode;
 import application.commands.Command;
 
+
 public class CommandDebug extends Command {
 
     public CommandDebug() {

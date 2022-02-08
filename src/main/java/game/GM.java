@@ -15,6 +15,7 @@ import game.model.worker.Insurgent;
 import game.model.worker.Worker;
 import game.model.worker.WorkerBuilder;
 
+
 public class GM {
     private GameMap map;
 

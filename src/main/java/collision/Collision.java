@@ -2,6 +2,7 @@ package collision;
 
 import org.joml.Vector2f;
 
+
 public class Collision {
     public Vector2f distance;
     public boolean isIntersecting;

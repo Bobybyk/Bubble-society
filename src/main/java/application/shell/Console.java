@@ -10,6 +10,7 @@ import application.commands.command_list.CommandHelp;
 import application.commands.command_list.CommandKill;
 import game.GM;
 
+
 public class Console extends Thread {
     private HashMap<String,Command> commandList = new HashMap<String,Command>();
 

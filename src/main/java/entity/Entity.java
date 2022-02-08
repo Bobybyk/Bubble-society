@@ -14,9 +14,9 @@ import render.Camera;
 import render.Shader;
 import world.World;
 
+
 public abstract class Entity {
     protected AABB boudingBoxes;
-    //private Texture texture;
     protected Animation[] animations;
     protected Transform transform;
     private int useAnimation;

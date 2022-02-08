@@ -1,7 +1,7 @@
 package render;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*; // sampler
+import static org.lwjgl.opengl.GL13.*;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -12,9 +12,8 @@ import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
 
-import java.lang.Object;
 
-public class Texture /* implements AutoCloseable */ {
+public class Texture {
     private int id;
     private int width;
     private int height;
@@ -54,11 +53,6 @@ public class Texture /* implements AutoCloseable */ {
         }
     }
 
-    public void finalyze() throws Throwable {
-        glDeleteTextures(id);
-        // close();
-    }
-
     public void bind(int sampler) {
         if (sampler >= 0 && sampler <= 31) {
             glActiveTexture(GL_TEXTURE0 + sampler);
@@ -66,8 +60,4 @@ public class Texture /* implements AutoCloseable */ {
         }
     }
 
-    /* @Override
-    public void close() throws Exception {
-        // TODO Auto-generated method stub
-    } */
 }

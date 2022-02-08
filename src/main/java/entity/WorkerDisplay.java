@@ -10,6 +10,7 @@ import world.World;
 
 import org.lwjgl.glfw.GLFW;
 
+
 public class WorkerDisplay extends Entity {
     public static final int ANIM_IDLE = 0;
     public static final int ANIM_MOVE = 1;

@@ -9,6 +9,7 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 
+
 public class VBO {
     private int drawCount;
     private int vertexId;
@@ -38,12 +39,6 @@ public class VBO {
         
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0); 
-    }
-
-    protected void finalize() {
-        glDeleteBuffers(vertexId);
-        glDeleteBuffers(textureId);
-        glDeleteBuffers(indicesId);
     }
 
     public void render() {

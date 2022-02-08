@@ -4,6 +4,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import java.util.Arrays;
 
+
 public class Input {
     private long window;
     private boolean[] keys;

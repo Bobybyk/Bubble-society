@@ -1,13 +1,13 @@
 package gui;
 
 import org.joml.Matrix4f;
-import org.joml.Vector4f;
 
 import assets.Assets;
 import io.Window;
 import render.Camera;
 import render.Shader;
 import render.TileSheet;
+
 
 public class Gui {
     private Shader shader;
@@ -32,7 +32,6 @@ public class Gui {
         shader.setUniform("projection", matrix);
         // tile sheet dimensions
         sheet.bindTile(shader, 5);
-        //shader.setUniform("color", new Vector4f(0, 0, 0, 0.4f));
         Assets.getModel().render();
     }
 }

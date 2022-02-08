@@ -2,6 +2,7 @@ package assets;
 
 import render.VBO;
 
+
 public class Assets {
     private static VBO model;
 

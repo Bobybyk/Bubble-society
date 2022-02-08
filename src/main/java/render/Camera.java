@@ -1,8 +1,8 @@
 package render;
 
 import org.joml.Matrix4f;
-import org.joml.Vector3d;
 import org.joml.Vector3f;
+
 
 public class Camera {
     private Vector3f position;

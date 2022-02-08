@@ -20,6 +20,7 @@ import io.Window;
 import render.Camera;
 import render.Shader;
 
+
 public class World {
     private int viewX;
     private int viewY;

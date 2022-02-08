@@ -3,6 +3,7 @@ package application;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 
+
 public class TestLoadAverage {
 
     public static void testCompute() {
