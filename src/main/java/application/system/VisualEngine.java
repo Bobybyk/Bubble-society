@@ -34,6 +34,8 @@ import world.World;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
+import java.util.Arrays;
+
 
 public class VisualEngine {
 	
@@ -115,14 +117,29 @@ public class VisualEngine {
 					}
 				}
 				
-				float mouseWheelVelocity = 0;
+				// move with mouse
+				if (window.getMousePosition()[0] <= 5) {
+					camera.getPosition().sub(new Vector3f(-5, 0, 0));
+				}
+				if (window.getMousePosition()[1] <= 5) {
+					camera.getPosition().sub(new Vector3f(0, 5, 0));
+				}
+				if (window.getMousePosition()[0] >= vid.width()-5) {
+					camera.getPosition().sub(new Vector3f(5, 0, 0));
+				}
+				if (window.getMousePosition()[1] >= vid.height()-5) {
+					camera.getPosition().sub(new Vector3f(0, -5, 0));
+				}
+				//System.out.println(Arrays.toString(window.getMousePosition()));
 
+				// zoom
+				float mouseWheelVelocity = 0;
 				GLFW.glfwSetScrollCallback(window.getWindow(), new GLFWScrollCallback() {
 					@Override public void invoke (long win, double dx, double dy) {
 						System.out.println(dy);
 						//mouseWheelVelocity = (float) dy;
-						world.setScale((int)dy);
-						System.out.println(world.getScale());
+						world.setScale((int)dy, window, camera);
+						//System.out.println(world.getScale());
 					}
 				});
 

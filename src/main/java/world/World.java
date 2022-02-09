@@ -14,6 +14,7 @@ package world;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.DoubleBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,8 @@ import java.awt.image.BufferedImage;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.glfw.GLFW;
 
 import collision.AABB;
 import entity.Entity;
@@ -53,7 +56,7 @@ public class World {
             width = tileSheet.getWidth();
             height = tileSheet.getHeight();
             scale = 16;
-
+            //System.out.println(width + " ; " + height);
             this.world = new Matrix4f().setTranslation(new Vector3f(0));
             this.world.scale(scale);
 
@@ -203,14 +206,36 @@ public class World {
     public int getScale() {
         return scale;
     }
-    public void setScale(int coef) {
+    public void setScale(int coef, Window window, Camera camera) {
         if (scale+coef >= 16) {
             this.scale += coef;
             this.world = new Matrix4f().setTranslation(new Vector3f(0));
             this.world.scale(scale);
         }
-
     }
+
+        /*  DoubleBuffer posX = BufferUtils.createDoubleBuffer(1);
+            DoubleBuffer posY = BufferUtils.createDoubleBuffer(1);
+
+            GLFW.glfwGetCursorPos(window.getWindow(), posX, posY);
+
+            int posXToTileX = (int)((posX.get(0)/window.getWidth()) * width);
+            int posYToTileY = (int)((posY.get(0)/window.getHeight()) * height);
+            
+            System.out.println(posXToTileX + " ; " + posYToTileY);
+           
+            if (posXToTileX < width/2) {
+                posXToTileX = (posXToTileX/2) * -1;
+            } else {
+                posXToTileX = posXToTileX/2;
+            }
+
+            if (posYToTileY < height/2) {
+                posYToTileY = (posYToTileY/2) * -1;
+            } else {
+                posYToTileY = (posYToTileY/2);
+            } */
+
     public WorkerDisplay getWorkerDisplay() {
         return worker;
     }
