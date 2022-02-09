@@ -18,7 +18,7 @@ public class Tile {
     public static byte numberOfTiles = 0;
 
     public static final Tile backgroundTile = new Tile("background");
-    public static final Tile markerTile = new Tile("UI_button_clicked").setSolid();
+    public static final Tile zoneTile = new Tile("zone_border").setSolid();
 
     private byte id;
     private boolean solid;
