@@ -1,5 +1,6 @@
 package application.commands;
 
+
 public abstract class Command {
 
 	private String commandId;

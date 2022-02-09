@@ -20,6 +20,7 @@ import io.Window;
 import render.Camera;
 import render.Shader;
 
+
 public class World {
     private int viewX;
     private int viewY;
@@ -30,6 +31,7 @@ public class World {
     private int height;
     private int scale;
     private Matrix4f world;
+    private WorkerDisplay worker;
     
     public World(String world, Camera camera) {
         try {
@@ -74,7 +76,7 @@ public class World {
                         transform.pos.x = x*2;
                         transform.pos.y = -y*2;
                         switch(entityIndex) {
-                            case 1: WorkerDisplay worker = new WorkerDisplay(transform); 
+                            case 1: worker = new WorkerDisplay(transform); 
                                     entities.add(worker); 
                                     camera.getPosition().set(transform.pos.mul(-scale, new Vector3f()));
 
@@ -186,8 +188,10 @@ public class World {
             return null;
         }
     }
-
     public int getScale() {
         return scale;
+    }
+    public WorkerDisplay getWorkerDisplay() {
+        return worker;
     }
 }

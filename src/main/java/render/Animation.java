@@ -2,6 +2,7 @@ package render;
 
 import io.Timer;
 
+
 public class Animation {
     private Texture[] frames;
     private int pointer;

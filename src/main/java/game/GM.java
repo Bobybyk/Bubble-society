@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.Timer;
 
-import application.DevMode;
+import application.debug.DebugLogger;
 import game.model.GameMap;
 import game.model.timer.LifeTimer;
 import game.model.timer.ShiftTimer;
@@ -14,6 +14,7 @@ import game.model.worker.Follower;
 import game.model.worker.Insurgent;
 import game.model.worker.Worker;
 import game.model.worker.WorkerBuilder;
+
 
 public class GM {
     private GameMap map;
@@ -40,7 +41,7 @@ public class GM {
             return false;
         }
         // DEBBUG
-        if (DevMode.debug) System.out.println("WORKERS LIFE");
+        if (DebugLogger.debug) System.out.println("WORKERS LIFE");
         ArrayList<Worker> workersToErase = new ArrayList<Worker>();
         for (HashMap.Entry<Worker, Double[]> w : map.getMapList().entrySet()) {
             // if worker is not in a zone, decrease hp
@@ -52,7 +53,7 @@ public class GM {
                 workersToErase.add(w.getKey());
             }
             // DEBBUG
-            if (DevMode.debug) System.out.println("    " + w.getKey().getHp());
+            if (DebugLogger.debug) System.out.println("    " + w.getKey().getHp());
         }
         // delete every workers in workersToErase list in world list
         for (Worker we : workersToErase) {
@@ -69,26 +70,26 @@ public class GM {
             return;
         }
         //DEBBUG
-        if (DevMode.debug) System.out.println("WORKERS MEETING");
+        if (DebugLogger.debug) System.out.println("WORKERS MEETING");
         for (HashMap.Entry<Worker, Double[]> w1 : map.getMapList().entrySet()) {
             for (HashMap.Entry<Worker, Double[]> w2 : map.getMapList().entrySet()) { 
                 if (w1 != w2) {
                     HashMap<Worker, Worker> workersMet = map.workerMeeting(w1.getKey(), w2.getKey());
                     for (HashMap.Entry<Worker, Worker> worker : workersMet.entrySet()) {
                         if(worker.getKey().isInsurgent() && worker.getValue().isFollower()) {
-                            if (DevMode.debug) System.out.println("    insurgent meets follower");
+                            if (DebugLogger.debug) System.out.println("    insurgent meets follower");
                             //attaque
                         }
                         if(worker.getKey().isInsurgent() && worker.getValue().isFollower()) {
-                            if (DevMode.debug) System.out.println("    follower meets insurgent");
+                            if (DebugLogger.debug) System.out.println("    follower meets insurgent");
                             //fuite
                         }
                         if(worker.getKey().isInsurgent() && worker.getValue().isInsurgent()) {
-                            if (DevMode.debug) System.out.println("    insurgent meets insurgent");
+                            if (DebugLogger.debug) System.out.println("    insurgent meets insurgent");
                             //échange
                         }
                         if(worker.getKey().isFollower() && worker.getValue().isFollower()) {
-                            if (DevMode.debug) System.out.println("    follower meets follower");
+                            if (DebugLogger.debug) System.out.println("    follower meets follower");
                             //échange
                         }
                     }
@@ -106,7 +107,7 @@ public class GM {
             spawnWorker();
         }
         // DEBBUG
-        if (DevMode.debug) System.out.println("    " + nbr + " : " + this.map.getNbrWorkers());
+        if (DebugLogger.debug) System.out.println("    " + nbr + " : " + this.map.getNbrWorkers());
     }
 
     /*

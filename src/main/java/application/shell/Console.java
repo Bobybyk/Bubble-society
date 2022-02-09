@@ -4,9 +4,11 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import application.commands.Command;
+import application.commands.command_list.CommandCreateGraphicEngine;
 import application.commands.command_list.CommandDebug;
 import application.commands.command_list.CommandHelp;
 import application.commands.command_list.CommandKill;
+
 
 public class Console extends Thread {
     private HashMap<String,Command> commandList = new HashMap<String,Command>();
@@ -15,6 +17,7 @@ public class Console extends Thread {
         commandList.put("debug", new CommandDebug());
         commandList.put("help", new CommandHelp());
         commandList.put("kill", new CommandKill());
+        commandList.put("run", new CommandCreateGraphicEngine());
     }
 
     @Override
@@ -27,10 +30,11 @@ public class Console extends Thread {
                 String input = sc.nextLine();
                 processCommand(input);
             } catch(InterruptedException e) {
-
             }
         }   
     }
+
+
 
     public static void layout() {
         System.out.print("\u001B[31m");

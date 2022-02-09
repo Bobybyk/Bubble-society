@@ -1,21 +1,13 @@
-package game;
+package application.system;
 
-import org.joml.Matrix4f;
-import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.lwjgl.*;
 import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
-import org.lwjgl.system.*;
 
-import application.DevMode;
-import application.TestLoadAverage;
+import application.debug.DebugLogger;
+import application.debug.DebugType;
 import application.shell.Console;
 import assets.Assets;
-import collision.AABB;
-import entity.Entity;
-import entity.Transform;
-import entity.WorkerDisplay;
+import game.GM;
 import gui.Gui;
 
 import org.lwjgl.opengl.GL;
@@ -24,21 +16,16 @@ import io.Timer;
 import io.Window;
 import render.Camera;
 import render.Shader;
-import render.Texture;
-import render.VBO;
-import world.Tile;
 import world.TileRenderer;
 import world.World;
 
-import java.nio.*;
-
-import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
-public class Main {
 
-	public Main(GM processor) {
+public class VisualEngine {
+	
+    public VisualEngine(GM processor) {
 
 		Window.setCallBacks();
 
@@ -48,7 +35,6 @@ public class Main {
 		}
 
 		Window window = new Window();
-		// watch later to create an instance
 		GLFWVidMode vid = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		window.setSize(vid.width(), vid.height());
 		//window.setFullScreen(true);
@@ -56,7 +42,8 @@ public class Main {
 
 		GL.createCapabilities();
 
-		glEnable(GL_BLEND); // for transparency
+		// for texture transparency
+		glEnable(GL_BLEND); 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		Camera camera = new Camera(window.getWidth(), window.getHeight());
@@ -68,10 +55,10 @@ public class Main {
 
 		Shader shader = new Shader("shader");
 
-		World world = new World("test_level", camera);
+		World world = new World("vanilla", camera);
 		world.calculateView(window);
 
-		Gui gui = new Gui(window);
+		//Gui gui = new Gui(window);
 
 		double frameCap = 1.0/60.0; // 60fps
 		
@@ -79,7 +66,9 @@ public class Main {
 		int frames = 0;
 
 		double time = Timer.getTime();
-		double unprocessed = 0; // time while progam hasn't been processed 
+
+		// time while progam hasn't been processed 
+		double unprocessed = 0;
 
 		while(!window.shouldClose()) {
 			boolean canRender = false;
@@ -95,7 +84,7 @@ public class Main {
 
 				if (window.hasResized()) {
 					camera.setProjection(window.getWidth(), window.getHeight());
-					gui.resizeCamera(window);
+					//gui.resizeCamera(window);
 					world.calculateView(window);
 					glViewport(0, 0, window.getWidth(), window.getHeight());
 				}
@@ -105,10 +94,12 @@ public class Main {
 
 				if(window.getInput().isKeyReleased(GLFW_KEY_ESCAPE)) {
 					glfwSetWindowShouldClose(window.getWindow(), true);
+					DebugLogger.destroyGraphicEngine();
 				}
-				if(window.getInput().isKeyReleased(GLFW_KEY_F11)) {
-					window.changeScreenMode();
-					System.out.println("OK");
+				if(window.getInput().isKeyReleased(GLFW_KEY_F10)) {
+					if (world.getWorkerDisplay() != null) {
+						world.getWorkerDisplay().changeCameraMod();
+					}
 				}
 
 				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
@@ -133,14 +124,11 @@ public class Main {
 
 				if (FrameTime >= 1.0) {
 					FrameTime = 0;
-					if (DevMode.debug) {
-						System.out.println("FPS: " + frames);
-						Console.layout();
-					}
-					// DebugLogger.print(DebugType.ERROR, "FPS Dosabmed")
+					DebugLogger.print(DebugType.ALL, ("FPS: " + frames));
 					frames = 0;
 				}
 			}
+
 			/*
 			 * Render system
 			 */
@@ -149,7 +137,7 @@ public class Main {
 
 				world.render(tiles, shader, camera);
 
-				gui.render();
+				//gui.render();
 
 				window.swapBuffers();
 				frames++;
@@ -162,11 +150,4 @@ public class Main {
 		glfwTerminate();
 
 	}
-
-	public static void main(String[] args) {
-		TestLoadAverage.testCompute();
-		new Console().start();
-		new Main(new GM());
-	}
-
 }

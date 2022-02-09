@@ -12,6 +12,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 
+
 public class Shader {
     private int program;
     private int vertexShader; // vertices for shader
@@ -75,14 +76,6 @@ public class Shader {
         if (gcLocation != -1) {
             glUniformMatrix4fv(gcLocation, false, buffer);
         }
-    }
-
-    protected void finalize() {
-        glDetachShader(program, vertexShader);
-        glDetachShader(program, fragmentShader);
-        glDeleteShader(vertexShader);
-        glDeleteShader(fragmentShader);
-        glDeleteProgram(program);
     }
 
     public void bind() {

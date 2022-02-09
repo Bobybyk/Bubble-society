@@ -2,6 +2,7 @@ package application.commands.command_list;
 
 import application.commands.Command;
 
+
 public class CommandKill extends Command {
 
     public CommandKill() {

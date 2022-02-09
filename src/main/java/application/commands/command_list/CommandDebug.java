@@ -1,7 +1,8 @@
 package application.commands.command_list;
 
-import application.DevMode;
 import application.commands.Command;
+import application.debug.DebugLogger;
+
 
 public class CommandDebug extends Command {
 
@@ -17,12 +18,12 @@ public class CommandDebug extends Command {
                 value = Integer.parseInt(args[1]);
             } catch(NumberFormatException e) {
                 if (args[1].equals("enable")) {
-                    DevMode.debug = true;
+                    DebugLogger.debug = true;
                     System.out.println("debug mode : enabled");
                     return;
                 }
                 if (args[1].equals("disable")) {
-                    DevMode.debug = false;
+                    DebugLogger.debug = false;
                     System.out.println("debug mode : disabled");
                     return;   
                 } else {
@@ -30,12 +31,12 @@ public class CommandDebug extends Command {
                 }
             }
             if (value == 0) {
-                DevMode.debug = false;
+                DebugLogger.debug = false;
                 System.out.println("debug mode : disabled");
                 return;
             }
             if (value == 1) {
-                DevMode.debug = true;
+                DebugLogger.debug = true;
                 System.out.println("debug mode : enabled");
                 return;
             }

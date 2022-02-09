@@ -2,6 +2,7 @@ package application.commands.command_list;
 
 import application.commands.Command;
 
+
 public class CommandHelp extends Command implements Runnable {
 
     public CommandHelp() {

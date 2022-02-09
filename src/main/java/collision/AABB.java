@@ -2,6 +2,7 @@ package collision;
 
 import org.joml.Vector2f;
 
+
 public class AABB {
     private Vector2f center, halfExtent;
     
