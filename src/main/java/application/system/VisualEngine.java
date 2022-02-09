@@ -3,7 +3,8 @@ package application.system;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.*;
 
-import application.DevMode;
+import application.debug.DebugLogger;
+import application.debug.DebugType;
 import application.shell.Console;
 import assets.Assets;
 import game.GM;
@@ -93,7 +94,7 @@ public class VisualEngine {
 
 				if(window.getInput().isKeyReleased(GLFW_KEY_ESCAPE)) {
 					glfwSetWindowShouldClose(window.getWindow(), true);
-					DevMode.destroyGraphicEngine();
+					DebugLogger.destroyGraphicEngine();
 				}
 				if(window.getInput().isKeyReleased(GLFW_KEY_F10)) {
 					if (world.getWorkerDisplay() != null) {
@@ -123,11 +124,7 @@ public class VisualEngine {
 
 				if (FrameTime >= 1.0) {
 					FrameTime = 0;
-					if (DevMode.debug) {
-						System.out.println("FPS: " + frames);
-						Console.layout();
-					}
-					// DebugLogger.print(DebugType.ERROR, "FPS Dosabmed")
+					DebugLogger.print(DebugType.ALL, ("FPS: " + frames));
 					frames = 0;
 				}
 			}

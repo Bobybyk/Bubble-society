@@ -1,8 +1,9 @@
-package application;
+package application.debug;
 
+import application.shell.Console;
 import application.system.EngineCreator;
 
-public class DevMode {
+public class DebugLogger {
     public static boolean debug = false;
     private static EngineCreator engine;
 
@@ -16,6 +17,13 @@ public class DevMode {
     public static void destroyGraphicEngine() {
         engine.stop();
         EngineCreator.gcEngine = null;
+    }
+
+    public static void print(int debugType, String str) {
+        if (debug) {
+            System.out.println(str);
+            Console.layout();
+        }
     }
     
 }

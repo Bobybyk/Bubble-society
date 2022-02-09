@@ -1,7 +1,7 @@
 package application.commands.command_list;
 
-import application.DevMode;
 import application.commands.Command;
+import application.debug.DebugLogger;
 
 public class CommandCreateGraphicEngine extends Command{
 
@@ -11,7 +11,7 @@ public class CommandCreateGraphicEngine extends Command{
 
     @Override
     public void execute(String[] args) {
-        DevMode.createGraphicEngine();
+        DebugLogger.createGraphicEngine();
     }
     
 }

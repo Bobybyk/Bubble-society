@@ -2,7 +2,7 @@ package game.model.timer;
 
 import java.util.TimerTask;
 
-import application.DevMode;
+import application.debug.DebugLogger;
 import game.GM;
 
 public class SpawnTimer extends TimerTask {
@@ -17,7 +17,7 @@ public class SpawnTimer extends TimerTask {
 	@Override
 	public void run() {
 		// DEBBUG
-		if (DevMode.debug) System.out.println("SPAWN");
+		if (DebugLogger.debug) System.out.println("SPAWN");
 		world.multiSpawn();
 		world.testMeeting();
 		counter--;
