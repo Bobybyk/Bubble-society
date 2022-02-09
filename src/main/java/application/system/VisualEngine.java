@@ -17,7 +17,6 @@ import org.lwjgl.glfw.*;
 
 import application.debug.DebugLogger;
 import application.debug.DebugType;
-import application.shell.Console;
 import assets.Assets;
 import game.Game;
 import gui.Gui;
@@ -33,8 +32,6 @@ import world.World;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-
-import java.util.Arrays;
 
 
 public class VisualEngine {
@@ -133,11 +130,9 @@ public class VisualEngine {
 				//System.out.println(Arrays.toString(window.getMousePosition()));
 
 				// zoom
-				float mouseWheelVelocity = 0;
 				GLFW.glfwSetScrollCallback(window.getWindow(), new GLFWScrollCallback() {
 					@Override public void invoke (long win, double dx, double dy) {
 						System.out.println(dy);
-						//mouseWheelVelocity = (float) dy;
 						world.setScale((int)dy, window, camera);
 						//System.out.println(world.getScale());
 					}
