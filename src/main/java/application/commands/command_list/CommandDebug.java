@@ -14,6 +14,8 @@ package application.commands.command_list;
 
 import application.commands.Command;
 import application.debug.DebugLogger;
+import application.debug.DebugType;
+import application.shell.Console;
 
 
 public class CommandDebug extends Command {
@@ -24,36 +26,51 @@ public class CommandDebug extends Command {
 
     @Override
     public void execute(String[] args) {
-        if (args.length == 2) {
+        if (args.length == 3) {
             int value;
+            String type;
             try {
-                value = Integer.parseInt(args[1]);
+                value = Integer.parseInt(args[2]);
+                if (args[1] instanceof String) {
+                    type = args[1];
+                    switch(type) {
+                        case "ERROR": 
+                            if (value == 0) {
+                                Console.layout(); System.out.println("debug ERROR mode : disabled");
+                                DebugLogger.typeMap.replace(DebugType.ERROR, false);
+                            }
+                            else if (value == 1) {
+                                Console.layout(); System.out.println("debug ERROR mode : enabled");
+                                DebugLogger.typeMap.replace(DebugType.ERROR, true);
+                            }
+                            return;
+                        case "ALL": 
+                            if (value == 0) {
+                                Console.layout(); System.out.println("debug ALL modes : disabled");
+                                DebugLogger.typeMap.replace(DebugType.ALL, false);
+                            }
+                            else if (value == 1) {
+                                Console.layout(); System.out.println("debug ALL modes : enabled");
+                                DebugLogger.typeMap.replace(DebugType.ALL, true);
+                            }
+                            return;
+                        case "UI": 
+                            if (value == 0) {
+                                Console.layout(); System.out.println("debug UI mode : disabled");
+                                DebugLogger.typeMap.replace(DebugType.UI, false);
+                            }
+                            else if (value == 1) {
+                                Console.layout(); System.out.println("debug UI mode : enabled");
+                                DebugLogger.typeMap.replace(DebugType.UI, true);
+                            }
+                            return;
+                    }
+                }
             } catch(NumberFormatException e) {
-                if (args[1].equals("enable")) {
-                    DebugLogger.debug = true;
-                    System.out.println("debug mode : enabled");
-                    return;
-                }
-                if (args[1].equals("disable")) {
-                    DebugLogger.debug = false;
-                    System.out.println("debug mode : disabled");
-                    return;   
-                } else {
-                    value = -1;
-                }
-            }
-            if (value == 0) {
-                DebugLogger.debug = false;
-                System.out.println("debug mode : disabled");
-                return;
-            }
-            if (value == 1) {
-                DebugLogger.debug = true;
-                System.out.println("debug mode : enabled");
-                return;
+
             }
         }
-        System.out.println("Command syntax error");
+        Console.layout(); System.out.println("Command syntax error");
     }
     
 }
