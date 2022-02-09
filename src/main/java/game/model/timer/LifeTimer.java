@@ -14,12 +14,12 @@ package game.model.timer;
 
 import java.util.TimerTask;
 
-import game.GM;
+import game.Game;
 
 public class LifeTimer extends TimerTask {
-    private GM world;
+    private Game world;
 
-    public LifeTimer(GM world) {
+    public LifeTimer(Game world) {
         this.world = world;
     }
 
