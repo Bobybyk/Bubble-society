@@ -14,6 +14,10 @@ package io;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+import java.nio.DoubleBuffer;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
@@ -134,5 +138,13 @@ public class Window {
     }
     public Input getInput() {
         return input;
+    }
+    public int[] getMousePosition() {
+        DoubleBuffer posX = BufferUtils.createDoubleBuffer(1);
+        DoubleBuffer posY = BufferUtils.createDoubleBuffer(1);
+
+        GLFW.glfwGetCursorPos(window, posX, posY);
+
+        return new int[] {(int)posX.get(0), (int)posY.get(0)};
     }
 }

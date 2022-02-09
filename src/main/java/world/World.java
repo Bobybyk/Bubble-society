@@ -53,7 +53,7 @@ public class World {
             width = tileSheet.getWidth();
             height = tileSheet.getHeight();
             scale = 16;
-
+            //System.out.println(width + " ; " + height);
             this.world = new Matrix4f().setTranslation(new Vector3f(0));
             this.world.scale(scale);
 
@@ -203,6 +203,14 @@ public class World {
     public int getScale() {
         return scale;
     }
+    public void setScale(int coef, Window window, Camera camera) {
+        if (scale+coef >= 16) {
+            this.scale += coef;
+            this.world = new Matrix4f().setTranslation(new Vector3f(0));
+            this.world.scale(scale);
+        }
+    }
+
     public WorkerDisplay getWorkerDisplay() {
         return worker;
     }

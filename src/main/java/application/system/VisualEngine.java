@@ -17,7 +17,6 @@ import org.lwjgl.glfw.*;
 
 import application.debug.DebugLogger;
 import application.debug.DebugType;
-import application.shell.Console;
 import assets.Assets;
 import game.Game;
 import gui.Gui;
@@ -72,7 +71,8 @@ public class VisualEngine {
 
 		//Gui gui = new Gui(window);
 
-		double frameCap = 1.0/60.0; // 60fps
+		// 60fps
+		double frameCap = 1.0/60.0; 
 		
 		double FrameTime = 0;
 		int frames = 0;
@@ -113,6 +113,30 @@ public class VisualEngine {
 						world.getWorkerDisplay().changeCameraMod();
 					}
 				}
+				
+				// move with mouse
+				if (window.getMousePosition()[0] <= 5) {
+					camera.getPosition().sub(new Vector3f(-5, 0, 0));
+				}
+				if (window.getMousePosition()[1] <= 5) {
+					camera.getPosition().sub(new Vector3f(0, 5, 0));
+				}
+				if (window.getMousePosition()[0] >= vid.width()-5) {
+					camera.getPosition().sub(new Vector3f(5, 0, 0));
+				}
+				if (window.getMousePosition()[1] >= vid.height()-5) {
+					camera.getPosition().sub(new Vector3f(0, -5, 0));
+				}
+				//System.out.println(Arrays.toString(window.getMousePosition()));
+
+				// zoom
+				GLFW.glfwSetScrollCallback(window.getWindow(), new GLFWScrollCallback() {
+					@Override public void invoke (long win, double dx, double dy) {
+						System.out.println(dy);
+						world.setScale((int)dy, window, camera);
+						//System.out.println(world.getScale());
+					}
+				});
 
 				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
 					camera.getPosition().sub(new Vector3f(-5, 0, 0));
