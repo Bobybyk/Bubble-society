@@ -34,23 +34,22 @@ public class CommandHelp extends Command implements Runnable {
 
     @Override
     public synchronized void run() {
-        System.out.println("####################################################");
-        System.out.println("#                                                  #");
-        System.out.println("#                  List of commands                #");
-        System.out.println("#                                                  #");
-        System.out.println("#--------------------------------------------------#");
-        System.out.println("#                                                  #");
-        System.out.println("# DEBUG :                                          #");
-        System.out.println("#   debug 0 : disable debug feedback               #");
-        System.out.println("#   debug 1 : enable debug feedback                #");
-        System.out.println("#   debug disable : disable debug feedback         #");
-        System.out.println("#   debug enable : enable debug feedback           #");
-        System.out.println("# HELP :                                           #");
-        System.out.println("#   help : you just ran this command...            #");
-        System.out.println("# KILL :                                           #");
-        System.out.println("#   kill : kill signal (hard way, exit program)    #");
-        System.out.println("#                                                  #");
-        System.out.println("####################################################");
+        System.out.println("############################################################");
+        System.out.println("#                                                          #");
+        System.out.println("#                      List of commands                    #");
+        System.out.println("#                                                          #");
+        System.out.println("#----------------------------------------------------------#");
+        System.out.println("#                                                          #");
+        System.out.println("# DEBUG :                                                  #");
+        System.out.println("#   debug ERROR <0/1> : enable/disable error feedback      #");
+        System.out.println("#   debug ALL <0/1> : enable/disable all feedbacks         #");
+        System.out.println("#   debug UI <0/1> : enable/disable UI feedback            #");
+        System.out.println("# HELP :                                                   #");
+        System.out.println("#   help : you just ran this command...                    #");
+        System.out.println("# KILL :                                                   #");
+        System.out.println("#   kill : kill signal (hard way, exit program)            #");
+        System.out.println("#                                                          #");
+        System.out.println("############################################################");
     }
     
 }

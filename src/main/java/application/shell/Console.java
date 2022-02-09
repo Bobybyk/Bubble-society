@@ -20,6 +20,7 @@ import application.commands.command_list.CommandCreateGraphicEngine;
 import application.commands.command_list.CommandDebug;
 import application.commands.command_list.CommandHelp;
 import application.commands.command_list.CommandKill;
+import application.debug.DebugLogger;
 
 
 public class Console extends Thread {
@@ -35,6 +36,7 @@ public class Console extends Thread {
     @Override
     public void run() {
         Scanner sc = new Scanner(System.in);
+        DebugLogger.setTypeMap();
         while(true) {
             try {
                 Thread.sleep(1);

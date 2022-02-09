@@ -12,12 +12,14 @@
  */
 package application.debug;
 
+import java.util.HashMap;
+
 import application.shell.Console;
 import application.system.EngineCreator;
 
 public class DebugLogger {
-    public static boolean debug = false;
     private static EngineCreator engine;
+    public static HashMap<Integer, Boolean> typeMap = new HashMap<Integer, Boolean>();
 
     public static void createGraphicEngine() {
         if (EngineCreator.gcEngine == null) {
@@ -26,16 +28,27 @@ public class DebugLogger {
         }
     }
 
+    public static void setTypeMap() {
+        typeMap.put(DebugType.ERROR, false);
+        typeMap.put(DebugType.ALL, false);
+        typeMap.put(DebugType.UI, false);
+    }
+
     public static void destroyGraphicEngine() {
         engine.stop();
         EngineCreator.gcEngine = null;
     }
 
     public static void print(int debugType, String str) {
-        if (debug) {
-            System.out.println(str);
+        if(typeMap.get(debugType)) {
             Console.layout();
+            System.out.println(str);
+        } 
+        else if(typeMap.get(DebugType.ALL)) {
+            Console.layout();
+            System.out.println(str);
         }
+
     }
     
 }
