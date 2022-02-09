@@ -204,9 +204,12 @@ public class World {
         return scale;
     }
     public void setScale(int coef) {
-        this.scale += coef;
-        this.world = new Matrix4f().setTranslation(new Vector3f(0));
-        this.world.scale(scale);
+        if (scale+coef >= 16) {
+            this.scale += coef;
+            this.world = new Matrix4f().setTranslation(new Vector3f(0));
+            this.world.scale(scale);
+        }
+
     }
     public WorkerDisplay getWorkerDisplay() {
         return worker;

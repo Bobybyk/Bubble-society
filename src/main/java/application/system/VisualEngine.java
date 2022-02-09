@@ -122,6 +122,7 @@ public class VisualEngine {
 						System.out.println(dy);
 						//mouseWheelVelocity = (float) dy;
 						world.setScale((int)dy);
+						System.out.println(world.getScale());
 					}
 				});
 
