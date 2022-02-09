@@ -10,16 +10,16 @@
  * TO ALLOW ANY THIRD PARTY TO ACCESS TO THIS CREATION IN AN UNFAIR OR ABUSIVE MANNER;
  * 
  */
-package application;
-
-import application.shell.Console;
-import application.system.TestLoadAverage;
+package application.commands;
 
 
-public class Main {
-	public static void main(String[] args) {
-		TestLoadAverage.testCompute();
-		new Console().start();	
+public abstract class Command {
+
+	private String commandId;
+
+	public Command(String id) {
+		this.commandId = id;
 	}
 
+	public abstract void execute(String[] args);
 }

@@ -10,16 +10,21 @@
  * TO ALLOW ANY THIRD PARTY TO ACCESS TO THIS CREATION IN AN UNFAIR OR ABUSIVE MANNER;
  * 
  */
-package application;
+package application.commands.command_list;
 
-import application.shell.Console;
-import application.system.TestLoadAverage;
+import application.commands.Command;
 
 
-public class Main {
-	public static void main(String[] args) {
-		TestLoadAverage.testCompute();
-		new Console().start();	
-	}
+public class CommandKill extends Command {
 
+    public CommandKill() {
+        super("666");
+    }
+
+    @Override
+    public void execute(String[] args) {
+        System.exit(0);
+
+    }
+    
 }

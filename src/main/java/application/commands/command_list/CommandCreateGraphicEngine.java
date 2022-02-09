@@ -10,16 +10,20 @@
  * TO ALLOW ANY THIRD PARTY TO ACCESS TO THIS CREATION IN AN UNFAIR OR ABUSIVE MANNER;
  * 
  */
-package application;
+package application.commands.command_list;
 
-import application.shell.Console;
-import application.system.TestLoadAverage;
+import application.commands.Command;
+import application.debug.DebugLogger;
 
+public class CommandCreateGraphicEngine extends Command{
 
-public class Main {
-	public static void main(String[] args) {
-		TestLoadAverage.testCompute();
-		new Console().start();	
-	}
+    public CommandCreateGraphicEngine() {
+        super("120");
+    }
 
+    @Override
+    public void execute(String[] args) {
+        DebugLogger.createGraphicEngine();
+    }
+    
 }

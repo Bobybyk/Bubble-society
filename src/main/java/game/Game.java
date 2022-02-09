@@ -10,16 +10,11 @@
  * TO ALLOW ANY THIRD PARTY TO ACCESS TO THIS CREATION IN AN UNFAIR OR ABUSIVE MANNER;
  * 
  */
-package application;
+package game;
 
-import application.shell.Console;
-import application.system.TestLoadAverage;
+public class Game {
 
-
-public class Main {
-	public static void main(String[] args) {
-		TestLoadAverage.testCompute();
-		new Console().start();	
-	}
-
+    public Game() {
+        // TODO : CREATE YOUR GAME
+    }
 }

@@ -10,16 +10,24 @@
  * TO ALLOW ANY THIRD PARTY TO ACCESS TO THIS CREATION IN AN UNFAIR OR ABUSIVE MANNER;
  * 
  */
-package application;
+package entity;
 
-import application.shell.Console;
-import application.system.TestLoadAverage;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 
-public class Main {
-	public static void main(String[] args) {
-		TestLoadAverage.testCompute();
-		new Console().start();	
-	}
+public class Transform {
+    public Vector3f pos;
+    public Vector3f scale;
 
+    public Transform() {
+        this.pos = new Vector3f();
+        this.scale = new Vector3f(1, 1, 1);
+    }
+
+    public Matrix4f getProjection(Matrix4f target) {
+        target.translate(pos);
+        target.scale(scale);
+        return target;
+    }
 }

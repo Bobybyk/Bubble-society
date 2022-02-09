@@ -10,16 +10,17 @@
  * TO ALLOW ANY THIRD PARTY TO ACCESS TO THIS CREATION IN AN UNFAIR OR ABUSIVE MANNER;
  * 
  */
-package application;
+package collision;
 
-import application.shell.Console;
-import application.system.TestLoadAverage;
+import org.joml.Vector2f;
 
 
-public class Main {
-	public static void main(String[] args) {
-		TestLoadAverage.testCompute();
-		new Console().start();	
-	}
-
-}
+public class Collision {
+    public Vector2f distance;
+    public boolean isIntersecting;
+    
+    public Collision(Vector2f distance, boolean intersects) {
+        this.distance = distance;
+        this.isIntersecting = intersects;
+    }
+} 

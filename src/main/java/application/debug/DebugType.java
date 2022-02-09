@@ -10,16 +10,9 @@
  * TO ALLOW ANY THIRD PARTY TO ACCESS TO THIS CREATION IN AN UNFAIR OR ABUSIVE MANNER;
  * 
  */
-package application;
+package application.debug;
 
-import application.shell.Console;
-import application.system.TestLoadAverage;
-
-
-public class Main {
-	public static void main(String[] args) {
-		TestLoadAverage.testCompute();
-		new Console().start();	
-	}
-
+public class DebugType {
+    public static int ERROR = -1;
+    public static int ALL = 0;
 }
