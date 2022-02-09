@@ -15,14 +15,14 @@ package game.model.timer;
 import java.util.TimerTask;
 
 import application.debug.DebugLogger;
-import game.GM;
+import game.Game;
 
 public class SpawnTimer extends TimerTask {
-	private GM world;
+	private Game world;
 
 	int counter = 10;
 
-	public SpawnTimer(GM world) {
+	public SpawnTimer(Game world) {
 		this.world = world;
 	}
 

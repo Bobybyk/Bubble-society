@@ -28,10 +28,10 @@ import game.model.worker.Worker;
 import game.model.worker.WorkerBuilder;
 
 
-public class GM {
+public class Game {
     private GameMap map;
 
-    public GM() {
+    public Game() {
         this.map = new GameMap();
 
         /*

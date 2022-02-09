@@ -19,7 +19,7 @@ import application.debug.DebugLogger;
 import application.debug.DebugType;
 import application.shell.Console;
 import assets.Assets;
-import game.GM;
+import game.Game;
 import gui.Gui;
 
 import org.lwjgl.opengl.GL;
@@ -37,7 +37,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class VisualEngine {
 	
-    public VisualEngine(GM processor) {
+    public VisualEngine(Game processor) {
 
 		Window.setCallBacks();
 

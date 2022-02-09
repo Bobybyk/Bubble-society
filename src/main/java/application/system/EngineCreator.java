@@ -12,13 +12,13 @@
  */
 package application.system;
 
-import game.GM;
+import game.Game;
 
 public class EngineCreator extends Thread {
     public static VisualEngine gcEngine;
     
     public void run() {
-        gcEngine = new VisualEngine(new GM());
+        gcEngine = new VisualEngine(new Game());
     }
 
 }
