@@ -203,6 +203,11 @@ public class World {
     public int getScale() {
         return scale;
     }
+    public void setScale(int coef) {
+        this.scale += coef;
+        this.world = new Matrix4f().setTranslation(new Vector3f(0));
+        this.world.scale(scale);
+    }
     public WorkerDisplay getWorkerDisplay() {
         return worker;
     }

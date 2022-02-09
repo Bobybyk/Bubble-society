@@ -72,7 +72,8 @@ public class VisualEngine {
 
 		//Gui gui = new Gui(window);
 
-		double frameCap = 1.0/60.0; // 60fps
+		// 60fps
+		double frameCap = 1.0/60.0; 
 		
 		double FrameTime = 0;
 		int frames = 0;
@@ -113,6 +114,16 @@ public class VisualEngine {
 						world.getWorkerDisplay().changeCameraMod();
 					}
 				}
+				
+				float mouseWheelVelocity = 0;
+
+				GLFW.glfwSetScrollCallback(window.getWindow(), new GLFWScrollCallback() {
+					@Override public void invoke (long win, double dx, double dy) {
+						System.out.println(dy);
+						//mouseWheelVelocity = (float) dy;
+						world.setScale((int)dy);
+					}
+				});
 
 				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
 					camera.getPosition().sub(new Vector3f(-5, 0, 0));
