@@ -1,4 +1,4 @@
-package application;
+package application.system;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;

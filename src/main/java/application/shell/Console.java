@@ -3,9 +3,8 @@ package application.shell;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import application.DevMode;
 import application.commands.Command;
-import application.commands.command_list.CommandCreateView;
+import application.commands.command_list.CommandCreateGraphicEngine;
 import application.commands.command_list.CommandDebug;
 import application.commands.command_list.CommandHelp;
 import application.commands.command_list.CommandKill;
@@ -18,7 +17,7 @@ public class Console extends Thread {
         commandList.put("debug", new CommandDebug());
         commandList.put("help", new CommandHelp());
         commandList.put("kill", new CommandKill());
-        commandList.put("run", new CommandCreateView());
+        commandList.put("run", new CommandCreateGraphicEngine());
     }
 
     @Override

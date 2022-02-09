@@ -1,8 +1,9 @@
-package application;
+package application.system;
 
 import org.joml.Vector3f;
 import org.lwjgl.glfw.*;
 
+import application.DevMode;
 import application.shell.Console;
 import assets.Assets;
 import game.GM;
@@ -92,7 +93,7 @@ public class VisualEngine {
 
 				if(window.getInput().isKeyReleased(GLFW_KEY_ESCAPE)) {
 					glfwSetWindowShouldClose(window.getWindow(), true);
-					DevMode.destroyView();
+					DevMode.destroyGraphicEngine();
 				}
 				if(window.getInput().isKeyReleased(GLFW_KEY_F10)) {
 					if (world.getWorkerDisplay() != null) {
