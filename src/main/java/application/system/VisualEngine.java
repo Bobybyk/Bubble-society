@@ -160,7 +160,7 @@ public class VisualEngine {
 
 				if (FrameTime >= 1.0) {
 					FrameTime = 0;
-					DebugLogger.print(DebugType.ALL, ("FPS: " + frames));
+					DebugLogger.print(DebugType.SYS, ("FPS: " + frames));
 					frames = 0;
 				}
 			}

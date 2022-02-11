@@ -54,7 +54,7 @@ public class Game {
             return false;
         }
         // DEBBUG
-        DebugLogger.print(DebugType.ALL, "WORKERS LIFE");
+        DebugLogger.print(DebugType.ENTITIES, "WORKERS LIFE");
         ArrayList<Worker> workersToErase = new ArrayList<Worker>();
         for (HashMap.Entry<Worker, Double[]> w : map.getMapList().entrySet()) {
             // if worker is not in a zone, decrease hp
@@ -66,7 +66,7 @@ public class Game {
                 workersToErase.add(w.getKey());
             }
             // DEBBUG
-            DebugLogger.print(DebugType.ALL, ""+w.getKey().getHp());
+            DebugLogger.print(DebugType.ENTITIES, ""+w.getKey().getHp());
         }
         // delete every workers in workersToErase list in world list
         for (Worker we : workersToErase) {
@@ -90,19 +90,19 @@ public class Game {
                     HashMap<Worker, Worker> workersMet = map.workerMeeting(w1.getKey(), w2.getKey());
                     for (HashMap.Entry<Worker, Worker> worker : workersMet.entrySet()) {
                         if(worker.getKey().isInsurgent() && worker.getValue().isFollower()) {
-                            DebugLogger.print(DebugType.ALL, "insurgent meets follower");
+                            DebugLogger.print(DebugType.ENTITIES, "insurgent meets follower");
                             //attaque
                         }
                         if(worker.getKey().isInsurgent() && worker.getValue().isFollower()) {
-                            DebugLogger.print(DebugType.ALL, "follower meets insurgent");
+                            DebugLogger.print(DebugType.ENTITIES, "follower meets insurgent");
                             //fuite
                         }
                         if(worker.getKey().isInsurgent() && worker.getValue().isInsurgent()) {
-                            DebugLogger.print(DebugType.ALL, "insurgent meets insurgent");
+                            DebugLogger.print(DebugType.ENTITIES, "insurgent meets insurgent");
                             //échange
                         }
                         if(worker.getKey().isFollower() && worker.getValue().isFollower()) {
-                            DebugLogger.print(DebugType.ALL, "follower meets follower");
+                            DebugLogger.print(DebugType.ENTITIES, "follower meets follower");
                             //échange
                         }
                     }
@@ -120,7 +120,7 @@ public class Game {
             spawnWorker();
         }
         // DEBBUG
-        DebugLogger.print(DebugType.ALL, nbr + " : " + this.map.getNbrWorkers());
+        DebugLogger.print(DebugType.ENTITIES, nbr + " : " + this.map.getNbrWorkers());
     }
 
     /*

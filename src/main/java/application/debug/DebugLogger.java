@@ -20,6 +20,7 @@ import application.system.EngineCreator;
 public class DebugLogger {
     private static EngineCreator engine;
     public static HashMap<Integer, Boolean> typeMap = new HashMap<Integer, Boolean>();
+    public static HashMap<Integer, String> typeMapDirectory = new HashMap<Integer, String>();
 
     public static void createGraphicEngine() {
         if (EngineCreator.gcEngine == null) {
@@ -30,8 +31,15 @@ public class DebugLogger {
 
     public static void setTypeMap() {
         typeMap.put(DebugType.ERROR, false);
+        typeMapDirectory.put(DebugType.ERROR, "ERROR");
         typeMap.put(DebugType.ALL, false);
+        typeMapDirectory.put(DebugType.ALL, "ALL");
         typeMap.put(DebugType.UI, false);
+        typeMapDirectory.put(DebugType.UI, "UI");
+        typeMap.put(DebugType.SYS, false);
+        typeMapDirectory.put(DebugType.SYS, "SYS");
+        typeMap.put(DebugType.ENTITIES, false);
+        typeMapDirectory.put(DebugType.ENTITIES, "ENTITIES");
     }
 
     public static void destroyGraphicEngine() {
@@ -41,12 +49,12 @@ public class DebugLogger {
 
     public static void print(int debugType, String str) {
         if(typeMap.get(debugType)) {
-            Console.layout();
             System.out.println(str);
+            Console.layout();
         } 
         else if(typeMap.get(DebugType.ALL)) {
-            Console.layout();
             System.out.println(str);
+            Console.layout(); 
         }
 
     }

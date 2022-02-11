@@ -41,9 +41,11 @@ public class CommandHelp extends Command implements Runnable {
         System.out.println("#----------------------------------------------------------#");
         System.out.println("#                                                          #");
         System.out.println("# DEBUG :                                                  #");
-        System.out.println("#   debug ERROR <0/1> : enable/disable error feedback      #");
-        System.out.println("#   debug ALL <0/1> : enable/disable all feedbacks         #");
-        System.out.println("#   debug UI <0/1> : enable/disable UI feedback            #");
+        System.out.println("#   debug ERROR <0/1> : disable/enable error feedback      #");
+        System.out.println("#   debug ALL <0/1> : disable/enable all feedbacks         #");
+        System.out.println("#   debug UI <0/1> : disable/enable UI feedback            #");
+        System.out.println("#   debug SYS <0/1> : disable/enable SYS feedback          #");
+        System.out.println("#   debug LIST : print debug state for each type           #");
         System.out.println("# HELP :                                                   #");
         System.out.println("#   help : you just ran this command...                    #");
         System.out.println("# KILL :                                                   #");

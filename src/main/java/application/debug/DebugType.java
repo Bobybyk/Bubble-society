@@ -16,4 +16,6 @@ public class DebugType {
     public static int ERROR = -1;
     public static int ALL = 0;
     public static int UI = 1;
+    public static int SYS = 2;
+    public static int ENTITIES = 3;
 }
