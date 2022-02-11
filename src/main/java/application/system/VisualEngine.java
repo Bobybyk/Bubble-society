@@ -38,7 +38,7 @@ import java.util.Arrays;
 
 public class VisualEngine {
 	
-    public VisualEngine(Game processor) {
+    public VisualEngine() {
 
 		Window.setCallBacks();
 
@@ -70,6 +70,8 @@ public class VisualEngine {
 
 		World world = new World("vanilla", camera);
 		world.calculateView(window);
+
+		Game processor = new Game(world);
 
 		//Gui gui = new Gui(window);
 

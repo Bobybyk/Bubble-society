@@ -27,22 +27,25 @@ import game.model.worker.Follower;
 import game.model.worker.Insurgent;
 import game.model.worker.Worker;
 import game.model.worker.WorkerBuilder;
+import world.World;
 
 
 public class Game {
     private GameMap map;
+    private World gWorld;
 
-    public Game() {
+    public Game(World gWorld) {
+        
         this.map = new GameMap();
-
+        this.gWorld = gWorld;
         /*
          * Time system declaration
          * (class timer line, start, period)
          */
 		Timer chrono = new Timer();
-        //chrono.schedule(new SpawnTimer(this), 0, 5000);
+        chrono.schedule(new SpawnTimer(this), 3000, 5000);
         //chrono.schedule(new LifeTimer(this), 0, 10000);
-        chrono.schedule(new ShiftTimer(map), 0, 100);
+        //chrono.schedule(new ShiftTimer(map), 0, 100);
     }
 
     /*
@@ -119,6 +122,7 @@ public class Game {
         for (int i = 0 ; i < nbr ; i++) {
             spawnWorker();
         }
+        gWorld.spawnWorker(nbr);
         // DEBBUG
         DebugLogger.print(DebugType.ENTITIES, nbr + " : " + this.map.getNbrWorkers());
     }

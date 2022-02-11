@@ -12,11 +12,13 @@
  */
 package game.model.timer;
 
+import java.util.Random;
 import java.util.TimerTask;
 
 import application.debug.DebugLogger;
 import application.debug.DebugType;
 import game.Game;
+import world.World;
 
 public class SpawnTimer extends TimerTask {
 	private Game world;
@@ -31,8 +33,10 @@ public class SpawnTimer extends TimerTask {
 	public void run() {
 		// DEBBUG
 		DebugLogger.print(DebugType.ALL, "SPAWN");
+		
 		world.multiSpawn();
 		world.testMeeting();
+
 		counter--;
 		if (counter < 1) {
 			cancel();

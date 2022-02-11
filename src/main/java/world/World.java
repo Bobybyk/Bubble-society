@@ -114,6 +114,19 @@ public class World {
         this.world.scale(scale);
     }
 
+    public void spawnWorker(int nbr) {
+        Transform transform;
+
+        while (nbr > 0) {
+            transform = new Transform();
+            transform.pos.x = 128-nbr;
+            transform.pos.y = -128;
+            entities.add(new WorkerDisplay(transform)); 
+            nbr--;
+        }
+
+    }
+
     public void calculateView(Window window) {
         viewX = (window.getWidth() / (scale * 2)) + 4;
         viewY = (window.getHeight() / (scale * 2)) + 4;
