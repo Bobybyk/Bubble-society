@@ -15,7 +15,6 @@ package application.commands.command_list;
 import application.commands.Command;
 import application.debug.DebugLogger;
 import application.debug.DebugType;
-import application.shell.Console;
 
 
 public class CommandDebug extends Command {
@@ -36,41 +35,78 @@ public class CommandDebug extends Command {
                     switch(type) {
                         case "ERROR": 
                             if (value == 0) {
-                                Console.layout(); System.out.println("debug ERROR mode : disabled");
+                                System.out.println("debug ERROR mode : disabled");  
                                 DebugLogger.typeMap.replace(DebugType.ERROR, false);
                             }
                             else if (value == 1) {
-                                Console.layout(); System.out.println("debug ERROR mode : enabled");
+                                System.out.println("debug ERROR mode : enabled");  
                                 DebugLogger.typeMap.replace(DebugType.ERROR, true);
                             }
                             return;
                         case "ALL": 
                             if (value == 0) {
-                                Console.layout(); System.out.println("debug ALL modes : disabled");
+                                System.out.println("debug ALL modes : disabled");  
                                 DebugLogger.typeMap.replace(DebugType.ALL, false);
                             }
                             else if (value == 1) {
-                                Console.layout(); System.out.println("debug ALL modes : enabled");
+                                System.out.println("debug ALL modes : enabled");  
                                 DebugLogger.typeMap.replace(DebugType.ALL, true);
                             }
                             return;
                         case "UI": 
                             if (value == 0) {
-                                Console.layout(); System.out.println("debug UI mode : disabled");
+                                System.out.println("debug UI mode : disabled");  
                                 DebugLogger.typeMap.replace(DebugType.UI, false);
                             }
                             else if (value == 1) {
-                                Console.layout(); System.out.println("debug UI mode : enabled");
+                                System.out.println("debug UI mode : enabled");  
                                 DebugLogger.typeMap.replace(DebugType.UI, true);
+                            }
+                            return;
+                        case "UIEXT": 
+                            if (value == 0) {
+                                System.out.println("debug extended UI mode : disabled");  
+                                DebugLogger.typeMap.replace(DebugType.UIEXT, false);
+                            }
+                            else if (value == 1) {
+                                System.out.println("debug extended UI mode : enabled");  
+                                DebugLogger.typeMap.replace(DebugType.UIEXT, true);
+                            }
+                            return;
+                        case "SYS": 
+                            if (value == 0) {
+                                System.out.println("debug SYS mode : disabled");  
+                                DebugLogger.typeMap.replace(DebugType.SYS, false);
+                            }
+                            else if (value == 1) {
+                                System.out.println("debug SYS mode : enabled");  
+                                DebugLogger.typeMap.replace(DebugType.SYS, true);
+                            }
+                            return;
+                        case "ENTITIES": 
+                            if (value == 0) {
+                                System.out.println("debug ENTITIES mode : disabled");  
+                                DebugLogger.typeMap.replace(DebugType.ENTITIES, false);
+                            }
+                            else if (value == 1) {
+                                System.out.println("debug ENTITIES mode : enabled");  
+                                DebugLogger.typeMap.replace(DebugType.ENTITIES, true);
                             }
                             return;
                     }
                 }
-            } catch(NumberFormatException e) {
-
+            } catch(NumberFormatException e) {}
+        }
+        // list every debug type state
+        else if (args.length == 2) {
+            if (args[1].equals("LIST")) {
+                for(int i = -1 ; i<DebugLogger.typeMap.size()-1 ; i++) {
+                    System.out.println("Debug type (" + DebugLogger.typeMapDirectory.get(i) + ", " + i + ") : " + DebugLogger.typeMap.get(i));
+                }
+                return;
             }
         }
-        Console.layout(); System.out.println("Command syntax error");
+        System.out.println("Command syntax error");  
     }
     
 }

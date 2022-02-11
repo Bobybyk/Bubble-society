@@ -19,7 +19,12 @@ import application.system.EngineCreator;
 
 public class DebugLogger {
     private static EngineCreator engine;
+    // map with debug type (as integer) and related boolean value
     public static HashMap<Integer, Boolean> typeMap = new HashMap<Integer, Boolean>();
+    // copy of typeMap with string macro instead of boolean value
+    public static HashMap<Integer, String> typeMapDirectory = new HashMap<Integer, String>();
+
+    private static String previousDebugMessage = "";
 
     public static void createGraphicEngine() {
         if (EngineCreator.gcEngine == null) {
@@ -30,8 +35,17 @@ public class DebugLogger {
 
     public static void setTypeMap() {
         typeMap.put(DebugType.ERROR, false);
+        typeMapDirectory.put(DebugType.ERROR, "ERROR");
         typeMap.put(DebugType.ALL, false);
+        typeMapDirectory.put(DebugType.ALL, "ALL");
         typeMap.put(DebugType.UI, false);
+        typeMapDirectory.put(DebugType.UI, "UI");
+        typeMap.put(DebugType.UIEXT, false);
+        typeMapDirectory.put(DebugType.UIEXT, "UIEXT");
+        typeMap.put(DebugType.SYS, false);
+        typeMapDirectory.put(DebugType.SYS, "SYS");
+        typeMap.put(DebugType.ENTITIES, false);
+        typeMapDirectory.put(DebugType.ENTITIES, "ENTITIES");
     }
 
     public static void destroyGraphicEngine() {
@@ -39,16 +53,20 @@ public class DebugLogger {
         EngineCreator.gcEngine = null;
     }
 
+    // print debug message if debug type is enable
     public static void print(int debugType, String str) {
-        if(typeMap.get(debugType)) {
-            Console.layout();
-            System.out.println(str);
-        } 
-        else if(typeMap.get(DebugType.ALL)) {
-            Console.layout();
-            System.out.println(str);
+        if (!str.equals(previousDebugMessage)) {
+            if(typeMap.get(debugType)) {
+                System.out.println(str);
+                Console.layout();
+                previousDebugMessage = str;
+            } 
+            else if(typeMap.get(DebugType.ALL)) {
+                System.out.println(str);
+                Console.layout(); 
+                previousDebugMessage = str;
+            }
         }
-
     }
     
 }

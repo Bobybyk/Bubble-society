@@ -33,6 +33,8 @@ import world.World;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
+import java.util.Arrays;
+
 
 public class VisualEngine {
 	
@@ -111,6 +113,7 @@ public class VisualEngine {
 				if(window.getInput().isKeyReleased(GLFW_KEY_F10)) {
 					if (world.getWorkerDisplay() != null) {
 						world.getWorkerDisplay().changeCameraMod();
+						DebugLogger.print(DebugType.UI, "camera mode has been updated");
 					}
 				}
 				
@@ -127,14 +130,14 @@ public class VisualEngine {
 				if (window.getMousePosition()[1] >= vid.height()-5) {
 					camera.getPosition().sub(new Vector3f(0, -5, 0));
 				}
-				//System.out.println(Arrays.toString(window.getMousePosition()));
+				DebugLogger.print(DebugType.UIEXT, "mouse cursor position : " + Arrays.toString(window.getMousePosition()));
 
 				// zoom
 				GLFW.glfwSetScrollCallback(window.getWindow(), new GLFWScrollCallback() {
 					@Override public void invoke (long win, double dx, double dy) {
-						System.out.println(dy);
+						//System.out.println(dy);
 						world.setScale((int)dy, window, camera);
-						//System.out.println(world.getScale());
+						DebugLogger.print(DebugType.UI, "world scale : " + world.getScale());
 					}
 				});
 
@@ -160,7 +163,7 @@ public class VisualEngine {
 
 				if (FrameTime >= 1.0) {
 					FrameTime = 0;
-					DebugLogger.print(DebugType.ALL, ("FPS: " + frames));
+					DebugLogger.print(DebugType.SYS, ("FPS: " + frames));
 					frames = 0;
 				}
 			}
