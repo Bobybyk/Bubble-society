@@ -20,9 +20,6 @@ import java.util.Timer;
 import application.debug.DebugLogger;
 import application.debug.DebugType;
 import game.model.GameMap;
-import game.model.timer.LifeTimer;
-import game.model.timer.ShiftTimer;
-import game.model.timer.SpawnTimer;
 import game.model.worker.Follower;
 import game.model.worker.Insurgent;
 import game.model.worker.Worker;
@@ -38,14 +35,6 @@ public class Game {
         
         this.map = new GameMap();
         this.gWorld = gWorld;
-        /*
-         * Time system declaration
-         * (class timer line, start, period)
-         */
-		Timer chrono = new Timer();
-        chrono.schedule(new SpawnTimer(this), 3000, 5000);
-        //chrono.schedule(new LifeTimer(this), 0, 10000);
-        //chrono.schedule(new ShiftTimer(map), 0, 100);
     }
 
     /*
