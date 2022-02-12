@@ -38,7 +38,11 @@ import java.util.Arrays;
 
 public class VisualEngine {
 	
-    public VisualEngine(Game processor) {
+	private static int lastTimeProccessed = 0;
+	private static int timeProccessed = 0;
+	private static Game processor;
+
+    public VisualEngine() {
 
 		Window.setCallBacks();
 
@@ -71,6 +75,8 @@ public class VisualEngine {
 		World world = new World("vanilla", camera);
 		world.calculateView(window);
 
+		processor = new Game(world);
+
 		//Gui gui = new Gui(window);
 
 		// 60fps
@@ -81,17 +87,21 @@ public class VisualEngine {
 
 		double time = Timer.getTime();
 
-		// time while progam hasn't been processed 
 		double unprocessed = 0;
 
+		// time while progam hasn't been processed 
 		while(!window.shouldClose()) {
 			boolean canRender = false;
 
 			double time2 = Timer.getTime();
 			double passed = time2 - time;
+
 			unprocessed+=passed;
 			FrameTime += passed;
 			time = time2;
+
+			// game calculs (spawn...)
+			gameProcess();
 
 			// doesn't have to be rendered
 			while(unprocessed >= frameCap) {
@@ -166,6 +176,7 @@ public class VisualEngine {
 					DebugLogger.print(DebugType.SYS, ("FPS: " + frames));
 					frames = 0;
 				}
+
 			}
 
 			/*
@@ -188,5 +199,15 @@ public class VisualEngine {
 
 		glfwTerminate();
 
+	}
+
+	public void gameProcess() {
+		timeProccessed = (int)glfwGetTime();
+		if (timeProccessed%5==0 && timeProccessed != lastTimeProccessed) {
+			processor.multiSpawn();
+			lastTimeProccessed = timeProccessed;
+			//System.out.println(timeProccessed);
+			//System.out.println(lastTimeProccessed);
+		}
 	}
 }
