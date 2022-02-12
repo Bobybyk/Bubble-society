@@ -15,10 +15,14 @@ package world;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+
+import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -38,7 +42,7 @@ public class World {
     private int viewY;
     private byte[] tiles;
     private AABB[] boudingBoxes;
-    private List<Entity> entities;
+    private HashMap<Entity, Double[]> entitiesBindShiftCoord = new HashMap<Entity, Double[]>();
     private int width;
     private int height;
     private int scale;
@@ -62,7 +66,7 @@ public class World {
 
             tiles = new byte[width * height];
             boudingBoxes = new AABB[width * height];
-            entities = new ArrayList<Entity>();
+            entitiesBindShiftCoord = new HashMap<Entity, Double[]>();
 
             Transform transform;
 
@@ -89,7 +93,7 @@ public class World {
                         transform.pos.y = -y*2;
                         switch(entityIndex) {
                             case 1: worker = new WorkerDisplay(transform); 
-                                    entities.add(worker); 
+                                    entitiesBindShiftCoord.put(worker, new Double[] {0.0, 0.0, 0.0}); 
                                     camera.getPosition().set(transform.pos.mul(-scale, new Vector3f()));
 
                                     break;
@@ -114,17 +118,13 @@ public class World {
         this.world.scale(scale);
     }
 
-    public void spawnWorker(int nbr) {
-        Transform transform;
-
-        while (nbr > 0) {
-            transform = new Transform();
-            transform.pos.x = 128-nbr;
-            transform.pos.y = -128;
-            entities.add(new WorkerDisplay(transform)); 
-            nbr--;
-        }
-
+    public WorkerDisplay spawnWorker() {
+        Transform transform = new Transform();
+        transform.pos.x = 128;
+        transform.pos.y = -128;
+        WorkerDisplay worker = new WorkerDisplay(transform);
+        entitiesBindShiftCoord.put(worker, new Double[] {0.0, 0.0, 0.0});
+        return worker; 
     }
 
     public void calculateView(Window window) {
@@ -150,14 +150,56 @@ public class World {
             }
         }
 
-        for (Entity entity : entities) {
-            entity.render(shader, cam, this);
+        for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
+            entity.getKey().render(shader, cam, this);
+        }
+    }
+
+    public void wanderUpdate(float delta) {
+        Random rand = new Random();
+        int x;
+        int y;
+        int length;
+        List<Entity> entities = new ArrayList<Entity>();
+        for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
+            if (entity.getValue()[2] <= 0 && entity.getValue()[0] == 0) {
+                x = rand.nextInt(2);
+                y = rand.nextInt(2);
+                length = rand.nextInt(3600)+1800;
+                x = x==0?-2:2;
+                y = y==0?-2:2;
+                //System.out.println(x + " ; " + y);
+                entity.setValue(new Double[] {(double) x, (double) y, glfwGetTime()+length});
+                //System.out.println(length);
+                continue;
+            } 
+            if (entity.getValue()[2] > 0){
+                entity.setValue(new Double[] {entity.getValue()[0], entity.getValue()[1], entity.getValue()[2]-glfwGetTime()});
+            }
+            if (entity.getValue()[2] <= 0 && entity.getValue()[0] != 0) {
+                length = rand.nextInt(1800)+1400;
+                //System.out.println(length);
+                entity.setValue(new Double[] {0.0, 0.0, glfwGetTime()+length});
+            }
+
+            entity.getKey().wanderUpdate(delta, entity.getValue());
+            entities.add(entity.getKey());
+        }
+        // collision between tiles and entities
+        for (int i = 0 ; i < entities.size() ; i++) {
+            entities.get(i).collideWithTiles(this);
+            for (int j = i+1 ; j < entities.size() ; j++) {
+                entities.get(i).collideWithEntity(entities.get(j));
+            }
+            entities.get(i).collideWithTiles(this);
         }
     }
 
     public void update(float delta, Window window, Camera camera) {
-        for (Entity entity : entities) {
-            entity.update(delta, window, camera, this);
+        List<Entity> entities = new ArrayList<Entity>();
+        for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
+            entity.getKey().update(delta, window, camera, this);
+            entities.add(entity.getKey());
         }
         // collision between tiles and entities
         for (int i = 0 ; i < entities.size() ; i++) {

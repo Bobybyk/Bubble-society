@@ -16,10 +16,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Timer;
+import java.util.function.DoubleBinaryOperator;
 
 import application.debug.DebugLogger;
 import application.debug.DebugType;
-import game.model.GameMap;
+import entity.Entity;
+import entity.WorkerDisplay;
 import game.model.worker.Follower;
 import game.model.worker.Insurgent;
 import game.model.worker.Worker;
@@ -28,12 +30,11 @@ import world.World;
 
 
 public class Game {
-    private GameMap map;
     private World gWorld;
+    private HashMap<Worker, WorkerDisplay> workerBindView = new HashMap<Worker, WorkerDisplay>();
 
     public Game(World gWorld) {
         
-        this.map = new GameMap();
         this.gWorld = gWorld;
     }
 
@@ -41,6 +42,7 @@ public class Game {
      * decrease hp manager
      * return true if workers exist, else false
      */
+    /* TO REFACTOR 
     public boolean decreaseHpForMap() {
         if (map.getNbrWorkers() == 0) {
             return false;
@@ -66,10 +68,12 @@ public class Game {
         }
         return true;
     }
+    */
 
     /*
      * for each worker of the map, check if it encount an other worker
      */
+    /* TO REFACTOR 
     public void testMeeting() {
         if (map.getNbrWorkers() == 0) {
             return;
@@ -101,7 +105,7 @@ public class Game {
                 }
             }
         }
-    }
+    } */
 
     /*
      * spawn random number of workers (1 to 5)
@@ -111,9 +115,8 @@ public class Game {
         for (int i = 0 ; i < nbr ; i++) {
             spawnWorker();
         }
-        gWorld.spawnWorker(nbr);
         // DEBBUG
-        DebugLogger.print(DebugType.ENTITIES, nbr + " : " + this.map.getNbrWorkers());
+        DebugLogger.print(DebugType.ENTITIES, nbr + " : " + getNbrWorkers());
     }
 
     /*
@@ -124,13 +127,19 @@ public class Game {
         int will = hp - (new Random().nextInt((hp - 20) + 1) + 20);
         double radius = new Random().nextInt(10) + 1;
         Worker worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).buildFollower();
-        this.map.addWorkerToMap(worker);
+        WorkerDisplay wd = gWorld.spawnWorker();
+        workerBindView.put(worker, wd);
+    }
+
+    private int getNbrWorkers() {
+        return workerBindView.size();
     }
 
     /*
      * change worker state
      * follower to insurgent ; insurgent to follower
      */
+    /* TO REFACTOR 
     public void changeWorkerState(Worker worker) {
         if (worker instanceof Follower) {
             map.addWorkerToMap(new WorkerBuilder().setHp(worker.getHp()).setWill(worker.getWill()).setZone(worker.getZone()).setRadius(worker.getRadius()).buildInsurgent());
@@ -139,5 +148,5 @@ public class Game {
             map.addWorkerToMap(new WorkerBuilder().setHp(worker.getHp()).setWill(worker.getWill()).setZone(worker.getZone()).setRadius(worker.getRadius()).buildFollower());
             map.removeWorker(worker);
         }
-    }
+    } */
 }

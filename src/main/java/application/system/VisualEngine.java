@@ -18,6 +18,7 @@ import org.lwjgl.glfw.*;
 import application.debug.DebugLogger;
 import application.debug.DebugType;
 import assets.Assets;
+import entity.WorkerDisplay;
 import game.Game;
 import gui.Gui;
 
@@ -165,9 +166,9 @@ public class VisualEngine {
 				}
 
 				// blocks camera shifting
-				world.update((float)frameCap, window, camera);
-
-				world.correctCamera(camera, window);
+				//world.update((float)frameCap, window, camera);
+				world.wanderUpdate((float)frameCap);
+				//world.correctCamera(camera, window);
 
 				window.update();
 
@@ -209,5 +210,8 @@ public class VisualEngine {
 			//System.out.println(timeProccessed);
 			//System.out.println(lastTimeProccessed);
 		}
+
+
+
 	}
 }
