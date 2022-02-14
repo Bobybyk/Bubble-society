@@ -120,9 +120,9 @@ public class World {
 
     public WorkerDisplay spawnWorker() {
         Transform transform = new Transform();
-        transform.pos.x = 128;
-        transform.pos.y = -128;
-        WorkerDisplay worker = new WorkerDisplay(transform);
+        transform.pos.x = 120;
+        transform.pos.y = -120;
+        worker = new WorkerDisplay(transform); // c la ke c pété
         entitiesBindShiftCoord.put(worker, new Double[] {0.0, 0.0, 0.0});
         return worker; 
     }

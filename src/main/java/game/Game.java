@@ -22,10 +22,10 @@ import application.debug.DebugLogger;
 import application.debug.DebugType;
 import entity.Entity;
 import entity.WorkerDisplay;
-import game.model.worker.Follower;
-import game.model.worker.Insurgent;
-import game.model.worker.Worker;
-import game.model.worker.WorkerBuilder;
+import game.worker.Follower;
+import game.worker.Insurgent;
+import game.worker.Worker;
+import game.worker.WorkerBuilder;
 import world.World;
 
 
