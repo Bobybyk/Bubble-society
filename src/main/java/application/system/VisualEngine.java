@@ -17,6 +17,7 @@ import org.lwjgl.glfw.*;
 
 import application.debug.DebugLogger;
 import application.debug.DebugType;
+import application.system.timers.SpawnTimer;
 import assets.Assets;
 import entity.WorkerDisplay;
 import game.Game;
@@ -39,9 +40,8 @@ import java.util.Arrays;
 
 public class VisualEngine {
 	
-	private static int lastTimeProccessed = 0;
-	private static int timeProccessed = 0;
 	private static Game processor;
+	private SpawnTimer spawner;
 
     public VisualEngine() {
 
@@ -55,7 +55,7 @@ public class VisualEngine {
 		Window window = new Window();
 		GLFWVidMode vid = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		window.setSize(vid.width(), vid.height());
-		//window.setFullScreen(true);
+		window.setFullScreen(true);
 		window.createWindow("Society");
 
 		GL.createCapabilities();
@@ -77,6 +77,7 @@ public class VisualEngine {
 		world.calculateView(window);
 
 		processor = new Game(world);
+		spawner = new SpawnTimer(processor);
 
 		//Gui gui = new Gui(window);
 
@@ -102,7 +103,7 @@ public class VisualEngine {
 			time = time2;
 
 			// game calculs (spawn...)
-			gameProcess();
+			spawner.gameProcess();
 
 			// doesn't have to be rendered
 			while(unprocessed >= frameCap) {
@@ -165,6 +166,10 @@ public class VisualEngine {
 					camera.getPosition().sub(new Vector3f(0, -5, 0));
 				}
 
+				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_P)) {
+					world.spawnWorker();
+				}
+
 				// blocks camera shifting
 				//world.update((float)frameCap, window, camera);
 				world.wanderUpdate((float)frameCap);
@@ -202,16 +207,4 @@ public class VisualEngine {
 
 	}
 
-	public void gameProcess() {
-		timeProccessed = (int)glfwGetTime();
-		if (timeProccessed%5==0 && timeProccessed != lastTimeProccessed) {
-			processor.multiSpawn();
-			lastTimeProccessed = timeProccessed;
-			//System.out.println(timeProccessed);
-			//System.out.println(lastTimeProccessed);
-		}
-
-
-
-	}
 }
