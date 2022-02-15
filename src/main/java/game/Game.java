@@ -31,7 +31,7 @@ import world.World;
 
 public class Game {
     private World gWorld;
-    private HashMap<Worker, WorkerDisplay> workerBindView = new HashMap<Worker, WorkerDisplay>();
+    private HashMap<WorkerDisplay, Worker> workerBindView = new HashMap<WorkerDisplay, Worker>();
 
     public Game(World gWorld) {
         
@@ -126,13 +126,16 @@ public class Game {
         int hp = new Random().nextInt((50 - 25) + 1) + 25;
         int will = hp - (new Random().nextInt((hp - 20) + 1) + 20);
         double radius = new Random().nextInt(10) + 1;
-        Worker worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).buildFollower();
+        Worker worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(true).buildFollower();
         WorkerDisplay wd = gWorld.spawnWorker();
-        workerBindView.put(worker, wd);
+        workerBindView.put(wd, worker);
     }
 
     private int getNbrWorkers() {
         return workerBindView.size();
+    }
+    public HashMap<WorkerDisplay, Worker> getWorkerBindView() {
+        return workerBindView;
     }
 
     /*

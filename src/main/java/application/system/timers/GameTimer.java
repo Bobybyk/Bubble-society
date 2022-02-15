@@ -5,14 +5,14 @@ import game.Game;
 import static org.lwjgl.glfw.GLFW.*;
 
 
-public class SpawnTimer {
+public class GameTimer {
 	private int lastTimeProccessed = 0;
 	private int timeProccessed = 0;
 
     private Game game;
     
 
-    public SpawnTimer(Game game) {
+    public GameTimer(Game game) {
         this.game = game;
     }
 

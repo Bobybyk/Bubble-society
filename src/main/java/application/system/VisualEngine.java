@@ -17,7 +17,7 @@ import org.lwjgl.glfw.*;
 
 import application.debug.DebugLogger;
 import application.debug.DebugType;
-import application.system.timers.SpawnTimer;
+import application.system.timers.GameTimer;
 import assets.Assets;
 import entity.WorkerDisplay;
 import game.Game;
@@ -41,7 +41,7 @@ import java.util.Arrays;
 public class VisualEngine {
 	
 	private static Game processor;
-	private SpawnTimer spawner;
+	private GameTimer spawner;
 
     public VisualEngine() {
 
@@ -77,7 +77,7 @@ public class VisualEngine {
 		world.calculateView(window);
 
 		processor = new Game(world);
-		spawner = new SpawnTimer(processor);
+		spawner = new GameTimer(processor);
 
 		//Gui gui = new Gui(window);
 
@@ -172,8 +172,8 @@ public class VisualEngine {
 
 				// blocks camera shifting
 				//world.update((float)frameCap, window, camera);
-				world.wanderUpdate((float)frameCap);
-				//world.correctCamera(camera, window);
+				world.wanderUpdate((float)frameCap, processor);
+				world.correctCamera(camera, window);
 
 				window.update();
 

@@ -32,6 +32,7 @@ import collision.AABB;
 import entity.Entity;
 import entity.Transform;
 import entity.WorkerDisplay;
+import game.Game;
 import io.Window;
 import render.Camera;
 import render.Shader;
@@ -160,13 +161,16 @@ public class World {
         }
     }
 
-    public void wanderUpdate(float delta) {
+    public void wanderUpdate(float delta, Game game) {
         Random rand = new Random();
         int x;
         int y;
         double length;
         List<Entity> entities = new ArrayList<Entity>();
         for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
+            if (game.getWorkerBindView().get(entity.getKey()) != null && game.getWorkerBindView().get(entity.getKey()).getWanderState() == false) {
+                continue;
+            }
             if (entity.getValue()[2] <= 0 && entity.getValue()[0] == 0) {
                 x = rand.nextInt(2);
                 y = rand.nextInt(2);
