@@ -28,14 +28,14 @@ public class WorkerDisplay extends Entity {
     public static final int ANIM_MOVE = 1;
     public static final int ANIM_SIZE = 2;
 
-    private static Animation idle = new Animation(20, 9, "follower/idle");
+    private static Animation idle = new Animation(20, 9, "follower/idle"); // Animation(number of frames, fps, name without id)
     private static Animation movment = new Animation(15, 8, "follower/movement");
 
     private boolean cameraOnWorker;
 
     public WorkerDisplay(Transform transform) {
         super(ANIM_SIZE, transform);
-        setAnimation(ANIM_IDLE, idle); // Animation(number of frames, fps, name without id)
+        setAnimation(ANIM_IDLE, idle); 
         setAnimation(ANIM_MOVE, movment);
     }
 

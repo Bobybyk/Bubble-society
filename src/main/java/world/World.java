@@ -32,6 +32,7 @@ import collision.AABB;
 import entity.Entity;
 import entity.Transform;
 import entity.WorkerDisplay;
+import game.Game;
 import io.Window;
 import render.Camera;
 import render.Shader;
@@ -43,11 +44,18 @@ public class World {
     private byte[] tiles;
     private AABB[] boudingBoxes;
     private HashMap<Entity, Double[]> entitiesBindShiftCoord = new HashMap<Entity, Double[]>();
+    private List<Entity> entities = new ArrayList<Entity>();
     private int width;
     private int height;
     private int scale;
     private Matrix4f world;
     private WorkerDisplay worker;
+    private boolean firstEntitiesSpecDefined = false;
+
+    private static int COOLDOWN_MIN = 150;
+    private static int COOLDOWN_MAX = 300;
+    private static int SHIFTING_MIN = 150;
+    private static int SHIFTING_MAX = 300;
     
     public World(String world, Camera camera) {
         try {
@@ -94,8 +102,9 @@ public class World {
                         switch(entityIndex) {
                             case 1: worker = new WorkerDisplay(transform); 
                                     entitiesBindShiftCoord.put(worker, new Double[] {0.0, 0.0, 0.0}); 
+                                    entities.add(worker);
+                                    checkCollisions();
                                     camera.getPosition().set(transform.pos.mul(-scale, new Vector3f()));
-
                                     break;
                             default : break;
                         }
@@ -124,7 +133,15 @@ public class World {
         transform.pos.y = -120;
         worker = new WorkerDisplay(transform); // c la ke c pété
         entitiesBindShiftCoord.put(worker, new Double[] {0.0, 0.0, 0.0});
+        entities.add(worker);
         return worker; 
+    }
+
+    private void setFirstEntitiesSpec(Game game) {
+        for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
+            game.defineEntity((WorkerDisplay) entity.getKey());
+        }
+        firstEntitiesSpecDefined = true;
     }
 
     public void calculateView(Window window) {
@@ -155,34 +172,47 @@ public class World {
         }
     }
 
-    public void wanderUpdate(float delta) {
+    public void wanderUpdate(float delta, Game game) {
         Random rand = new Random();
         int x;
         int y;
-        int length;
-        List<Entity> entities = new ArrayList<Entity>();
+        double length;
+        if(firstEntitiesSpecDefined == false) {
+            setFirstEntitiesSpec(game);
+        }
         for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
+            if (game.getWorkerBindView().get(entity.getKey()) != null && game.getWorkerBindView().get(entity.getKey()).getWanderState() == false) {
+                continue;
+            }
             if (entity.getValue()[2] <= 0 && entity.getValue()[0] == 0) {
                 x = rand.nextInt(2);
                 y = rand.nextInt(2);
-                length = rand.nextInt(3600)+1800;
+                length = SHIFTING_MIN + (SHIFTING_MAX - SHIFTING_MIN) * rand.nextDouble();
                 x = x==0?-2:2;
                 y = y==0?-2:2;
                 //System.out.println(x + " ; " + y);
-                entity.setValue(new Double[] {(double) x, (double) y, glfwGetTime()+length});
+                entity.setValue(new Double[] {(double) x, (double) y, length});
                 //System.out.println(length);
                 continue;
             } 
             if (entity.getValue()[2] > 0){
-                entity.setValue(new Double[] {entity.getValue()[0], entity.getValue()[1], entity.getValue()[2]-glfwGetTime()});
+                entity.setValue(new Double[] {entity.getValue()[0], entity.getValue()[1], entity.getValue()[2]-1});
             }
             if (entity.getValue()[2] <= 0 && entity.getValue()[0] != 0) {
-                length = rand.nextInt(1800)+1400;
+                length = COOLDOWN_MIN + (COOLDOWN_MAX - COOLDOWN_MIN) * rand.nextDouble();
                 //System.out.println(length);
-                entity.setValue(new Double[] {0.0, 0.0, glfwGetTime()+length});
+                entity.setValue(new Double[] {0.0, 0.0, length});
             }
 
             entity.getKey().wanderUpdate(delta, entity.getValue());
+        }
+        checkCollisions();
+    }
+
+    public void update(float delta, Window window, Camera camera) {
+        List<Entity> entities = new ArrayList<Entity>();
+        for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
+            entity.getKey().update(delta, window, camera, this);
             entities.add(entity.getKey());
         }
         // collision between tiles and entities
@@ -195,12 +225,7 @@ public class World {
         }
     }
 
-    public void update(float delta, Window window, Camera camera) {
-        List<Entity> entities = new ArrayList<Entity>();
-        for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
-            entity.getKey().update(delta, window, camera, this);
-            entities.add(entity.getKey());
-        }
+    private void checkCollisions() {
         // collision between tiles and entities
         for (int i = 0 ; i < entities.size() ; i++) {
             entities.get(i).collideWithTiles(this);
