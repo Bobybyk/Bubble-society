@@ -12,18 +12,12 @@
  */
 package game;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
-import java.util.Timer;
-import java.util.function.DoubleBinaryOperator;
 
 import application.debug.DebugLogger;
 import application.debug.DebugType;
-import entity.Entity;
 import entity.WorkerDisplay;
-import game.worker.Follower;
-import game.worker.Insurgent;
 import game.worker.Worker;
 import game.worker.WorkerBuilder;
 import world.World;
@@ -125,17 +119,24 @@ public class Game {
         int hp = new Random().nextInt((50 - 25) + 1) + 25;
         int will = hp - (new Random().nextInt((hp - 20) + 1) + 20);
         double radius = new Random().nextInt(10) + 1;
-        Worker worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(false).buildFollower();
+        Worker worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(true).buildFollower();
         WorkerDisplay wd = gWorld.spawnWorker();
         workerBindView.put(wd, worker);
     }
 
+    // to define entity without graphical part
     public void defineEntity(WorkerDisplay wd) {
         int hp = new Random().nextInt((50 - 25) + 1) + 25;
         int will = hp - (new Random().nextInt((hp - 20) + 1) + 20);
         double radius = new Random().nextInt(10) + 1;
-        Worker worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(false).buildFollower();
+        Worker worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(true).buildFollower();
         workerBindView.put(wd, worker);
+    }
+
+    public void changeWanderMode(boolean state) {
+        for (HashMap.Entry<WorkerDisplay, Worker> entity : workerBindView.entrySet()) {
+            entity.getValue().setWanderState(state);
+        }
     }
 
     private int getNbrWorkers() {

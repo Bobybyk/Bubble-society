@@ -12,6 +12,7 @@
  */
 package application.system;
 
+import application.debug.DebugType;
 import game.Game;
 
 public class EngineCreator extends Thread {
@@ -19,6 +20,7 @@ public class EngineCreator extends Thread {
     
     public void run() {
         gcEngine = new VisualEngine();
+        DebugType.gc = gcEngine;
     }
 
 }

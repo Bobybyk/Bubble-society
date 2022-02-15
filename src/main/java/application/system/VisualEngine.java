@@ -73,6 +73,8 @@ public class VisualEngine {
 
 		Shader shader = new Shader("shader");
 
+		DebugType.gc = this;
+
 		World world = new World("vanilla", camera);
 		world.calculateView(window);
 
@@ -205,6 +207,10 @@ public class VisualEngine {
 
 		glfwTerminate();
 
+	}
+
+	public Game getGame() {
+		return processor;
 	}
 
 }

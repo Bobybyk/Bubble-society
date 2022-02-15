@@ -51,6 +51,7 @@ public class DebugLogger {
     public static void destroyGraphicEngine() {
         engine.stop();
         EngineCreator.gcEngine = null;
+        DebugType.gc = null;
     }
 
     // print debug message if debug type is enable

@@ -74,5 +74,8 @@ public abstract class Worker {
             return false;
         }
     }
+    public void setWanderState(boolean state) {
+        wanderState = state;
+    }
 
 }
