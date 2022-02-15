@@ -44,6 +44,7 @@ public class World {
     private byte[] tiles;
     private AABB[] boudingBoxes;
     private HashMap<Entity, Double[]> entitiesBindShiftCoord = new HashMap<Entity, Double[]>();
+    private List<Entity> entities = new ArrayList<Entity>();
     private int width;
     private int height;
     private int scale;
@@ -101,8 +102,9 @@ public class World {
                         switch(entityIndex) {
                             case 1: worker = new WorkerDisplay(transform); 
                                     entitiesBindShiftCoord.put(worker, new Double[] {0.0, 0.0, 0.0}); 
+                                    entities.add(worker);
+                                    checkCollisions();
                                     camera.getPosition().set(transform.pos.mul(-scale, new Vector3f()));
-
                                     break;
                             default : break;
                         }
@@ -131,6 +133,7 @@ public class World {
         transform.pos.y = -120;
         worker = new WorkerDisplay(transform); // c la ke c pété
         entitiesBindShiftCoord.put(worker, new Double[] {0.0, 0.0, 0.0});
+        entities.add(worker);
         return worker; 
     }
 
@@ -177,7 +180,6 @@ public class World {
         if(firstEntitiesSpecDefined == false) {
             setFirstEntitiesSpec(game);
         }
-        List<Entity> entities = new ArrayList<Entity>();
         for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
             if (game.getWorkerBindView().get(entity.getKey()) != null && game.getWorkerBindView().get(entity.getKey()).getWanderState() == false) {
                 continue;
@@ -203,6 +205,14 @@ public class World {
             }
 
             entity.getKey().wanderUpdate(delta, entity.getValue());
+        }
+        checkCollisions();
+    }
+
+    public void update(float delta, Window window, Camera camera) {
+        List<Entity> entities = new ArrayList<Entity>();
+        for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
+            entity.getKey().update(delta, window, camera, this);
             entities.add(entity.getKey());
         }
         // collision between tiles and entities
@@ -215,12 +225,7 @@ public class World {
         }
     }
 
-    public void update(float delta, Window window, Camera camera) {
-        List<Entity> entities = new ArrayList<Entity>();
-        for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
-            entity.getKey().update(delta, window, camera, this);
-            entities.add(entity.getKey());
-        }
+    private void checkCollisions() {
         // collision between tiles and entities
         for (int i = 0 ; i < entities.size() ; i++) {
             entities.get(i).collideWithTiles(this);
