@@ -10,7 +10,7 @@
  * TO ALLOW ANY THIRD PARTY TO ACCESS TO THIS CREATION IN AN UNFAIR OR ABUSIVE MANNER;
  * 
  */
-package game.model.worker;
+package game.worker;
 
 public class WorkerBuilder {
 

@@ -10,11 +10,12 @@
  * TO ALLOW ANY THIRD PARTY TO ACCESS TO THIS CREATION IN AN UNFAIR OR ABUSIVE MANNER;
  * 
  */
-package game.model.worker;
+package game.worker;
 
-public class Follower extends Worker {
-    
-    public Follower(WorkerBuilder worker) {
+public class Insurgent extends Worker {
+
+    public Insurgent(WorkerBuilder worker) {
         super(worker);
     }
+    
 }
