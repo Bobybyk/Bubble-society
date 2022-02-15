@@ -49,6 +49,7 @@ public class World {
     private int scale;
     private Matrix4f world;
     private WorkerDisplay worker;
+    private boolean firstEntitiesSpecDefined = false;
 
     private static int COOLDOWN_MIN = 150;
     private static int COOLDOWN_MAX = 300;
@@ -133,6 +134,13 @@ public class World {
         return worker; 
     }
 
+    private void setFirstEntitiesSpec(Game game) {
+        for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
+            game.defineEntity((WorkerDisplay) entity.getKey());
+        }
+        firstEntitiesSpecDefined = true;
+    }
+
     public void calculateView(Window window) {
         viewX = (window.getWidth() / (scale * 2)) + 4;
         viewY = (window.getHeight() / (scale * 2)) + 4;
@@ -166,6 +174,9 @@ public class World {
         int x;
         int y;
         double length;
+        if(firstEntitiesSpecDefined == false) {
+            setFirstEntitiesSpec(game);
+        }
         List<Entity> entities = new ArrayList<Entity>();
         for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
             if (game.getWorkerBindView().get(entity.getKey()) != null && game.getWorkerBindView().get(entity.getKey()).getWanderState() == false) {
