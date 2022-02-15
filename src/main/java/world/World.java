@@ -234,6 +234,12 @@ public class World {
         }
     }
 
+    public void removeEntity(Entity entity) {
+        entities.remove(entity);
+        entitiesBindShiftCoord.remove(entity);
+        entity = null;
+    }
+
     // to avoid going out the map
     public void correctCamera(Camera camera, Window window) {
         Vector3f pos = camera.getPosition();

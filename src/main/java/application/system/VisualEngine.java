@@ -181,7 +181,7 @@ public class VisualEngine {
 				}
 
 				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_P)) {
-					world.spawnWorker();
+					game.spawnWorker();
 				}
 
 				// blocks camera shifting

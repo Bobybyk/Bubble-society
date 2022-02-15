@@ -12,6 +12,7 @@
  */
 package game;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -35,33 +36,40 @@ public class Game {
      * decrease hp manager
      * return true if workers exist, else false
      */
-    /* TO REFACTOR 
-    public boolean decreaseHpForMap() {
-        if (map.getNbrWorkers() == 0) {
-            return false;
+    public void decreaseWorkersHp() {
+        if (getNbrWorkers() == 0) {
+            return;
         }
         // DEBBUG
         DebugLogger.print(DebugType.ENTITIES, "WORKERS LIFE");
         ArrayList<Worker> workersToErase = new ArrayList<Worker>();
-        for (HashMap.Entry<Worker, Double[]> w : map.getMapList().entrySet()) {
+        for (HashMap.Entry<WorkerDisplay, Worker> w : workerBindView.entrySet()) {
             // if worker is not in a zone, decrease hp
-            if (!w.getKey().getZone()) {
-                w.getKey().decreaseHp();
+            if (!w.getValue().getZone()) {
+                w.getValue().decreaseHp();
             }
             // if worker has 0 hp, add it to the erase list
-            if (w.getKey().getHp() < 1) {
-                workersToErase.add(w.getKey());
+            if (w.getValue().getHp() < 1) {
+                workersToErase.add(w.getValue());
             }
             // DEBBUG
-            DebugLogger.print(DebugType.ENTITIES, ""+w.getKey().getHp());
+            DebugLogger.print(DebugType.ENTITIES, ""+w.getValue().getHp());
         }
         // delete every workers in workersToErase list in world list
+        ArrayList<WorkerDisplay> wdToErase = new ArrayList<WorkerDisplay>();
         for (Worker we : workersToErase) {
-            map.removeWorker(we);
+            for (HashMap.Entry<WorkerDisplay, Worker> w : workerBindView.entrySet()) {
+                if (w.getValue() == we) {
+                    gWorld.removeEntity(w.getKey());
+                    wdToErase.add(w.getKey());
+                }
+            }
+            we = null;
         }
-        return true;
+        for (int i = 0 ; i<wdToErase.size() ; i++) {
+            workerBindView.remove(wdToErase.get(i));
+        }
     }
-    */
 
     /*
      * for each worker of the map, check if it encount an other worker

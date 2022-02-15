@@ -18,11 +18,15 @@ public class GameTimer {
 
     public void gameProcess() {
 		timeProccessed = (int)glfwGetTime();
-		if (timeProccessed%5==0 && timeProccessed != lastTimeProccessed) {
-			game.multiSpawn();
+		if (timeProccessed%2==0 && timeProccessed != lastTimeProccessed) {
+			//game.multiSpawn();
 			lastTimeProccessed = timeProccessed;
 			//System.out.println(timeProccessed);
 			//System.out.println(lastTimeProccessed);
+		}
+		if (timeProccessed%1==0 && timeProccessed != lastTimeProccessed) {
+			game.decreaseWorkersHp();
+			lastTimeProccessed = timeProccessed;
 		}
 	}
 
