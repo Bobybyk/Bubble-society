@@ -12,13 +12,14 @@
  */
 package application.system;
 
-import game.Game;
+import application.debug.DebugType;
 
 public class EngineCreator extends Thread {
     public static VisualEngine gcEngine;
     
     public void run() {
         gcEngine = new VisualEngine();
+        DebugType.gc = gcEngine;
     }
 
 }

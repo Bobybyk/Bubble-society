@@ -20,17 +20,18 @@ import application.commands.command_list.CommandCreateGraphicEngine;
 import application.commands.command_list.CommandDebug;
 import application.commands.command_list.CommandHelp;
 import application.commands.command_list.CommandKill;
+import application.commands.command_list.CommandSetWander;
 import application.debug.DebugLogger;
 
 
 public class Console extends Thread {
     private HashMap<String,Command> commandList = new HashMap<String,Command>();
-
     public Console() {
         commandList.put("debug", new CommandDebug());
         commandList.put("help", new CommandHelp());
         commandList.put("kill", new CommandKill());
         commandList.put("run", new CommandCreateGraphicEngine());
+        commandList.put("wander", new CommandSetWander());
     }
 
     @Override
@@ -47,8 +48,6 @@ public class Console extends Thread {
             }
         }   
     }
-
-
 
     public static void layout() {
         System.out.print("\u001B[31m");

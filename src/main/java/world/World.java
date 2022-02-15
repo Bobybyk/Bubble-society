@@ -22,8 +22,6 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
-import static org.lwjgl.glfw.GLFW.glfwGetTime;
-
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;

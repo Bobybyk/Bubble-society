@@ -12,6 +12,8 @@
  */
 package application.debug;
 
+import application.system.VisualEngine;
+
 public class DebugType {
     public static int ERROR = -1;
     public static int ALL = 0;
@@ -19,4 +21,5 @@ public class DebugType {
     public static int UIEXT = 2;
     public static int SYS = 3;
     public static int ENTITIES = 4;
+    public static VisualEngine gc;
 }

@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-mainClassName = 'game.Main'
+mainClassName = 'application.Main'
 
 import org.gradle.internal.os.OperatingSystem
 
