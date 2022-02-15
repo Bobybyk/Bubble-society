@@ -48,6 +48,11 @@ public class World {
     private int scale;
     private Matrix4f world;
     private WorkerDisplay worker;
+
+    private static int COOLDOWN_MIN = 150;
+    private static int COOLDOWN_MAX = 300;
+    private static int SHIFTING_MIN = 150;
+    private static int SHIFTING_MAX = 300;
     
     public World(String world, Camera camera) {
         try {
@@ -159,27 +164,27 @@ public class World {
         Random rand = new Random();
         int x;
         int y;
-        int length;
+        double length;
         List<Entity> entities = new ArrayList<Entity>();
         for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
             if (entity.getValue()[2] <= 0 && entity.getValue()[0] == 0) {
                 x = rand.nextInt(2);
                 y = rand.nextInt(2);
-                length = rand.nextInt(3600)+1800;
+                length = SHIFTING_MIN + (SHIFTING_MAX - SHIFTING_MIN) * rand.nextDouble();
                 x = x==0?-2:2;
                 y = y==0?-2:2;
                 //System.out.println(x + " ; " + y);
-                entity.setValue(new Double[] {(double) x, (double) y, glfwGetTime()+length});
+                entity.setValue(new Double[] {(double) x, (double) y, length});
                 //System.out.println(length);
                 continue;
             } 
             if (entity.getValue()[2] > 0){
-                entity.setValue(new Double[] {entity.getValue()[0], entity.getValue()[1], entity.getValue()[2]-glfwGetTime()});
+                entity.setValue(new Double[] {entity.getValue()[0], entity.getValue()[1], entity.getValue()[2]-1});
             }
             if (entity.getValue()[2] <= 0 && entity.getValue()[0] != 0) {
-                length = rand.nextInt(1800)+1400;
+                length = COOLDOWN_MIN + (COOLDOWN_MAX - COOLDOWN_MIN) * rand.nextDouble();
                 //System.out.println(length);
-                entity.setValue(new Double[] {0.0, 0.0, glfwGetTime()+length});
+                entity.setValue(new Double[] {0.0, 0.0, length});
             }
 
             entity.getKey().wanderUpdate(delta, entity.getValue());
