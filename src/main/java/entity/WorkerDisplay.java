@@ -30,6 +30,8 @@ public class WorkerDisplay extends Entity {
 
     private static Animation idle = new Animation(20, 9, "follower/idle"); // Animation(number of frames, fps, name without id)
     private static Animation movment = new Animation(15, 8, "follower/movement");
+    private static Animation dying = new Animation(20, 10, "follower/dying");
+    private static Animation dead = new Animation(1, 1, "follower/dead");
 
     private boolean cameraOnWorker;
 
