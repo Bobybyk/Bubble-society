@@ -22,12 +22,10 @@ import application.commands.command_list.CommandHelp;
 import application.commands.command_list.CommandKill;
 import application.commands.command_list.CommandSetWander;
 import application.debug.DebugLogger;
-import application.system.VisualEngine;
 
 
 public class Console extends Thread {
     private HashMap<String,Command> commandList = new HashMap<String,Command>();
-    private VisualEngine gc;
     public Console() {
         commandList.put("debug", new CommandDebug());
         commandList.put("help", new CommandHelp());

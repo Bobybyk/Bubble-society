@@ -19,9 +19,7 @@ import application.debug.DebugLogger;
 import application.debug.DebugType;
 import application.system.timers.GameTimer;
 import assets.Assets;
-import entity.WorkerDisplay;
 import game.Game;
-import gui.Gui;
 
 import org.lwjgl.opengl.GL;
 
@@ -40,8 +38,25 @@ import java.util.Arrays;
 
 public class VisualEngine {
 	
-	private static Game processor;
+	private Game game;
 	private GameTimer spawner;
+	private Camera camera;
+	private World world;
+	private Window window;
+	private GLFWVidMode vid;
+	private TileRenderer tiles;
+	private Shader shader;
+
+	private double frameCap;
+	private double FrameTime;
+	private double time;
+	private double unprocessed;
+	private double time2;
+	private double passed;
+
+	private int frames;
+
+	private boolean canRender = false;
 
     public VisualEngine() {
 
@@ -52,8 +67,8 @@ public class VisualEngine {
 			System.exit(1);
 		}
 
-		Window window = new Window();
-		GLFWVidMode vid = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		window = new Window();
+		vid = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		window.setSize(vid.width(), vid.height());
 		window.setFullScreen(true);
 		window.createWindow("Society");
@@ -64,42 +79,39 @@ public class VisualEngine {
 		glEnable(GL_BLEND); 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		Camera camera = new Camera(window.getWidth(), window.getHeight());
+		camera = new Camera(window.getWidth(), window.getHeight());
 
 		glEnable(GL_TEXTURE_2D);
 
-		TileRenderer tiles = new TileRenderer();
+		tiles = new TileRenderer();
 		Assets.initAsset();
 
-		Shader shader = new Shader("shader");
+		shader = new Shader("shader");
 
 		DebugType.gc = this;
 
-		World world = new World("vanilla", camera);
+		world = new World("vanilla", camera);
 		world.calculateView(window);
 
-		processor = new Game(world);
-		spawner = new GameTimer(processor);
-
-		//Gui gui = new Gui(window);
+		game = new Game(world);
+		spawner = new GameTimer(game);
 
 		// 60fps
-		double frameCap = 1.0/60.0; 
+		frameCap = 1.0/60.0; 
 		
-		double FrameTime = 0;
-		int frames = 0;
+		FrameTime = 0;
+		frames = 0;
 
-		double time = Timer.getTime();
+		time = Timer.getTime();
 
-		double unprocessed = 0;
+		unprocessed = 0;
 
 		// time while progam hasn't been processed 
 		while(!window.shouldClose()) {
-			boolean canRender = false;
-
-			double time2 = Timer.getTime();
-			double passed = time2 - time;
-
+			
+			canRender = false;
+			time2 = Timer.getTime();
+			passed = time2 - time;
 			unprocessed+=passed;
 			FrameTime += passed;
 			time = time2;
@@ -174,7 +186,7 @@ public class VisualEngine {
 
 				// blocks camera shifting
 				//world.update((float)frameCap, window, camera);
-				world.wanderUpdate((float)frameCap, processor);
+				world.wanderUpdate((float)frameCap, game);
 				world.correctCamera(camera, window);
 
 				window.update();
@@ -195,8 +207,6 @@ public class VisualEngine {
 
 				world.render(tiles, shader, camera);
 
-				//gui.render();
-
 				window.swapBuffers();
 				frames++;
 			}
@@ -204,13 +214,12 @@ public class VisualEngine {
 		}
 
 		Assets.deleteAsset();
-
 		glfwTerminate();
 
 	}
 
 	public Game getGame() {
-		return processor;
+		return game;
 	}
 
 }

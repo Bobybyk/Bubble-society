@@ -13,7 +13,6 @@
 package application.system;
 
 import application.debug.DebugType;
-import game.Game;
 
 public class EngineCreator extends Thread {
     public static VisualEngine gcEngine;
