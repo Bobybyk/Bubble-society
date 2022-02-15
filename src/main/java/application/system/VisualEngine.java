@@ -132,16 +132,16 @@ public class VisualEngine {
 				}
 				
 				// move with mouse
-				if (window.getMousePosition()[0] <= 5) {
+				if (window.getMousePosition()[0] <= 15) {
 					camera.getPosition().sub(new Vector3f(-5, 0, 0));
 				}
-				if (window.getMousePosition()[1] <= 5) {
+				if (window.getMousePosition()[1] <= 15) {
 					camera.getPosition().sub(new Vector3f(0, 5, 0));
 				}
-				if (window.getMousePosition()[0] >= vid.width()-5) {
+				if (window.getMousePosition()[0] >= vid.width()-15 && window.getMousePosition()[0] <= vid.width()+15) {
 					camera.getPosition().sub(new Vector3f(5, 0, 0));
 				}
-				if (window.getMousePosition()[1] >= vid.height()-5) {
+				if (window.getMousePosition()[1] >= vid.height()-15 && window.getMousePosition()[0] <= vid.width()+15) {
 					camera.getPosition().sub(new Vector3f(0, -5, 0));
 				}
 				DebugLogger.print(DebugType.UIEXT, "mouse cursor position : " + Arrays.toString(window.getMousePosition()));
