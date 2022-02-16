@@ -135,6 +135,10 @@ public class World {
         return worker; 
     }
 
+    public void killEntity(WorkerDisplay worker) {
+        entitiesBindShiftCoord.put(worker, null);
+    }
+
     private void setFirstEntitiesSpec(Game game) {
         for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
             game.defineEntity((WorkerDisplay) entity.getKey());
@@ -182,27 +186,30 @@ public class World {
             if (game.getWorkerBindView().get(entity.getKey()) != null && game.getWorkerBindView().get(entity.getKey()).getWanderState() == false) {
                 continue;
             }
-            if (entity.getValue()[2] <= 0 && entity.getValue()[0] == 0) {
-                x = rand.nextInt(2);
-                y = rand.nextInt(2);
-                length = SHIFTING_MIN + (SHIFTING_MAX - SHIFTING_MIN) * rand.nextDouble();
-                x = x==0?-2:2;
-                y = y==0?-2:2;
-                //System.out.println(x + " ; " + y);
-                entity.setValue(new Double[] {(double) x, (double) y, length});
-                //System.out.println(length);
-                continue;
-            } 
-            if (entity.getValue()[2] > 0){
-                entity.setValue(new Double[] {entity.getValue()[0], entity.getValue()[1], entity.getValue()[2]-1});
-            }
-            if (entity.getValue()[2] <= 0 && entity.getValue()[0] != 0) {
-                length = COOLDOWN_MIN + (COOLDOWN_MAX - COOLDOWN_MIN) * rand.nextDouble();
-                //System.out.println(length);
-                entity.setValue(new Double[] {0.0, 0.0, length});
-            }
+            if (entity.getValue() != null) {
 
-            entity.getKey().wanderUpdate(delta, entity.getValue());
+                if (entity.getValue()[2] <= 0 && entity.getValue()[0] == 0) {
+                    x = rand.nextInt(2);
+                    y = rand.nextInt(2);
+                    length = SHIFTING_MIN + (SHIFTING_MAX - SHIFTING_MIN) * rand.nextDouble();
+                    x = x==0?-2:2;
+                    y = y==0?-2:2;
+                    //System.out.println(x + " ; " + y);
+                    entity.setValue(new Double[] {(double) x, (double) y, length});
+                    //System.out.println(length);
+                    continue;
+                } 
+                if (entity.getValue()[2] > 0){
+                    entity.setValue(new Double[] {entity.getValue()[0], entity.getValue()[1], entity.getValue()[2]-1});
+                }
+                if (entity.getValue()[2] <= 0 && entity.getValue()[0] != 0) {
+                    length = COOLDOWN_MIN + (COOLDOWN_MAX - COOLDOWN_MIN) * rand.nextDouble();
+                    //System.out.println(length);
+                    entity.setValue(new Double[] {0.0, 0.0, length});
+                }
+
+                entity.getKey().wanderUpdate(delta, entity.getValue());
+            }
         }
         checkCollisions();
     }

@@ -42,32 +42,18 @@ public class Game {
         }
         // DEBBUG
         DebugLogger.print(DebugType.ENTITIES, "WORKERS LIFE");
-        ArrayList<Worker> workersToErase = new ArrayList<Worker>();
         for (HashMap.Entry<WorkerDisplay, Worker> w : workerBindView.entrySet()) {
             // if worker is not in a zone, decrease hp
-            if (!w.getValue().getZone()) {
+            if (!w.getValue().getZone() && w.getValue().getLifeState()) {
                 w.getValue().decreaseHp();
             }
             // if worker has 0 hp, add it to the erase list
-            if (w.getValue().getHp() < 1) {
-                workersToErase.add(w.getValue());
+            if (w.getValue().getHp() < 1 && w.getValue().getLifeState()) {
+                gWorld.killEntity(w.getKey());
+                w.getValue().setLifeState(false);
             }
             // DEBBUG
             DebugLogger.print(DebugType.ENTITIES, ""+w.getValue().getHp());
-        }
-        // delete every workers in workersToErase list in world list
-        ArrayList<WorkerDisplay> wdToErase = new ArrayList<WorkerDisplay>();
-        for (Worker we : workersToErase) {
-            for (HashMap.Entry<WorkerDisplay, Worker> w : workerBindView.entrySet()) {
-                if (w.getValue() == we) {
-                    gWorld.removeEntity(w.getKey());
-                    wdToErase.add(w.getKey());
-                }
-            }
-            we = null;
-        }
-        for (int i = 0 ; i<wdToErase.size() ; i++) {
-            workerBindView.remove(wdToErase.get(i));
         }
     }
 
@@ -127,9 +113,10 @@ public class Game {
         int hp = new Random().nextInt((50 - 25) + 1) + 25;
         int will = hp - (new Random().nextInt((hp - 20) + 1) + 20);
         double radius = new Random().nextInt(10) + 1;
-        Worker worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(true).buildFollower();
+        Worker worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(true).setLifeState(true).buildFollower();
         WorkerDisplay wd = gWorld.spawnWorker();
         workerBindView.put(wd, worker);
+        wd.setWorker(worker);
     }
 
     // to define entity without graphical part
@@ -137,8 +124,9 @@ public class Game {
         int hp = new Random().nextInt((50 - 25) + 1) + 25;
         int will = hp - (new Random().nextInt((hp - 20) + 1) + 20);
         double radius = new Random().nextInt(10) + 1;
-        Worker worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(true).buildFollower();
+        Worker worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(true).setLifeState(true).buildFollower();
         workerBindView.put(wd, worker);
+        wd.setWorker(worker);
     }
 
     public void changeWanderMode(boolean state) {

@@ -21,6 +21,7 @@ public class WorkerBuilder {
     private int speed;
     private int dps;
     private boolean wanderState;
+    private boolean lifeState;
 
     public WorkerBuilder setHp(int hp) {
         this.hp = hp;
@@ -48,6 +49,10 @@ public class WorkerBuilder {
     }
     public WorkerBuilder setWanderState(boolean wanderState) {
         this.wanderState = wanderState;
+        return this;
+    }
+    public WorkerBuilder setLifeState(boolean lifeState) {
+        this.lifeState = lifeState;
         return this;
     }
 
@@ -78,5 +83,8 @@ public class WorkerBuilder {
     }
     public boolean getWanderState() {
         return this.wanderState;
+    }
+    public boolean getLifeState() {
+        return lifeState;
     }
 }
