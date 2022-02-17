@@ -18,7 +18,7 @@ import io.Timer;
 public class Animation {
     private Texture[] frames;
     private int pointer;
-    private int nbrOfIter;
+    private boolean madeACycle;
 
     private double elapsedTime;
     private double currentTime;
@@ -32,12 +32,8 @@ public class Animation {
         this.lastTime = Timer.getTime();
         this.fps = 1.0/(double)fps;
 
-        this.frames = new Texture[amout];
-
-        for(int i = 0 ; i < amout ; i++) {
-            this.frames[i] = new Texture(filename + "/" + i + ".png");
-        }
-        this.nbrOfIter = 0;
+        this.frames = textureLoaded.getTextures();
+        this.madeACycle = false;
     }
 
     public void bind() { bind(0); }
@@ -53,16 +49,16 @@ public class Animation {
 
         if (pointer >= frames.length) {
             pointer = 0;
-            nbrOfIter++;
+            madeACycle = true;
         }
 
         this.lastTime = currentTime;
 
-        frames[pointer].bind(sampler);
-        
+        frames[pointer].bind(sampler);   
     }
 
-    public int getNbrIter() {
-        return nbrOfIter;
+    public boolean hasMadeACycle() {
+        return madeACycle;
     }
+
 }
