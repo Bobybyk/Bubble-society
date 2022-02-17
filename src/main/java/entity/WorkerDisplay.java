@@ -34,9 +34,9 @@ public class WorkerDisplay extends Entity {
     public static final int ANIM_DYING = 2;
     public static final int ANIM_DEAD = 3;
 
-    private static TextureLoader idleTexures = new TextureLoader(9, "follower/idle"); // Animation(number of frames, fps, name without id)
-    private static TextureLoader movmentTexures = new TextureLoader(8, "follower/movement");
-    private static TextureLoader dyingTexures = new TextureLoader(10, "follower/dying");
+    private static TextureLoader idleTexures = new TextureLoader(20, "follower/idle"); // Animation(number of frames, fps, name without id)
+    private static TextureLoader movmentTexures = new TextureLoader(15, "follower/movement");
+    private static TextureLoader dyingTexures = new TextureLoader(20, "follower/dying");
     private static TextureLoader deadTexures = new TextureLoader(1, "follower/dead");
 
     private Animation idle;
@@ -50,9 +50,9 @@ public class WorkerDisplay extends Entity {
 
     public WorkerDisplay(Transform transform) {
         super(ANIM_SIZE, transform);
-        this.idle = new Animation(20, idleTexures);
-        this.movment = new Animation(15, movmentTexures);
-        this.dying = new Animation(20, dyingTexures);
+        this.idle = new Animation(9, idleTexures);
+        this.movment = new Animation(8, movmentTexures);
+        this.dying = new Animation(10, dyingTexures);
         this.dead = new Animation(1, deadTexures);
         setAnimation(ANIM_IDLE, idle); 
         setAnimation(ANIM_MOVE, movment);
@@ -77,14 +77,10 @@ public class WorkerDisplay extends Entity {
                 useAnimation(ANIM_IDLE);
             }
         } 
-        else if (!isDead) {
-            useAnimation(ANIM_DYING);
-            if (dying.hasMadeACycle()) {
-                isDead = true;
-            }
-        }
-        else if (isDead) {
+        else if (dying.hasMadeACycle()) {
             useAnimation(ANIM_DEAD);
+        } else {
+            useAnimation(ANIM_DYING);
         }
     }
     
