@@ -22,21 +22,32 @@ import world.World;
 
 import org.lwjgl.glfw.GLFW;
 
+import game.Game;
+import game.worker.Worker;
+
 
 public class WorkerDisplay extends Entity {
     public static final int ANIM_IDLE = 0;
     public static final int ANIM_MOVE = 1;
-    public static final int ANIM_SIZE = 2;
+    public static final int ANIM_SIZE = 4;
+    public static final int ANIM_DYING = 2;
+    public static final int ANIM_DEAD = 3;
 
     private static Animation idle = new Animation(20, 9, "follower/idle"); // Animation(number of frames, fps, name without id)
     private static Animation movment = new Animation(15, 8, "follower/movement");
+    private static Animation dying = new Animation(20, 10, "follower/dying");
+    private static Animation dead = new Animation(1, 1, "follower/dead");
 
     private boolean cameraOnWorker;
+    private Worker worker;
+    private boolean isDead = false; 
 
     public WorkerDisplay(Transform transform) {
         super(ANIM_SIZE, transform);
         setAnimation(ANIM_IDLE, idle); 
         setAnimation(ANIM_MOVE, movment);
+        setAnimation(ANIM_DYING, dying);
+        setAnimation(ANIM_DEAD, dead);
     }
 
 
@@ -44,16 +55,27 @@ public class WorkerDisplay extends Entity {
     public void wanderUpdate(float delta, Double[] coords) {
         Vector2f movement = new Vector2f();
 
-        movement.add((int)(double)coords[0]*delta, (int)(double)coords[1]*delta);
-
-        move(movement);
-
-        if (movement.x != 0 || movement.y != 0) {
-            useAnimation(ANIM_MOVE);
-        } else {
-            useAnimation(ANIM_IDLE);
+        if (coords != null) {
+            movement.add((int)(double)coords[0]*delta, (int)(double)coords[1]*delta);
+            move(movement);
         }
-        
+
+        if (worker.getLifeState()) {
+            if (movement.x != 0 || movement.y != 0) {
+                useAnimation(ANIM_MOVE);
+            } else {
+                useAnimation(ANIM_IDLE);
+            }
+        } 
+        else if (!isDead) {
+            useAnimation(ANIM_DYING);
+            if (dying.getNbrIter() > 0) {
+                isDead = true;
+            }
+        }
+        else if (isDead) {
+            useAnimation(ANIM_DEAD);
+        }
     }
     
 
@@ -98,6 +120,10 @@ public class WorkerDisplay extends Entity {
         } else {
             cameraOnWorker = true;
         }
+    }
+
+    public void setWorker(Worker worker) {
+        this.worker = worker;
     }
 
 }

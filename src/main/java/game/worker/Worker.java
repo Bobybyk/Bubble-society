@@ -21,6 +21,7 @@ public abstract class Worker {
     protected int speed;
     protected int dps;
     protected boolean wanderState;
+    protected boolean lifeState;
 
     public Worker (WorkerBuilder worker) {
         this.hp = worker.getHp();
@@ -30,6 +31,7 @@ public abstract class Worker {
         this.speed = worker.getSpeed();
         this.dps = worker.getDps();
         this.wanderState = worker.getWanderState();
+        this.lifeState = worker.getLifeState();
     }
 
     public int getHp() {
@@ -52,6 +54,9 @@ public abstract class Worker {
     }
     public boolean getWanderState() {
         return this.wanderState;
+    }
+    public boolean getLifeState() {
+        return this.lifeState;
     }
 
     public void decreaseHp() {
@@ -76,6 +81,9 @@ public abstract class Worker {
     }
     public void setWanderState(boolean state) {
         wanderState = state;
+    }
+    public void setLifeState(boolean state) {
+        lifeState = state;
     }
 
 }
