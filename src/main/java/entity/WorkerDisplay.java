@@ -18,6 +18,7 @@ import org.joml.Vector3f;
 import io.Window;
 import render.Animation;
 import render.Camera;
+import render.TextureLoader;
 import world.World;
 
 import org.lwjgl.glfw.GLFW;
@@ -33,10 +34,10 @@ public class WorkerDisplay extends Entity {
     public static final int ANIM_DYING = 2;
     public static final int ANIM_DEAD = 3;
 
-    private static Animation idle = new Animation(20, 9, "follower/idle"); // Animation(number of frames, fps, name without id)
-    private static Animation movment = new Animation(15, 8, "follower/movement");
-    private static Animation dying = new Animation(20, 10, "follower/dying");
-    private static Animation dead = new Animation(1, 1, "follower/dead");
+    private static TextureLoader idle = new TextureLoader(9, "follower/idle"); // Animation(number of frames, fps, name without id)
+    private static TextureLoader movment = new TextureLoader(8, "follower/movement");
+    private static TextureLoader dying = new TextureLoader(10, "follower/dying");
+    private static TextureLoader dead = new TextureLoader(1, "follower/dead");
 
     private boolean cameraOnWorker;
     private Worker worker;
@@ -44,10 +45,10 @@ public class WorkerDisplay extends Entity {
 
     public WorkerDisplay(Transform transform) {
         super(ANIM_SIZE, transform);
-        setAnimation(ANIM_IDLE, idle); 
-        setAnimation(ANIM_MOVE, movment);
-        setAnimation(ANIM_DYING, dying);
-        setAnimation(ANIM_DEAD, dead);
+        setAnimation(ANIM_IDLE, new Animation(20, idle)); 
+        setAnimation(ANIM_MOVE, new Animation(15, movment));
+        setAnimation(ANIM_DYING, new Animation(20, dying));
+        setAnimation(ANIM_DEAD, new Animation(1, dead));
     }
 
 

@@ -25,7 +25,7 @@ public class Animation {
     private double lastTime;
     private double fps;
 
-    public Animation(int amout, int fps, String filename) {
+    public Animation(int fps, TextureLoader textureLoaded) {
         this.pointer = 0;
         this.elapsedTime = 0;
         this.currentTime = 0;
