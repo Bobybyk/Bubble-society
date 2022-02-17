@@ -207,9 +207,8 @@ public class World {
                     //System.out.println(length);
                     entity.setValue(new Double[] {0.0, 0.0, length});
                 }
-
-                entity.getKey().wanderUpdate(delta, entity.getValue());
             }
+            entity.getKey().wanderUpdate(delta, entity.getValue());
         }
         checkCollisions();
     }

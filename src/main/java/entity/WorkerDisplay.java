@@ -54,11 +54,12 @@ public class WorkerDisplay extends Entity {
     public void wanderUpdate(float delta, Double[] coords) {
         Vector2f movement = new Vector2f();
 
-        movement.add((int)(double)coords[0]*delta, (int)(double)coords[1]*delta);
+        if (coords != null) {
+            movement.add((int)(double)coords[0]*delta, (int)(double)coords[1]*delta);
+            move(movement);
+        }
 
-        move(movement);
-
-        if (worker.getLifeState() && worker.getLifeState()) {
+        if (worker.getLifeState()) {
             if (movement.x != 0 || movement.y != 0) {
                 useAnimation(ANIM_MOVE);
             } else {
