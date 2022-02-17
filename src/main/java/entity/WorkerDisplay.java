@@ -40,6 +40,7 @@ public class WorkerDisplay extends Entity {
 
     private boolean cameraOnWorker;
     private Worker worker;
+    private boolean isDead = false; 
 
     public WorkerDisplay(Transform transform) {
         super(ANIM_SIZE, transform);
@@ -65,8 +66,15 @@ public class WorkerDisplay extends Entity {
             } else {
                 useAnimation(ANIM_IDLE);
             }
-        } else {
+        } 
+        else if (!isDead) {
             useAnimation(ANIM_DYING);
+            if (dying.getNbrIter() > 0) {
+                isDead = true;
+            }
+        }
+        else if (isDead) {
+            useAnimation(ANIM_DEAD);
         }
     }
     

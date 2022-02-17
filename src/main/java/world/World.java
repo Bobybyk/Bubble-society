@@ -184,6 +184,7 @@ public class World {
         }
         for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
             if (game.getWorkerBindView().get(entity.getKey()) != null && game.getWorkerBindView().get(entity.getKey()).getWanderState() == false) {
+                entity.getKey().wanderUpdate(delta, entity.getValue());
                 continue;
             }
             if (entity.getValue() != null) {
