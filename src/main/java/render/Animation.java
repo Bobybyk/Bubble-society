@@ -47,9 +47,11 @@ public class Animation {
             pointer++;
         }
 
+        if (pointer >= frames.length-1 && madeACycle == false) {
+            madeACycle = true;
+        }
         if (pointer >= frames.length) {
             pointer = 0;
-            madeACycle = true;
         }
 
         this.lastTime = currentTime;
