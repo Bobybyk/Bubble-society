@@ -18,6 +18,7 @@ import org.joml.Vector3f;
 import io.Window;
 import render.Animation;
 import render.Camera;
+import render.TextureLoader;
 import world.World;
 
 import org.lwjgl.glfw.GLFW;
@@ -33,10 +34,15 @@ public class WorkerDisplay extends Entity {
     public static final int ANIM_DYING = 2;
     public static final int ANIM_DEAD = 3;
 
-    private static Animation idle = new Animation(20, 9, "follower/idle"); // Animation(number of frames, fps, name without id)
-    private static Animation movment = new Animation(15, 8, "follower/movement");
-    private static Animation dying = new Animation(20, 10, "follower/dying");
-    private static Animation dead = new Animation(1, 1, "follower/dead");
+    private static TextureLoader idleTexures = new TextureLoader(9, "follower/idle"); // Animation(number of frames, fps, name without id)
+    private static TextureLoader movmentTexures = new TextureLoader(8, "follower/movement");
+    private static TextureLoader dyingTexures = new TextureLoader(10, "follower/dying");
+    private static TextureLoader deadTexures = new TextureLoader(1, "follower/dead");
+
+    private Animation idle;
+    private Animation movment;
+    private Animation dying;
+    private Animation dead;
 
     private boolean cameraOnWorker;
     private Worker worker;
@@ -44,6 +50,10 @@ public class WorkerDisplay extends Entity {
 
     public WorkerDisplay(Transform transform) {
         super(ANIM_SIZE, transform);
+        this.idle = new Animation(20, idleTexures);
+        this.movment = new Animation(15, movmentTexures);
+        this.dying = new Animation(20, dyingTexures);
+        this.dead = new Animation(1, deadTexures);
         setAnimation(ANIM_IDLE, idle); 
         setAnimation(ANIM_MOVE, movment);
         setAnimation(ANIM_DYING, dying);
@@ -69,7 +79,7 @@ public class WorkerDisplay extends Entity {
         } 
         else if (!isDead) {
             useAnimation(ANIM_DYING);
-            if (dying.getNbrIter() > 0) {
+            if (dying.hasMadeACycle()) {
                 isDead = true;
             }
         }
