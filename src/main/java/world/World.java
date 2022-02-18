@@ -42,12 +42,14 @@ public class World {
     private byte[] tiles;
     private AABB[] boudingBoxes;
     private HashMap<Entity, Double[]> entitiesBindShiftCoord = new HashMap<Entity, Double[]>();
+    private ArrayList<Entity> alive = new ArrayList<Entity>();
+    private ArrayList<Entity> dead = new ArrayList<Entity>();
     private List<Entity> entities = new ArrayList<Entity>();
     private int width;
     private int height;
     private int scale;
     private Matrix4f world;
-    private WorkerDisplay worker;
+    private Entity entity;
     private boolean firstEntitiesSpecDefined = false;
 
     private static int COOLDOWN_MIN = 150;
@@ -98,9 +100,10 @@ public class World {
                         transform.pos.x = x*2;
                         transform.pos.y = -y*2;
                         switch(entityIndex) {
-                            case 1: worker = new WorkerDisplay(transform); 
-                                    entitiesBindShiftCoord.put(worker, new Double[] {0.0, 0.0, 0.0}); 
-                                    entities.add(worker);
+                            case 1: entity = new WorkerDisplay(transform); 
+                                    entitiesBindShiftCoord.put(entity, new Double[] {0.0, 0.0, 0.0}); 
+                                    entities.add(entity);
+                                    alive.add(entity);
                                     checkCollisions();
                                     camera.getPosition().set(transform.pos.mul(-scale, new Vector3f()));
                                     break;
@@ -125,18 +128,24 @@ public class World {
         this.world.scale(scale);
     }
 
-    public WorkerDisplay spawnWorker() {
+    public Entity spawnEntity(int id) {
         Transform transform = new Transform();
         transform.pos.x = 120;
         transform.pos.y = -120;
-        worker = new WorkerDisplay(transform); // c la ke c pété
-        entitiesBindShiftCoord.put(worker, new Double[] {0.0, 0.0, 0.0});
-        entities.add(worker);
-        return worker; 
+        switch(id) {
+            case 1: 
+                entity = new WorkerDisplay(transform);
+                entitiesBindShiftCoord.put(entity, new Double[] {0.0, 0.0, 0.0});
+                entities.add(entity);
+                alive.add(entity);
+        }
+
+        return entity; 
     }
 
-    public void killEntity(WorkerDisplay worker) {
-        entitiesBindShiftCoord.put(worker, null);
+    public void killEntity(Entity entity) {
+        dead.add(entity);
+        alive.remove(entity);
     }
 
     private void setFirstEntitiesSpec(Game game) {
@@ -174,43 +183,46 @@ public class World {
         }
     }
 
-    public void wanderUpdate(float delta, Game game) {
-        Random rand = new Random();
-        int x;
-        int y;
-        double length;
+    public void entitiesUpdate(float delta, Game game) {
+        
+        // define entities spec for those which could be spawned by entities map parsing
         if(firstEntitiesSpecDefined == false) {
             setFirstEntitiesSpec(game);
         }
-        for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
-            if (game.getWorkerBindView().get(entity.getKey()) != null && game.getWorkerBindView().get(entity.getKey()).getWanderState() == false) {
-                entity.getKey().wanderUpdate(delta, entity.getValue());
+
+        // parse alive entities list and update their state (position, shifting, animation, etc.)
+        Random rand = new Random();
+        int x, y;
+        double length;
+        for (Entity entitiesAlive : alive) {
+            if (!game.getWorkerBindView().get(entitiesAlive).getWanderState()) {
+                entitiesAlive.wanderUpdate(delta, entitiesBindShiftCoord.get(entitiesAlive));
+            }
+            if (entitiesBindShiftCoord.get(entitiesAlive)[2] <= 0 && entitiesBindShiftCoord.get(entitiesAlive)[0] == 0) {
+                x = rand.nextInt(2);
+                y = rand.nextInt(2);
+                length = SHIFTING_MIN + (SHIFTING_MAX - SHIFTING_MIN) * rand.nextDouble();
+                x = x==0?-2:2;
+                y = y==0?-2:2;
+                entitiesBindShiftCoord.put(entitiesAlive, new Double[] {(double) x, (double) y, length});
                 continue;
             }
-            if (entity.getValue() != null) {
-
-                if (entity.getValue()[2] <= 0 && entity.getValue()[0] == 0) {
-                    x = rand.nextInt(2);
-                    y = rand.nextInt(2);
-                    length = SHIFTING_MIN + (SHIFTING_MAX - SHIFTING_MIN) * rand.nextDouble();
-                    x = x==0?-2:2;
-                    y = y==0?-2:2;
-                    //System.out.println(x + " ; " + y);
-                    entity.setValue(new Double[] {(double) x, (double) y, length});
-                    //System.out.println(length);
-                    continue;
-                } 
-                if (entity.getValue()[2] > 0){
-                    entity.setValue(new Double[] {entity.getValue()[0], entity.getValue()[1], entity.getValue()[2]-1});
-                }
-                if (entity.getValue()[2] <= 0 && entity.getValue()[0] != 0) {
-                    length = COOLDOWN_MIN + (COOLDOWN_MAX - COOLDOWN_MIN) * rand.nextDouble();
-                    //System.out.println(length);
-                    entity.setValue(new Double[] {0.0, 0.0, length});
-                }
+            if (entitiesBindShiftCoord.get(entitiesAlive)[2] > 0){
+                entitiesBindShiftCoord.put(entitiesAlive, new Double[] {entitiesBindShiftCoord.get(entitiesAlive)[0], entitiesBindShiftCoord.get(entitiesAlive)[1], entitiesBindShiftCoord.get(entitiesAlive)[2]-1});
             }
-            entity.getKey().wanderUpdate(delta, entity.getValue());
+            if (entitiesBindShiftCoord.get(entitiesAlive)[2] <= 0 && entitiesBindShiftCoord.get(entitiesAlive)[0] != 0) {
+                length = COOLDOWN_MIN + (COOLDOWN_MAX - COOLDOWN_MIN) * rand.nextDouble();
+                entitiesBindShiftCoord.put(entitiesAlive, new Double[] {0.0, 0.0, length});
+            }
+            entitiesAlive.wanderUpdate(delta, entitiesBindShiftCoord.get(entitiesAlive));
         }
+
+        // parse dead entities list and update their animation
+        for(Entity deadEntities : dead) {
+            deadEntities.deathUpdate();
+        }
+
+        // check colisions between every entity
         checkCollisions();
     }
 
@@ -302,7 +314,7 @@ public class World {
         }
     }
 
-    public WorkerDisplay getWorkerDisplay() {
-        return worker;
+    public Entity getEntityDisplay() {
+        return entity;
     }
 }

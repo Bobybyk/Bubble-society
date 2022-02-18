@@ -137,8 +137,8 @@ public class VisualEngine {
 					DebugLogger.destroyGraphicEngine();
 				}
 				if(window.getInput().isKeyReleased(GLFW_KEY_F10)) {
-					if (world.getWorkerDisplay() != null) {
-						world.getWorkerDisplay().changeCameraMod();
+					if (world.getEntityDisplay() != null) {
+						world.getEntityDisplay().changeCameraMod();
 						DebugLogger.print(DebugType.UI, "camera mode has been updated");
 					}
 				}
@@ -186,7 +186,7 @@ public class VisualEngine {
 
 				// blocks camera shifting
 				//world.update((float)frameCap, window, camera);
-				world.wanderUpdate((float)frameCap, game);
+				world.entitiesUpdate((float)frameCap, game);
 				world.correctCamera(camera, window);
 
 				window.update();
