@@ -65,23 +65,26 @@ public class WorkerDisplay extends Entity {
     public void wanderUpdate(float delta, Double[] coords) {
         Vector2f movement = new Vector2f();
 
-        if (coords != null) {
-            movement.add((int)(double)coords[0]*delta, (int)(double)coords[1]*delta);
-            move(movement);
-        }
+        movement.add((int)(double)coords[0]*delta, (int)(double)coords[1]*delta);
+        move(movement);
 
-        if (worker.getLifeState()) {
-            if (movement.x != 0 || movement.y != 0) {
-                useAnimation(ANIM_MOVE);
-            } else {
-                useAnimation(ANIM_IDLE);
-            }
-        } 
-        else if (dying.hasMadeACycle()) {
+        casualAnimUpdate(movement);
+    }
+
+    public void casualAnimUpdate(Vector2f movement) {
+        if (movement.x != 0 || movement.y != 0) {
+            useAnimation(ANIM_MOVE);
+        } else {
+            useAnimation(ANIM_IDLE);
+        }
+    }
+
+    public void deathUpdate() {
+        if (dying.hasMadeACycle()) {
             useAnimation(ANIM_DEAD);
         } else {
             useAnimation(ANIM_DYING);
-        }
+        }   
     }
     
 

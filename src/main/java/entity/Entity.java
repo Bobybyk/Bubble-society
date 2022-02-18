@@ -109,6 +109,8 @@ public abstract class Entity {
 
     public abstract void update(float delta, Window window, Camera camera, World world);
     public abstract void wanderUpdate(float delta, Double[] coords);
+    public abstract void deathUpdate();
+    public abstract void changeCameraMod();
 
     public void render(Shader shader, Camera camera, World world) {
         Matrix4f target = camera.getProjection();

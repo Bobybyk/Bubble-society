@@ -114,7 +114,7 @@ public class Game {
         int will = hp - (new Random().nextInt((hp - 20) + 1) + 20);
         double radius = new Random().nextInt(10) + 1;
         Worker worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(true).setLifeState(true).buildFollower();
-        WorkerDisplay wd = gWorld.spawnWorker();
+        WorkerDisplay wd = (WorkerDisplay) gWorld.spawnEntity(1);
         workerBindView.put(wd, worker);
         wd.setWorker(worker);
     }
