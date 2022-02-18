@@ -39,15 +39,21 @@ import render.Shader;
 public class World {
     private int viewX;
     private int viewY;
-    private byte[] tiles;
-    private AABB[] boudingBoxes;
-    private HashMap<Entity, Double[]> entitiesBindShiftCoord = new HashMap<Entity, Double[]>();
-    private ArrayList<Entity> alive = new ArrayList<Entity>();
-    private ArrayList<Entity> dead = new ArrayList<Entity>();
-    private List<Entity> entities = new ArrayList<Entity>();
     private int width;
     private int height;
     private int scale;
+
+    private byte[] tiles;
+    
+    private AABB[] boudingBoxes;
+    
+    private HashMap<Entity, Double[]> entitiesBindShiftCoord = new HashMap<Entity, Double[]>();
+    
+    private ArrayList<Entity> alive = new ArrayList<Entity>();
+    private ArrayList<Entity> dead = new ArrayList<Entity>();
+    
+    private List<Entity> entities = new ArrayList<Entity>();
+
     private Matrix4f world;
     private Entity entity;
     private boolean firstEntitiesSpecDefined = false;
@@ -62,19 +68,19 @@ public class World {
             BufferedImage tileSheet = ImageIO.read(new File("./levels/" + world + "/tiles.png"));
             BufferedImage entitySheet = ImageIO.read(new File("./levels/" + world + "/entities.png"));
 
-            width = tileSheet.getWidth();
-            height = tileSheet.getHeight();
-            scale = 16;
-            //System.out.println(width + " ; " + height);
+            this.width = tileSheet.getWidth();
+            this.height = tileSheet.getHeight();
+            this.scale = 16;
+
             this.world = new Matrix4f().setTranslation(new Vector3f(0));
             this.world.scale(scale);
 
             int[] colorTileSheet = tileSheet.getRGB(0, 0, width, height, null, 0, width);
             int[] colorEntitySheet = entitySheet.getRGB(0, 0, width, height, null, 0, width);
 
-            tiles = new byte[width * height];
-            boudingBoxes = new AABB[width * height];
-            entitiesBindShiftCoord = new HashMap<Entity, Double[]>();
+            this.tiles = new byte[width * height];
+            this.boudingBoxes = new AABB[width * height];
+            this.entitiesBindShiftCoord = new HashMap<Entity, Double[]>();
 
             Transform transform;
 
@@ -100,14 +106,18 @@ public class World {
                         transform.pos.x = x*2;
                         transform.pos.y = -y*2;
                         switch(entityIndex) {
-                            case 1: entity = new WorkerDisplay(transform); 
+                            case 1: /* follower */
+                                    entity = new WorkerDisplay(transform); 
                                     entitiesBindShiftCoord.put(entity, new Double[] {0.0, 0.0, 0.0}); 
                                     entities.add(entity);
                                     alive.add(entity);
                                     checkCollisions();
                                     camera.getPosition().set(transform.pos.mul(-scale, new Vector3f()));
                                     break;
-                            default : break;
+                            case 2: /* insurgent */ 
+                                    break;
+                            default : /* no entities */
+                                    break;
                         }
                     }
                 }

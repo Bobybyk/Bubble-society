@@ -19,7 +19,6 @@ import org.joml.Vector3f;
 import assets.Assets;
 import collision.AABB;
 import collision.Collision;
-import game.Game;
 import io.Window;
 import render.Animation;
 import render.Camera;
