@@ -26,11 +26,15 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+import application.debug.DebugLogger;
+import application.debug.DebugType;
 import collision.AABB;
 import entity.Entity;
 import entity.Transform;
-import entity.WorkerDisplay;
+import entity.FollowerDisplay;
+import entity.InsurgentDisplay;
 import game.Game;
+import game.worker.Follower;
 import io.Window;
 import render.Camera;
 import render.Shader;
@@ -107,7 +111,7 @@ public class World {
                         transform.pos.y = -y*2;
                         switch(entityIndex) {
                             case 1: /* follower */
-                                    entity = new WorkerDisplay(transform); 
+                                    entity = new FollowerDisplay(transform); 
                                     entitiesBindShiftCoord.put(entity, new Double[] {0.0, 0.0, 0.0}); 
                                     entities.add(entity);
                                     alive.add(entity);
@@ -144,7 +148,7 @@ public class World {
         transform.pos.y = -120;
         switch(id) {
             case 1: 
-                entity = new WorkerDisplay(transform);
+                entity = new FollowerDisplay(transform);
                 entitiesBindShiftCoord.put(entity, new Double[] {0.0, 0.0, 0.0});
                 entities.add(entity);
                 alive.add(entity);
@@ -160,7 +164,7 @@ public class World {
 
     private void setFirstEntitiesSpec(Game game) {
         for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
-            game.defineEntity((WorkerDisplay) entity.getKey());
+            game.defineEntity((FollowerDisplay) entity.getKey());
         }
         firstEntitiesSpecDefined = true;
     }
@@ -204,6 +208,7 @@ public class World {
         Random rand = new Random();
         int x, y;
         double length;
+        List<Entity> entitiesToConvert = new ArrayList<Entity>();
         for (Entity entitiesAlive : alive) {
             if (!game.getWorkerBindView().get(entitiesAlive).getWanderState()) {
                 entitiesAlive.wanderUpdate(delta, entitiesBindShiftCoord.get(entitiesAlive));
@@ -224,7 +229,19 @@ public class World {
                 length = COOLDOWN_MIN + (COOLDOWN_MAX - COOLDOWN_MIN) * rand.nextDouble();
                 entitiesBindShiftCoord.put(entitiesAlive, new Double[] {0.0, 0.0, length});
             }
+            if (game.getWorkerBindView().get(entitiesAlive) instanceof Follower && game.getWorkerBindView().get(entitiesAlive).getHp() < game.getWorkerBindView().get(entitiesAlive).getWill()) {
+                entitiesToConvert.add(entitiesAlive);
+            }
             entitiesAlive.wanderUpdate(delta, entitiesBindShiftCoord.get(entitiesAlive));
+        }
+
+        for (int i = 0 ; i<entitiesToConvert.size() ; i++) {
+            DebugLogger.print(DebugType.ENTITIES, "CONVERSION");
+            if (entitiesToConvert.get(i).getCycle(FollowerDisplay.ANIM_CONVERSION)) {
+                game.changeWorkerState(game.removeEntity(entitiesToConvert.get(i)), entityConversion(entitiesToConvert.get(i)));
+            } else {
+                ((FollowerDisplay) entitiesToConvert.get(i)).conversionUpdate();
+            }
         }
 
         // parse dead entities list and update their animation
@@ -261,6 +278,24 @@ public class World {
             }
             entities.get(i).collideWithTiles(this);
         }
+    }
+
+    public Entity entityConversion(Entity entity) {
+        Entity trans = null;
+        Double[] entityShiftCoords = entitiesBindShiftCoord.get(entity);
+        if (entity instanceof FollowerDisplay) {
+            trans = new InsurgentDisplay(entity.getTransform());
+        }
+        if (entity instanceof InsurgentDisplay) {
+            trans = new FollowerDisplay(entity.getTransform());
+        }
+        entities.remove(entity);
+        entities.add(trans);
+        alive.remove(entity);
+        alive.add(trans);
+        entitiesBindShiftCoord.remove(entity);
+        entitiesBindShiftCoord.put(trans, entityShiftCoords);
+        return trans;
     }
 
     public void removeEntity(Entity entity) {

@@ -18,7 +18,11 @@ import java.util.Random;
 
 import application.debug.DebugLogger;
 import application.debug.DebugType;
-import entity.WorkerDisplay;
+import entity.Entity;
+import entity.FollowerDisplay;
+import entity.InsurgentDisplay;
+import game.worker.Follower;
+import game.worker.Insurgent;
 import game.worker.Worker;
 import game.worker.WorkerBuilder;
 import world.World;
@@ -26,7 +30,7 @@ import world.World;
 
 public class Game {
     private World gWorld;
-    private HashMap<WorkerDisplay, Worker> workerBindView = new HashMap<WorkerDisplay, Worker>();
+    private HashMap<Entity, Worker> workerBindView = new HashMap<Entity, Worker>();
 
     public Game(World gWorld) {
         this.gWorld = gWorld;
@@ -42,7 +46,7 @@ public class Game {
         }
         // DEBBUG
         DebugLogger.print(DebugType.ENTITIES, "WORKERS LIFE");
-        for (HashMap.Entry<WorkerDisplay, Worker> w : workerBindView.entrySet()) {
+        for (HashMap.Entry<Entity, Worker> w : workerBindView.entrySet()) {
             // if worker is not in a zone, decrease hp
             if (!w.getValue().getZone() && w.getValue().getLifeState()) {
                 w.getValue().decreaseHp();
@@ -111,16 +115,17 @@ public class Game {
      */
     public void spawnWorker() {
         int hp = new Random().nextInt((50 - 25) + 1) + 25;
-        int will = hp - (new Random().nextInt((hp - 20) + 1) + 20);
+        int will = new Random().nextInt(hp) + 5;
+        while(will>hp) will--; 
         double radius = new Random().nextInt(10) + 1;
         Worker worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(true).setLifeState(true).buildFollower();
-        WorkerDisplay wd = (WorkerDisplay) gWorld.spawnEntity(1);
+        FollowerDisplay wd = (FollowerDisplay) gWorld.spawnEntity(1);
         workerBindView.put(wd, worker);
         wd.setWorker(worker);
     }
 
     // to define entity without graphical part
-    public void defineEntity(WorkerDisplay wd) {
+    public void defineEntity(FollowerDisplay wd) {
         int hp = new Random().nextInt((50 - 25) + 1) + 25;
         int will = hp - (new Random().nextInt((hp - 20) + 1) + 20);
         double radius = new Random().nextInt(10) + 1;
@@ -130,7 +135,7 @@ public class Game {
     }
 
     public void changeWanderMode(boolean state) {
-        for (HashMap.Entry<WorkerDisplay, Worker> entity : workerBindView.entrySet()) {
+        for (HashMap.Entry<Entity, Worker> entity : workerBindView.entrySet()) {
             entity.getValue().setWanderState(state);
         }
     }
@@ -138,22 +143,21 @@ public class Game {
     private int getNbrWorkers() {
         return workerBindView.size();
     }
-    public HashMap<WorkerDisplay, Worker> getWorkerBindView() {
+    public HashMap<Entity, Worker> getWorkerBindView() {
         return workerBindView;
     }
 
-    /*
-     * change worker state
-     * follower to insurgent ; insurgent to follower
-     */
-    /* TO REFACTOR 
-    public void changeWorkerState(Worker worker) {
+    public Worker removeEntity(Entity entity) {
+        Worker tmp = workerBindView.get(entity);
+        workerBindView.remove(entity);
+        return tmp;
+    }
+
+    public void changeWorkerState(Worker worker, Entity entity) {
         if (worker instanceof Follower) {
-            map.addWorkerToMap(new WorkerBuilder().setHp(worker.getHp()).setWill(worker.getWill()).setZone(worker.getZone()).setRadius(worker.getRadius()).buildInsurgent());
-            map.removeWorker(worker);
+            workerBindView.put(entity, new WorkerBuilder().setHp(worker.getHp()).setWill(worker.getWill()).setZone(worker.getZone()).setRadius(worker.getRadius()).buildInsurgent());
         } else if (worker instanceof Insurgent) {
-            map.addWorkerToMap(new WorkerBuilder().setHp(worker.getHp()).setWill(worker.getWill()).setZone(worker.getZone()).setRadius(worker.getRadius()).buildFollower());
-            map.removeWorker(worker);
+            workerBindView.put(entity, new WorkerBuilder().setHp(worker.getHp()).setWill(worker.getWill()).setZone(worker.getZone()).setRadius(worker.getRadius()).buildFollower());
         }
-    } */
+    }
 }

@@ -1,43 +1,32 @@
-/*
- *
- * Copyright (c) 2022 Matthieu Le Franc
- *
- * You are prohibited from sharing and distributing this creation without our prior authorization, more specifically:
- * 
- * TO PROVIDE A COPY OF OUR GAME TO ANY THIRD PARTY;
- * TO USE THIS CREATION FOR COMMERCIAL PURPOSES;
- * TO USE THIS CREATIONS FOR PROFIT;
- * TO ALLOW ANY THIRD PARTY TO ACCESS TO THIS CREATION IN AN UNFAIR OR ABUSIVE MANNER;
- * 
- */
 package entity;
+
+import java.util.HashMap;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFW;
 
+import game.worker.Worker;
 import io.Window;
 import render.Animation;
 import render.Camera;
 import render.TextureLoader;
 import world.World;
 
-import org.lwjgl.glfw.GLFW;
-
-import game.Game;
-import game.worker.Worker;
-
-
-public class WorkerDisplay extends Entity {
+public class InsurgentDisplay extends Entity {
     public static final int ANIM_IDLE = 0;
     public static final int ANIM_MOVE = 1;
-    public static final int ANIM_SIZE = 4;
     public static final int ANIM_DYING = 2;
     public static final int ANIM_DEAD = 3;
+    public static final int ANIM_CONVERSION = 4;
+    public static final int ANIM_SIZE = 5;
 
-    private static TextureLoader idleTexures = new TextureLoader(20, "follower/idle"); // Animation(number of frames, fps, name without id)
-    private static TextureLoader movmentTexures = new TextureLoader(15, "follower/movement");
-    private static TextureLoader dyingTexures = new TextureLoader(20, "follower/dying");
-    private static TextureLoader deadTexures = new TextureLoader(1, "follower/dead");
+    private HashMap<Integer, Animation> animationBindId = new HashMap<Integer, Animation>();
+
+    private static TextureLoader idleTexures = new TextureLoader(20, "insurgent/idle"); // Animation(number of frames, fps, name without id)
+    private static TextureLoader movmentTexures = new TextureLoader(20, "insurgent/movement");
+    private static TextureLoader dyingTexures = new TextureLoader(21, "insurgent/dying");
+    private static TextureLoader deadTexures = new TextureLoader(1, "insurgent/dead");
 
     private Animation idle;
     private Animation movment;
@@ -45,48 +34,24 @@ public class WorkerDisplay extends Entity {
     private Animation dead;
 
     private boolean cameraOnWorker;
-    private Worker worker;
-    private boolean isDead = false; 
-
-    public WorkerDisplay(Transform transform) {
+    
+    public InsurgentDisplay(Transform transform) {
         super(ANIM_SIZE, transform);
         this.idle = new Animation(9, idleTexures);
         this.movment = new Animation(8, movmentTexures);
         this.dying = new Animation(10, dyingTexures);
         this.dead = new Animation(1, deadTexures);
+
         setAnimation(ANIM_IDLE, idle); 
         setAnimation(ANIM_MOVE, movment);
         setAnimation(ANIM_DYING, dying);
         setAnimation(ANIM_DEAD, dead);
+
+        animationBindId.put(ANIM_IDLE, idle);
+        animationBindId.put(ANIM_MOVE, movment);
+        animationBindId.put(ANIM_DYING, dying);
+        animationBindId.put(ANIM_DEAD, dead);
     }
-
-
-    @Override
-    public void wanderUpdate(float delta, Double[] coords) {
-        Vector2f movement = new Vector2f();
-
-        movement.add((int)(double)coords[0]*delta, (int)(double)coords[1]*delta);
-        move(movement);
-
-        casualAnimUpdate(movement);
-    }
-
-    public void casualAnimUpdate(Vector2f movement) {
-        if (movement.x != 0 || movement.y != 0) {
-            useAnimation(ANIM_MOVE);
-        } else {
-            useAnimation(ANIM_IDLE);
-        }
-    }
-
-    public void deathUpdate() {
-        if (dying.hasMadeACycle()) {
-            useAnimation(ANIM_DEAD);
-        } else {
-            useAnimation(ANIM_DYING);
-        }   
-    }
-    
 
     @Override
     public void update(float delta, Window window, Camera camera, World world) {
@@ -114,7 +79,7 @@ public class WorkerDisplay extends Entity {
         }
 
         followWorker(world, camera);
-        
+
     }
 
     public void followWorker(World world, Camera camera) {
@@ -123,6 +88,34 @@ public class WorkerDisplay extends Entity {
         }
     }
 
+    @Override
+    public void wanderUpdate(float delta, Double[] coords) {
+        Vector2f movement = new Vector2f();
+
+        movement.add((int)(double)coords[0]*delta, (int)(double)coords[1]*delta);
+        move(movement);
+
+        casualAnimUpdate(movement);
+    }
+
+    public void casualAnimUpdate(Vector2f movement) {
+        if (movement.x != 0 || movement.y != 0) {
+            useAnimation(ANIM_MOVE);
+        } else {
+            useAnimation(ANIM_IDLE);
+        }
+    }
+
+    @Override
+    public void deathUpdate() {
+        if (dying.hasMadeACycle()) {
+            useAnimation(ANIM_DEAD);
+        } else {
+            useAnimation(ANIM_DYING);
+        }  
+    }
+
+    @Override
     public void changeCameraMod() {
         if(cameraOnWorker) {
             cameraOnWorker = false;
@@ -130,9 +123,5 @@ public class WorkerDisplay extends Entity {
             cameraOnWorker = true;
         }
     }
-
-    public void setWorker(Worker worker) {
-        this.worker = worker;
-    }
-
+    
 }
