@@ -132,5 +132,9 @@ public abstract class Entity {
             entity.transform.pos.set(entity.boudingBoxes.getCenter().x, entity.boudingBoxes.getCenter().y, 0);
         }
     }
+
+    public boolean getCycle(int animConversion) {
+        return false;
+    }
 }
 

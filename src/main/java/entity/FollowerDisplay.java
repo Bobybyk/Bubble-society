@@ -12,6 +12,8 @@
  */
 package entity;
 
+import java.util.HashMap;
+
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -27,37 +29,51 @@ import game.Game;
 import game.worker.Worker;
 
 
-public class WorkerDisplay extends Entity {
+public class FollowerDisplay extends Entity {
     public static final int ANIM_IDLE = 0;
     public static final int ANIM_MOVE = 1;
-    public static final int ANIM_SIZE = 4;
     public static final int ANIM_DYING = 2;
     public static final int ANIM_DEAD = 3;
+    public static final int ANIM_CONVERSION = 4;
+    public static final int ANIM_SIZE = 5;
+
+    private HashMap<Integer, Animation> animationBindId = new HashMap<Integer, Animation>();
 
     private static TextureLoader idleTexures = new TextureLoader(20, "follower/idle"); // Animation(number of frames, fps, name without id)
     private static TextureLoader movmentTexures = new TextureLoader(15, "follower/movement");
     private static TextureLoader dyingTexures = new TextureLoader(20, "follower/dying");
     private static TextureLoader deadTexures = new TextureLoader(1, "follower/dead");
+    private static TextureLoader conversionTexures = new TextureLoader(20, "follower/conversion");
 
     private Animation idle;
     private Animation movment;
     private Animation dying;
     private Animation dead;
+    private Animation conversion;
 
     private boolean cameraOnWorker;
     private Worker worker;
     private boolean isDead = false; 
 
-    public WorkerDisplay(Transform transform) {
+    public FollowerDisplay(Transform transform) {
         super(ANIM_SIZE, transform);
         this.idle = new Animation(9, idleTexures);
         this.movment = new Animation(8, movmentTexures);
         this.dying = new Animation(10, dyingTexures);
         this.dead = new Animation(1, deadTexures);
+        this.conversion = new Animation(9, conversionTexures);
+
         setAnimation(ANIM_IDLE, idle); 
         setAnimation(ANIM_MOVE, movment);
         setAnimation(ANIM_DYING, dying);
         setAnimation(ANIM_DEAD, dead);
+        setAnimation(ANIM_CONVERSION, conversion);
+
+        animationBindId.put(ANIM_IDLE, idle);
+        animationBindId.put(ANIM_MOVE, movment);
+        animationBindId.put(ANIM_DYING, dying);
+        animationBindId.put(ANIM_DEAD, dead);
+        animationBindId.put(ANIM_CONVERSION, conversion);
     }
 
 
@@ -79,12 +95,17 @@ public class WorkerDisplay extends Entity {
         }
     }
 
+    @Override
     public void deathUpdate() {
         if (dying.hasMadeACycle()) {
             useAnimation(ANIM_DEAD);
         } else {
             useAnimation(ANIM_DYING);
         }   
+    }
+
+    public void conversionUpdate() {
+        useAnimation(ANIM_CONVERSION);
     }
     
 
@@ -123,12 +144,17 @@ public class WorkerDisplay extends Entity {
         }
     }
 
+    @Override
     public void changeCameraMod() {
         if(cameraOnWorker) {
             cameraOnWorker = false;
         } else {
             cameraOnWorker = true;
         }
+    }
+
+    public boolean getCycle(int id) {
+        return animationBindId.get(id).hasMadeACycle();
     }
 
     public void setWorker(Worker worker) {

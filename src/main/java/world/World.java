@@ -29,7 +29,7 @@ import org.joml.Vector3f;
 import collision.AABB;
 import entity.Entity;
 import entity.Transform;
-import entity.WorkerDisplay;
+import entity.FollowerDisplay;
 import game.Game;
 import io.Window;
 import render.Camera;
@@ -107,7 +107,7 @@ public class World {
                         transform.pos.y = -y*2;
                         switch(entityIndex) {
                             case 1: /* follower */
-                                    entity = new WorkerDisplay(transform); 
+                                    entity = new FollowerDisplay(transform); 
                                     entitiesBindShiftCoord.put(entity, new Double[] {0.0, 0.0, 0.0}); 
                                     entities.add(entity);
                                     alive.add(entity);
@@ -144,7 +144,7 @@ public class World {
         transform.pos.y = -120;
         switch(id) {
             case 1: 
-                entity = new WorkerDisplay(transform);
+                entity = new FollowerDisplay(transform);
                 entitiesBindShiftCoord.put(entity, new Double[] {0.0, 0.0, 0.0});
                 entities.add(entity);
                 alive.add(entity);
@@ -160,7 +160,7 @@ public class World {
 
     private void setFirstEntitiesSpec(Game game) {
         for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
-            game.defineEntity((WorkerDisplay) entity.getKey());
+            game.defineEntity((FollowerDisplay) entity.getKey());
         }
         firstEntitiesSpecDefined = true;
     }
@@ -223,6 +223,13 @@ public class World {
             if (entitiesBindShiftCoord.get(entitiesAlive)[2] <= 0 && entitiesBindShiftCoord.get(entitiesAlive)[0] != 0) {
                 length = COOLDOWN_MIN + (COOLDOWN_MAX - COOLDOWN_MIN) * rand.nextDouble();
                 entitiesBindShiftCoord.put(entitiesAlive, new Double[] {0.0, 0.0, length});
+            }
+            if (game.getWorkerBindView().get(entitiesAlive).getHp() < game.getWorkerBindView().get(entitiesAlive).getWill()) {
+                if (entitiesAlive.getCycle(FollowerDisplay.ANIM_CONVERSION)) {
+                    // faire truc conversion game spec
+                } else {
+                    ((FollowerDisplay) entitiesAlive).conversionUpdate();
+                }
             }
             entitiesAlive.wanderUpdate(delta, entitiesBindShiftCoord.get(entitiesAlive));
         }
