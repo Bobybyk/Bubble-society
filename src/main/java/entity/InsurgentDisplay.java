@@ -6,8 +6,8 @@ import world.World;
 
 public class InsurgentDisplay extends Entity {
 
-    public InsurgentDisplay(int maxAnimations, Transform transform) {
-        super(maxAnimations, transform);
+    public InsurgentDisplay(Transform transform) {
+        super(0, transform);
         //TODO Auto-generated constructor stub
     }
 

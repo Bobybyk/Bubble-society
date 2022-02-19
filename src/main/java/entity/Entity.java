@@ -136,5 +136,8 @@ public abstract class Entity {
     public boolean getCycle(int animConversion) {
         return false;
     }
+    public Transform getTransform() {
+        return transform;
+    }
 }
 
