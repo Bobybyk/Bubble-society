@@ -53,8 +53,8 @@ public class FollowerDisplay extends Entity {
 
     private boolean cameraOnWorker;
     private Worker worker;
-    private boolean isDead = false; 
 
+    
     public FollowerDisplay(Transform transform) {
         super(ANIM_SIZE, transform);
         this.idle = new Animation(9, idleTexures);

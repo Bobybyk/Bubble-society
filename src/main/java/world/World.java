@@ -238,7 +238,7 @@ public class World {
         for (int i = 0 ; i<entitiesToConvert.size() ; i++) {
             DebugLogger.print(DebugType.ENTITIES, "CONVERSION");
             if (entitiesToConvert.get(i).getCycle(FollowerDisplay.ANIM_CONVERSION)) {
-                //game.changeWorkerState(game.removeEntity(entitiesToConvert.get(i)), entityConversion(entitiesToConvert.get(i)));
+                game.changeWorkerState(game.removeEntity(entitiesToConvert.get(i)), entityConversion(entitiesToConvert.get(i)));
             } else {
                 ((FollowerDisplay) entitiesToConvert.get(i)).conversionUpdate();
             }
