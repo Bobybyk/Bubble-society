@@ -62,49 +62,12 @@ public class Game {
     }
 
     /*
-     * for each worker of the map, check if it encount an other worker
-     */
-    /* TO REFACTOR 
-    public void testMeeting() {
-        if (map.getNbrWorkers() == 0) {
-            return;
-        }
-        //DEBBUG
-        DebugLogger.print(DebugType.ALL, "WORKERS MEETING");
-        for (HashMap.Entry<Worker, Double[]> w1 : map.getMapList().entrySet()) {
-            for (HashMap.Entry<Worker, Double[]> w2 : map.getMapList().entrySet()) { 
-                if (w1 != w2) {
-                    HashMap<Worker, Worker> workersMet = map.workerMeeting(w1.getKey(), w2.getKey());
-                    for (HashMap.Entry<Worker, Worker> worker : workersMet.entrySet()) {
-                        if(worker.getKey().isInsurgent() && worker.getValue().isFollower()) {
-                            DebugLogger.print(DebugType.ENTITIES, "insurgent meets follower");
-                            //attaque
-                        }
-                        if(worker.getKey().isInsurgent() && worker.getValue().isFollower()) {
-                            DebugLogger.print(DebugType.ENTITIES, "follower meets insurgent");
-                            //fuite
-                        }
-                        if(worker.getKey().isInsurgent() && worker.getValue().isInsurgent()) {
-                            DebugLogger.print(DebugType.ENTITIES, "insurgent meets insurgent");
-                            //échange
-                        }
-                        if(worker.getKey().isFollower() && worker.getValue().isFollower()) {
-                            DebugLogger.print(DebugType.ENTITIES, "follower meets follower");
-                            //échange
-                        }
-                    }
-                }
-            }
-        }
-    } */
-
-    /*
      * spawn random number of workers (1 to 5)
      */
     public void multiSpawn() {
         int nbr = new Random().nextInt(5) + 1;
         for (int i = 0 ; i < nbr ; i++) {
-            spawnWorker();
+            spawnWorker(1);
         }
         // DEBBUG
         DebugLogger.print(DebugType.ENTITIES, nbr + " : " + getNbrWorkers());
@@ -113,23 +76,43 @@ public class Game {
     /*
      * spawn and init a follower
      */
-    public void spawnWorker() {
+    public void spawnWorker(int id) {
         int hp = new Random().nextInt((50 - 25) + 1) + 25;
         int will = new Random().nextInt(hp) + 5;
         while(will>hp) will--; 
         double radius = new Random().nextInt(10) + 1;
-        Worker worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(true).setLifeState(true).buildFollower();
-        FollowerDisplay wd = (FollowerDisplay) gWorld.spawnEntity(1);
+
+        Worker worker = null;
+        Entity wd = null;
+
+        switch(id) {
+            case 1: 
+                worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(true).setLifeState(true).buildFollower();
+                wd = gWorld.spawnEntity(1);
+                break;
+            case 2:
+                worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(true).setLifeState(true).buildInsurgent();
+                wd = gWorld.spawnEntity(2);
+                break;
+        }
+
         workerBindView.put(wd, worker);
         wd.setWorker(worker);
     }
 
     // to define entity without graphical part
-    public void defineEntity(FollowerDisplay wd) {
+    public void defineEntity(Entity wd) {
         int hp = new Random().nextInt((50 - 25) + 1) + 25;
         int will = hp - (new Random().nextInt((hp - 20) + 1) + 20);
         double radius = new Random().nextInt(10) + 1;
-        Worker worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(true).setLifeState(true).buildFollower();
+        Worker worker = null;
+        if (wd instanceof FollowerDisplay) {
+            worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(true).setLifeState(true).buildFollower();
+            System.out.println("jbour");
+        }
+        if (wd instanceof InsurgentDisplay) {
+            worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(true).setLifeState(true).buildInsurgent();
+        }
         workerBindView.put(wd, worker);
         wd.setWorker(worker);
     }

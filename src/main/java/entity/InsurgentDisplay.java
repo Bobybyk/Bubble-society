@@ -34,6 +34,8 @@ public class InsurgentDisplay extends Entity {
     private Animation dead;
 
     private boolean cameraOnWorker;
+
+    private Worker worker;
     
     public InsurgentDisplay(Transform transform) {
         super(ANIM_SIZE, transform);
@@ -122,6 +124,10 @@ public class InsurgentDisplay extends Entity {
         } else {
             cameraOnWorker = true;
         }
+    }
+
+    public void setWorker(Worker worker) {
+        this.worker = worker;
     }
     
 }

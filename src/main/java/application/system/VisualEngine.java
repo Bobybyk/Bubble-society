@@ -180,8 +180,11 @@ public class VisualEngine {
 					camera.getPosition().sub(new Vector3f(0, -5, 0));
 				}
 
-				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_P)) {
-					game.spawnWorker();
+				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_F)) {
+					game.spawnWorker(1);
+				}
+				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_I)) {
+					game.spawnWorker(2);
 				}
 
 				// blocks camera shifting
