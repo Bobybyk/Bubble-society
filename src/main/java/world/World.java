@@ -152,6 +152,13 @@ public class World {
                 entitiesBindShiftCoord.put(entity, new Double[] {0.0, 0.0, 0.0});
                 entities.add(entity);
                 alive.add(entity);
+                break;
+            case 2:
+                entity = new InsurgentDisplay(transform);
+                entitiesBindShiftCoord.put(entity, new Double[] {0.0, 0.0, 0.0});
+                entities.add(entity);
+                alive.add(entity);
+                break;
         }
 
         return entity; 
@@ -164,7 +171,7 @@ public class World {
 
     private void setFirstEntitiesSpec(Game game) {
         for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
-            game.defineEntity((FollowerDisplay) entity.getKey());
+            game.defineEntity(entity.getKey());
         }
         firstEntitiesSpecDefined = true;
     }

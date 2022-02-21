@@ -19,6 +19,7 @@ import org.joml.Vector3f;
 import assets.Assets;
 import collision.AABB;
 import collision.Collision;
+import game.worker.Worker;
 import io.Window;
 import render.Animation;
 import render.Camera;
@@ -110,6 +111,7 @@ public abstract class Entity {
     public abstract void wanderUpdate(float delta, Double[] coords);
     public abstract void deathUpdate();
     public abstract void changeCameraMod();
+    public abstract void setWorker(Worker worker);
 
     public void render(Shader shader, Camera camera, World world) {
         Matrix4f target = camera.getProjection();
