@@ -108,7 +108,6 @@ public class Game {
         Worker worker = null;
         if (wd instanceof FollowerDisplay) {
             worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(true).setLifeState(true).buildFollower();
-            System.out.println("jbour");
         }
         if (wd instanceof InsurgentDisplay) {
             worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(true).setLifeState(true).buildInsurgent();

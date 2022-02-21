@@ -117,7 +117,7 @@ public class VisualEngine {
 			time = time2;
 
 			// game calculs (spawn...)
-			spawner.gameProcess();
+			//spawner.gameProcess();
 
 			// doesn't have to be rendered
 			while(unprocessed >= frameCap) {
@@ -188,9 +188,10 @@ public class VisualEngine {
 				}
 
 				// blocks camera shifting
-				//world.update((float)frameCap, window, camera);
-				world.entitiesUpdate((float)frameCap, game);
+				world.update((float)frameCap, window, camera);
+				//world.entitiesUpdate((float)frameCap, game, window);
 				world.correctCamera(camera, window);
+				world.correctMapSize(window);
 
 				window.update();
 
