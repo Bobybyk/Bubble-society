@@ -30,4 +30,8 @@ public class Transform {
         target.scale(scale);
         return target;
     }
+
+    public Vector3f getPosition() {
+        return pos;
+    }
 }

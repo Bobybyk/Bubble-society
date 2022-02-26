@@ -66,6 +66,7 @@ public class World {
     private static int COOLDOWN_MAX = 300;
     private static int SHIFTING_MIN = 150;
     private static int SHIFTING_MAX = 300;
+    private static int RESIZE_COEF = 32;
     
     public World(String world, Camera camera) {
         try {
@@ -204,7 +205,7 @@ public class World {
         }
     }
 
-    public void entitiesUpdate(float delta, Game game) {
+    public void entitiesUpdate(float delta, Game game, Window window) {
         
         // define entities spec for those which could be spawned by entities map parsing
         if(firstEntitiesSpecDefined == false) {
@@ -332,6 +333,46 @@ public class World {
         }
     }
 
+    public void correctMapSize(Window window) {
+        Vector3f pos = null;
+
+        for (int i = 0 ; i < entities.size() ; i++) {
+            pos = entities.get(i).getTransform().getPosition();
+            //System.out.println(Math.floor(pos.y));
+            if (pos.x > width*2) {
+                DebugLogger.print(DebugType.RESIZE, "RIGHT : " + pos.x + " ; " + width);
+                this.width += RESIZE_COEF;
+                this.height += RESIZE_COEF;
+                repaintTiles();
+            }
+            if (pos.x < 0) {
+                DebugLogger.print(DebugType.RESIZE, "LEFT : " + pos.x + " ; " + width + " - can't be resized");
+                pos.x = 0;
+            }
+            if (pos.y < -height*2) {
+                DebugLogger.print(DebugType.RESIZE, "DOWN : " + pos.y + " ; " + height);
+                this.width += RESIZE_COEF;
+                this.height += RESIZE_COEF;
+                repaintTiles();
+            }
+            if (pos.y > 0) {
+                DebugLogger.print(DebugType.RESIZE, "UP : " + pos.y + " ; " + height + " - can't be resized");
+                pos.y = 0;
+            }
+        }
+    }
+    
+    public void repaintTiles() {
+        byte[] tilesBis = this.tiles;
+        this.tiles = new byte[width * height];
+        setBoundingBoxes();
+        for (int y = RESIZE_COEF ; y < height-RESIZE_COEF ; y++) {
+            for (int x = RESIZE_COEF ; x < width-RESIZE_COEF ; x++) {
+                setTile(Tile.tiles[tilesBis[(x-RESIZE_COEF) + (y-RESIZE_COEF) * (width-RESIZE_COEF)]], x-RESIZE_COEF, y-RESIZE_COEF);
+            }
+        }
+    }
+
     public void setTile(Tile tile, int x, int y) {
         tiles[x + y * width] = tile.getId();
         if (tile.isSolid()) {
@@ -339,6 +380,10 @@ public class World {
         } else {
             boudingBoxes[x + y * width] = null;
         }
+    }
+
+    private void setBoundingBoxes() {
+        boudingBoxes = new AABB[width*height];
     }
 
     public Tile getTile(int x, int y) {

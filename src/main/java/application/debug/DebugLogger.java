@@ -46,6 +46,8 @@ public class DebugLogger {
         typeMapDirectory.put(DebugType.SYS, "SYS");
         typeMap.put(DebugType.ENTITIES, false);
         typeMapDirectory.put(DebugType.ENTITIES, "ENTITIES");
+        typeMap.put(DebugType.RESIZE, false);
+        typeMapDirectory.put(DebugType.ENTITIES, "RESIZE");
     }
 
     public static void destroyGraphicEngine() {

@@ -32,7 +32,7 @@ public abstract class Entity {
     protected Animation[] animations;
     protected Transform transform;
     private int useAnimation;
-
+    
     public Entity(int maxAnimations, Transform transform) {
         this.animations = new Animation[maxAnimations];
         this.transform = transform;

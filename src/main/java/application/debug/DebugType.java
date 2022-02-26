@@ -21,5 +21,6 @@ public class DebugType {
     public static int UIEXT = 2;
     public static int SYS = 3;
     public static int ENTITIES = 4;
+    public static int RESIZE = 4;
     public static VisualEngine gc;
 }
