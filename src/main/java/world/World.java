@@ -66,8 +66,7 @@ public class World {
     private static int COOLDOWN_MAX = 300;
     private static int SHIFTING_MIN = 150;
     private static int SHIFTING_MAX = 300;
-
-    private int resizeIterations;
+    private static int RESIZE_COEF = 32;
     
     public World(String world, Camera camera) {
         try {
@@ -87,8 +86,6 @@ public class World {
             this.tiles = new byte[width * height];
             this.boudingBoxes = new AABB[width * height];
             this.entitiesBindShiftCoord = new HashMap<Entity, Double[]>();
-
-            this.resizeIterations = 0;
 
             Transform transform;
 
@@ -341,41 +338,37 @@ public class World {
 
         for (int i = 0 ; i < entities.size() ; i++) {
             pos = entities.get(i).getTransform().getPosition();
+            //System.out.println(Math.floor(pos.y));
             if (pos.x > width*2) {
                 System.out.println("OK1 : " + pos.x + " ; " + width);
-                this.width += 10;
-                this.height += 10;
+                this.width += RESIZE_COEF;
+                this.height += RESIZE_COEF;
                 repaintTiles();
             }
-            if (pos.x < -width) {
+            if (pos.x < 0) {
                 System.out.println("OK2 : " + pos.x + " ; " + width);
-                this.width += 10;
-                this.height += 10;
-                repaintTiles();
+                pos.x = 0;
             }
             if (pos.y < -height*2) {
                 System.out.println("OK3 : " + pos.y + " ; " + height);
-                this.width += 10;
-                this.height += 10;
+                this.width += RESIZE_COEF;
+                this.height += RESIZE_COEF;
                 repaintTiles();
             }
-            if (pos.y > height) {
+            if (pos.y > 0) {
                 System.out.println("OK4 : " + pos.y + " ; " + height);
-                this.width += 10;
-                this.height += 10;
-                repaintTiles();
+                pos.y = 0;
             }
         }
     }
     
     public void repaintTiles() {
-        resizeIterations += 1;
         byte[] tilesBis = this.tiles;
         this.tiles = new byte[width * height];
-        //this.boudingBoxes = new AABB[width * height];
-        for (int y = 10*resizeIterations ; y < height-10*resizeIterations ; y++) {
-            for (int x = 10*resizeIterations ; x < width-10*resizeIterations ; x++) {
-                setTile(Tile.tiles[tilesBis[(x-10*resizeIterations) + (y-10*resizeIterations) * (width-10*resizeIterations)]], x-10*resizeIterations, y-10*resizeIterations);
+        setBoundingBoxes();
+        for (int y = RESIZE_COEF ; y < height-RESIZE_COEF ; y++) {
+            for (int x = RESIZE_COEF ; x < width-RESIZE_COEF ; x++) {
+                setTile(Tile.tiles[tilesBis[(x-RESIZE_COEF) + (y-RESIZE_COEF) * (width-RESIZE_COEF)]], x-RESIZE_COEF, y-RESIZE_COEF);
             }
         }
     }
@@ -387,6 +380,10 @@ public class World {
         } else {
             boudingBoxes[x + y * width] = null;
         }
+    }
+
+    private void setBoundingBoxes() {
+        boudingBoxes = new AABB[width*height];
     }
 
     public Tile getTile(int x, int y) {
