@@ -93,6 +93,16 @@ public class CommandDebug extends Command {
                                 DebugLogger.typeMap.replace(DebugType.ENTITIES, true);
                             }
                             return;
+                        case "RESIZE": 
+                            if (value == 0) {
+                                System.out.println("debug RESIZE mode : disabled");  
+                                DebugLogger.typeMap.replace(DebugType.RESIZE, false);
+                            }
+                            else if (value == 1) {
+                                System.out.println("debug RESIZE mode : enabled");  
+                                DebugLogger.typeMap.replace(DebugType.RESIZE, true);
+                            }
+                            return;
                     }
                 }
             } catch(NumberFormatException e) {}

@@ -340,23 +340,23 @@ public class World {
             pos = entities.get(i).getTransform().getPosition();
             //System.out.println(Math.floor(pos.y));
             if (pos.x > width*2) {
-                System.out.println("OK1 : " + pos.x + " ; " + width);
+                DebugLogger.print(DebugType.RESIZE, "RIGHT : " + pos.x + " ; " + width);
                 this.width += RESIZE_COEF;
                 this.height += RESIZE_COEF;
                 repaintTiles();
             }
             if (pos.x < 0) {
-                System.out.println("OK2 : " + pos.x + " ; " + width);
+                DebugLogger.print(DebugType.RESIZE, "LEFT : " + pos.x + " ; " + width + " - can't be resized");
                 pos.x = 0;
             }
             if (pos.y < -height*2) {
-                System.out.println("OK3 : " + pos.y + " ; " + height);
+                DebugLogger.print(DebugType.RESIZE, "DOWN : " + pos.y + " ; " + height);
                 this.width += RESIZE_COEF;
                 this.height += RESIZE_COEF;
                 repaintTiles();
             }
             if (pos.y > 0) {
-                System.out.println("OK4 : " + pos.y + " ; " + height);
+                DebugLogger.print(DebugType.RESIZE, "UP : " + pos.y + " ; " + height + " - can't be resized");
                 pos.y = 0;
             }
         }

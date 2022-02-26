@@ -47,6 +47,7 @@ public class CommandHelp extends Command implements Runnable {
         System.out.println("#   debug UIEXT <0/1> : disable/enable extended UI feedback     #");
         System.out.println("#   debug SYS <0/1> : disable/enable SYS feedback               #");
         System.out.println("#   debug ENTITIES <0/1> : disable/enable ENTITIES feedback     #");
+        System.out.println("#   debug RESIZE <0/1> : disable/enable map resazing system     #");
         System.out.println("#   debug LIST : print debug state for each type                #");
         System.out.println("# HELP :                                                        #");
         System.out.println("#   help : you just ran this command...                         #");
