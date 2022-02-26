@@ -163,7 +163,7 @@ public class VisualEngine {
 					@Override public void invoke (long win, double dx, double dy) {
 						//System.out.println(dy);
 						world.setScale((int)dy, window, camera);
-						DebugLogger.print(DebugType.UI, "world scale : " + world.getScale());
+						DebugLogger.print(DebugType.RESIZE, "world scale : " + world.getScale());
 					}
 				});
 
