@@ -223,17 +223,21 @@ public class World {
             setFirstEntitiesSpec(game);
         }
 
-        // parse alive entities list and update their state (position, shifting, animation, etc.)
+        
         Random rand = new Random();
         int x, y;
         double length;
         List<Entity> entitiesToConvert = new ArrayList<Entity>();
+
+        // for each entity alive
         for (Entity entityAlive : alive) {
             
+            // declare stats for initial entities (given by the entities.png)
             if (!game.getWorkerBindView().get(entityAlive).getWanderState()) {
                 entityAlive.wanderUpdate(delta, entityShiftVector(entityAlive));
             }
 
+            // give shifting vector components (coords, translation...)
             if (entityTranslation(entityAlive) <= 0 && entityShiftX(entityAlive) == 0) {
                 x = rand.nextInt(2);
                 y = rand.nextInt(2);
@@ -244,10 +248,12 @@ public class World {
                 continue;
             }
 
+            // decrease translation if it's not equals to 0
             if (entityTranslation(entityAlive) > 0) {
                 entityShiftVector(entityAlive).decreaseTranslation();
             }
 
+            // reset coords and define a new translation for shifting vector
             if (entityTranslation(entityAlive) <= 0 && entityShiftX(entityAlive) != 0) {
                 length = COOLDOWN_MIN + (COOLDOWN_MAX - COOLDOWN_MIN) * rand.nextDouble();
                 entityShiftVector(entityAlive).resetX();
@@ -255,21 +261,26 @@ public class World {
                 entityShiftVector(entityAlive).setTranslation(length);
             }
 
-            if (entityAlive(game, entityAlive) instanceof Follower && entityHpLowerThanEntityWill(game, entityAlive)) {
+            // if entity hasn't anought anymore, add it to the conversion list
+            if (workerInstanceOfFollower(game, entityAlive) && entityHpLowerThanEntityWill(game, entityAlive)) {
                 entitiesToConvert.add(entityAlive);
             }
 
+            // update entity position and animation
             entityAlive.wanderUpdate(delta, entitiesBindShiftCoord.get(entityAlive));
 
         }
 
         for (int i = 0 ; i<entitiesToConvert.size() ; i++) {
+
             DebugLogger.print(DebugType.ENTITIES, "CONVERSION");
+
             if (entitiesToConvert.get(i).getCycle(FollowerDisplay.ANIM_CONVERSION)) {
                 game.changeWorkerState(game.removeEntity(entitiesToConvert.get(i)), entityConversion(entitiesToConvert.get(i)));
             } else {
                 ((FollowerDisplay) entitiesToConvert.get(i)).conversionUpdate();
             }
+
         }
 
         // parse dead entities list and update their animation
@@ -282,6 +293,10 @@ public class World {
     }
 
 // -----------
+
+    public boolean workerInstanceOfFollower(Game game, Entity entity) {
+        return entityAlive(game, entity) instanceof Follower;
+    }
 
     public ShiftingVector entityShiftVector(Entity entity) {
         return entitiesBindShiftCoord.get(entity);
