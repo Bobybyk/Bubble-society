@@ -48,7 +48,7 @@ public class Game {
         DebugLogger.print(DebugType.ENTITIES, "WORKERS LIFE");
         for (HashMap.Entry<Entity, Worker> w : workerBindView.entrySet()) {
             // if worker is not in a zone, decrease hp
-            if (!w.getValue().getZone() && w.getValue().getLifeState()) {
+            if (!gWorld.entityIsInZone(w.getKey(), this) && w.getValue().getLifeState()) {
                 w.getValue().decreaseHp();
             }
             // if worker has 0 hp, add it to the erase list
