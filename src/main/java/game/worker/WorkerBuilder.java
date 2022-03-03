@@ -22,6 +22,7 @@ public class WorkerBuilder {
     private int dps;
     private boolean wanderState;
     private boolean lifeState;
+    private int zoneId;
 
     public WorkerBuilder setHp(int hp) {
         this.hp = hp;
@@ -55,6 +56,10 @@ public class WorkerBuilder {
         this.lifeState = lifeState;
         return this;
     }
+    public WorkerBuilder setZoneId(int id) {
+        this.zoneId = id;
+        return this;
+    }
 
     public Worker buildFollower() {
         return new Follower(this);
@@ -86,5 +91,8 @@ public class WorkerBuilder {
     }
     public boolean getLifeState() {
         return lifeState;
+    }
+    public int getZoneId() {
+        return zoneId;
     }
 }

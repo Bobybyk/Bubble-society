@@ -103,6 +103,16 @@ public class CommandDebug extends Command {
                                 DebugLogger.typeMap.replace(DebugType.RESIZE, true);
                             }
                             return;
+                        case "ZONE": 
+                            if (value == 0) {
+                                System.out.println("debug ZONE mode : disabled");  
+                                DebugLogger.typeMap.replace(DebugType.ZONE, false);
+                            }
+                            else if (value == 1) {
+                                System.out.println("debug ZONE mode : enabled");  
+                                DebugLogger.typeMap.replace(DebugType.ZONE, true);
+                            }
+                            return;
                     }
                 }
             } catch(NumberFormatException e) {}

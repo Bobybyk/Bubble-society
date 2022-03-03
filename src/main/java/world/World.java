@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -58,6 +59,8 @@ public class World {
     
     private List<Entity> entities = new ArrayList<Entity>();
 
+    private HashMap<Integer, Zone> bordersInterval = new HashMap<>();
+
     private Matrix4f world;
     private Entity entity;
     private boolean firstEntitiesSpecDefined = false;
@@ -88,7 +91,8 @@ public class World {
             this.entitiesBindShiftCoord = new HashMap<Entity, Double[]>();
 
             Transform transform;
-
+            List<Integer> tmpBorderCordsX = new LinkedList<>();  
+            List<Integer> tmpBorderCordsY = new LinkedList<>();  
             // level loader
             for (int y = 0 ; y < height ; y++) {
                 for (int x = 0 ; x < width ; x++) {
@@ -104,6 +108,10 @@ public class World {
                     }
                     if (t != null) {
                         setTile(t, x, y);
+                    }
+                    if (t.isSolid()) {
+                        tmpBorderCordsX.add(x*2);
+                        tmpBorderCordsY.add(-y*2);
                     }
                     if (entityAlpha > 0) {
                         transform = new Transform();
@@ -126,7 +134,8 @@ public class World {
                         }
                     }
                 }
-            }     
+            }
+            fillBorderCoords(tmpBorderCordsX, tmpBorderCordsY);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -288,6 +297,26 @@ public class World {
         }
     }
 
+    public boolean entityIsInZone(Entity entity, Game game) {
+        if (!game.getWorkerBindView().get(entity).getZone()) {
+            return false;
+        }
+        if (entity.getTransform().getPosition().x < bordersInterval.get(game.getWorkerBindView().get(entity).getZoneId()).getX1()) {
+            return false;
+        }
+        if (entity.getTransform().getPosition().x > bordersInterval.get(game.getWorkerBindView().get(entity).getZoneId()).getX2()) {
+            return false;
+        }
+        if (entity.getTransform().getPosition().y < -bordersInterval.get(game.getWorkerBindView().get(entity).getZoneId()).getY1()) {
+            return false;
+        }
+        if (entity.getTransform().getPosition().y > -bordersInterval.get(game.getWorkerBindView().get(entity).getZoneId()).getY2()) {
+            return false;
+        }
+        return true;
+        
+    }
+
     public Entity entityConversion(Entity entity) {
         Entity trans = null;
         Double[] entityShiftCoords = entitiesBindShiftCoord.get(entity);
@@ -338,7 +367,7 @@ public class World {
 
         for (int i = 0 ; i < entities.size() ; i++) {
             pos = entities.get(i).getTransform().getPosition();
-            //System.out.println(Math.floor(pos.y));
+            DebugLogger.print(DebugType.ENTITIES, "X : " + pos.x + " ; Y : " + pos.y);
             if (pos.x > width*2) {
                 DebugLogger.print(DebugType.RESIZE, "RIGHT : " + pos.x + " ; " + width);
                 this.width += RESIZE_COEF;
@@ -384,6 +413,24 @@ public class World {
 
     private void setBoundingBoxes() {
         boudingBoxes = new AABB[width*height];
+    }
+
+    private void fillBorderCoords(List<Integer> tmpBorderCordsX, List<Integer> tmpBorderCordsY) {
+        bordersInterval.put(bordersInterval.size(), 
+        new Zone (
+            tmpBorderCordsX.get(0), 
+            tmpBorderCordsX.get(tmpBorderCordsX.size()-1), 
+            tmpBorderCordsY.get(0), 
+            tmpBorderCordsY.get(tmpBorderCordsY.size()-1) 
+        ));
+        DebugLogger.print(DebugType.ZONE, "new Zone Created : \n    X1 : " 
+            + tmpBorderCordsX.get(0) 
+            + "\n   X2 : " 
+            + tmpBorderCordsX.get(tmpBorderCordsX.size()-1) 
+            + "\n   Y1 : "
+            + tmpBorderCordsY.get(0)
+            + "\n   Y2 : "
+            + tmpBorderCordsY.get(tmpBorderCordsY.size()-1) );
     }
 
     public Tile getTile(int x, int y) {

@@ -22,6 +22,7 @@ public abstract class Worker {
     protected int dps;
     protected boolean wanderState;
     protected boolean lifeState;
+    protected int zoneId;
 
     public Worker (WorkerBuilder worker) {
         this.hp = worker.getHp();
@@ -32,6 +33,7 @@ public abstract class Worker {
         this.dps = worker.getDps();
         this.wanderState = worker.getWanderState();
         this.lifeState = worker.getLifeState();
+        this.zoneId = worker.getZoneId();
     }
 
     public int getHp() {
@@ -57,6 +59,9 @@ public abstract class Worker {
     }
     public boolean getLifeState() {
         return this.lifeState;
+    }
+    public int getZoneId() {
+        return this.zoneId;
     }
 
     public void decreaseHp() {
@@ -84,6 +89,9 @@ public abstract class Worker {
     }
     public void setLifeState(boolean state) {
         lifeState = state;
+    }
+    public void setZoneId(int id) {
+        this.zoneId = id;
     }
 
 }
