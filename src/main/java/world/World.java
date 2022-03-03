@@ -34,8 +34,10 @@ import entity.Entity;
 import entity.Transform;
 import entity.FollowerDisplay;
 import entity.InsurgentDisplay;
+import entity.ShiftingVector;
 import game.Game;
 import game.worker.Follower;
+import game.worker.Worker;
 import io.Window;
 import render.Camera;
 import render.Shader;
@@ -52,7 +54,7 @@ public class World {
     
     private AABB[] boudingBoxes;
     
-    private HashMap<Entity, Double[]> entitiesBindShiftCoord = new HashMap<Entity, Double[]>();
+    private HashMap<Entity, ShiftingVector> entitiesBindShiftCoord = new HashMap<Entity, ShiftingVector>();
     
     private ArrayList<Entity> alive = new ArrayList<Entity>();
     private ArrayList<Entity> dead = new ArrayList<Entity>();
@@ -88,7 +90,7 @@ public class World {
 
             this.tiles = new byte[width * height];
             this.boudingBoxes = new AABB[width * height];
-            this.entitiesBindShiftCoord = new HashMap<Entity, Double[]>();
+            this.entitiesBindShiftCoord = new HashMap<Entity, ShiftingVector>();
 
             Transform transform;
             List<Integer> tmpBorderCordsX = new LinkedList<>();  
@@ -121,7 +123,7 @@ public class World {
                         switch(entityIndex) {
                             case 1: /* follower */
                                     entity = new FollowerDisplay(transform); 
-                                    entitiesBindShiftCoord.put(entity, new Double[] {0.0, 0.0, 0.0}); 
+                                    entitiesBindShiftCoord.put(entity, new ShiftingVector(0.0, 0.0, 0.0)); 
                                     entities.add(entity);
                                     alive.add(entity);
                                     checkCollisions();
@@ -159,13 +161,13 @@ public class World {
         switch(id) {
             case 1: 
                 entity = new FollowerDisplay(transform);
-                entitiesBindShiftCoord.put(entity, new Double[] {0.0, 0.0, 0.0});
+                entitiesBindShiftCoord.put(entity, new ShiftingVector(0.0, 0.0, 0.0));
                 entities.add(entity);
                 alive.add(entity);
                 break;
             case 2:
                 entity = new InsurgentDisplay(transform);
-                entitiesBindShiftCoord.put(entity, new Double[] {0.0, 0.0, 0.0});
+                entitiesBindShiftCoord.put(entity, new ShiftingVector(0.0, 0.0, 0.0));
                 entities.add(entity);
                 alive.add(entity);
                 break;
@@ -180,7 +182,7 @@ public class World {
     }
 
     private void setFirstEntitiesSpec(Game game) {
-        for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
+        for (HashMap.Entry<Entity, ShiftingVector> entity : entitiesBindShiftCoord.entrySet()) {
             game.defineEntity(entity.getKey());
         }
         firstEntitiesSpecDefined = true;
@@ -209,7 +211,7 @@ public class World {
             }
         }
 
-        for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
+        for (HashMap.Entry<Entity, ShiftingVector> entity : entitiesBindShiftCoord.entrySet()) {
             entity.getKey().render(shader, cam, this);
         }
     }
@@ -226,30 +228,39 @@ public class World {
         int x, y;
         double length;
         List<Entity> entitiesToConvert = new ArrayList<Entity>();
-        for (Entity entitiesAlive : alive) {
-            if (!game.getWorkerBindView().get(entitiesAlive).getWanderState()) {
-                entitiesAlive.wanderUpdate(delta, entitiesBindShiftCoord.get(entitiesAlive));
+        for (Entity entityAlive : alive) {
+            
+            if (!game.getWorkerBindView().get(entityAlive).getWanderState()) {
+                entityAlive.wanderUpdate(delta, entityShiftVector(entityAlive));
             }
-            if (entitiesBindShiftCoord.get(entitiesAlive)[2] <= 0 && entitiesBindShiftCoord.get(entitiesAlive)[0] == 0) {
+
+            if (entityTranslation(entityAlive) <= 0 && entityShiftX(entityAlive) == 0) {
                 x = rand.nextInt(2);
                 y = rand.nextInt(2);
                 length = SHIFTING_MIN + (SHIFTING_MAX - SHIFTING_MIN) * rand.nextDouble();
                 x = x==0?-2:2;
                 y = y==0?-2:2;
-                entitiesBindShiftCoord.put(entitiesAlive, new Double[] {(double) x, (double) y, length});
+                entitiesBindShiftCoord.put(entityAlive, new ShiftingVector((double) x, (double) y, length));
                 continue;
             }
-            if (entitiesBindShiftCoord.get(entitiesAlive)[2] > 0){
-                entitiesBindShiftCoord.put(entitiesAlive, new Double[] {entitiesBindShiftCoord.get(entitiesAlive)[0], entitiesBindShiftCoord.get(entitiesAlive)[1], entitiesBindShiftCoord.get(entitiesAlive)[2]-1});
+
+            if (entityTranslation(entityAlive) > 0) {
+                entityShiftVector(entityAlive).decreaseTranslation();
             }
-            if (entitiesBindShiftCoord.get(entitiesAlive)[2] <= 0 && entitiesBindShiftCoord.get(entitiesAlive)[0] != 0) {
+
+            if (entityTranslation(entityAlive) <= 0 && entityShiftX(entityAlive) != 0) {
                 length = COOLDOWN_MIN + (COOLDOWN_MAX - COOLDOWN_MIN) * rand.nextDouble();
-                entitiesBindShiftCoord.put(entitiesAlive, new Double[] {0.0, 0.0, length});
+                entityShiftVector(entityAlive).resetX();
+                entityShiftVector(entityAlive).resetY();
+                entityShiftVector(entityAlive).setTranslation(length);
             }
-            if (game.getWorkerBindView().get(entitiesAlive) instanceof Follower && game.getWorkerBindView().get(entitiesAlive).getHp() < game.getWorkerBindView().get(entitiesAlive).getWill()) {
-                entitiesToConvert.add(entitiesAlive);
+
+            if (entityAlive(game, entityAlive) instanceof Follower && entityHpLowerThanEntityWill(game, entityAlive)) {
+                entitiesToConvert.add(entityAlive);
             }
-            entitiesAlive.wanderUpdate(delta, entitiesBindShiftCoord.get(entitiesAlive));
+
+            entityAlive.wanderUpdate(delta, entitiesBindShiftCoord.get(entityAlive));
+
         }
 
         for (int i = 0 ; i<entitiesToConvert.size() ; i++) {
@@ -270,9 +281,43 @@ public class World {
         checkCollisions();
     }
 
+// -----------
+
+    public ShiftingVector entityShiftVector(Entity entity) {
+        return entitiesBindShiftCoord.get(entity);
+    }
+
+    public double entityShiftX(Entity entity) {
+        return entitiesBindShiftCoord.get(entity).getX();
+    }
+
+    public double entityTranslation(Entity entity) {
+        return entitiesBindShiftCoord.get(entity).getTranslation();
+    }    
+
+    public boolean entityHpLowerThanEntityWill(Game game, Entity entity) {
+        return entityHp(game, entity) < entityWill(game, entity);
+    }
+
+    public int entityWill(Game game, Entity entity) {
+        return game.getWorkerBindView().get(entity).getWill();
+    }
+
+    public int entityHp(Game game, Entity entity) {
+        return game.getWorkerBindView().get(entity).getHp();
+    }
+
+    public Worker entityAlive(Game game, Entity entity) {
+        return game.getWorkerBindView().get(entity);
+    }
+
+
+// -----------
+
+
     public void update(float delta, Window window, Camera camera) {
         List<Entity> entities = new ArrayList<Entity>();
-        for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
+        for (HashMap.Entry<Entity, ShiftingVector> entity : entitiesBindShiftCoord.entrySet()) {
             entity.getKey().update(delta, window, camera, this);
             entities.add(entity.getKey());
         }
@@ -319,7 +364,7 @@ public class World {
 
     public Entity entityConversion(Entity entity) {
         Entity trans = null;
-        Double[] entityShiftCoords = entitiesBindShiftCoord.get(entity);
+        ShiftingVector entityShiftCoords = entitiesBindShiftCoord.get(entity);
         if (entity instanceof FollowerDisplay) {
             trans = new InsurgentDisplay(entity.getTransform());
         }

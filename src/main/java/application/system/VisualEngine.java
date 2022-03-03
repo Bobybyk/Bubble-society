@@ -117,7 +117,7 @@ public class VisualEngine {
 			time = time2;
 
 			// game calculs (spawn...)
-			//spawner.gameProcess();
+			spawner.gameProcess();
 
 			// doesn't have to be rendered
 			while(unprocessed >= frameCap) {
@@ -180,16 +180,18 @@ public class VisualEngine {
 					camera.getPosition().sub(new Vector3f(0, -5, 0));
 				}
 
+				// spawn followers
 				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_F)) {
 					game.spawnWorker(1);
 				}
+				// spawn insurgents
 				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_I)) {
 					game.spawnWorker(2);
 				}
 
 				// blocks camera shifting
-				world.update((float)frameCap, window, camera);
-				//world.entitiesUpdate((float)frameCap, game, window);
+				//world.update((float)frameCap, window, camera);
+				world.entitiesUpdate((float)frameCap, game, window);
 				world.correctCamera(camera, window);
 				world.correctMapSize(window);
 

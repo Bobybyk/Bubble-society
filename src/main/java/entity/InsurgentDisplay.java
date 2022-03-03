@@ -91,10 +91,10 @@ public class InsurgentDisplay extends Entity {
     }
 
     @Override
-    public void wanderUpdate(float delta, Double[] coords) {
+    public void wanderUpdate(float delta, ShiftingVector coords) {
         Vector2f movement = new Vector2f();
 
-        movement.add((int)(double)coords[0]*delta, (int)(double)coords[1]*delta);
+        movement.add((int)(double)coords.getX()*delta, (int)(double)coords.getY()*delta);
         move(movement);
 
         casualAnimUpdate(movement);

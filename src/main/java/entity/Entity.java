@@ -108,7 +108,7 @@ public abstract class Entity {
     }
 
     public abstract void update(float delta, Window window, Camera camera, World world);
-    public abstract void wanderUpdate(float delta, Double[] coords);
+    public abstract void wanderUpdate(float delta, ShiftingVector coords);
     public abstract void deathUpdate();
     public abstract void changeCameraMod();
     public abstract void setWorker(Worker worker);
