@@ -44,6 +44,7 @@ import render.Shader;
 
 
 public class World {
+    
     private int viewX;
     private int viewY;
     private int width;
@@ -73,6 +74,7 @@ public class World {
     private static int SHIFTING_MAX = 300;
     private static int RESIZE_COEF = 32;
     
+
     public World(String world, Camera camera) {
         try {
             BufferedImage tileSheet = ImageIO.read(new File("./levels/" + world + "/tiles.png"));
@@ -95,14 +97,18 @@ public class World {
             Transform transform;
             List<Integer> tmpBorderCordsX = new LinkedList<>();  
             List<Integer> tmpBorderCordsY = new LinkedList<>();  
+            
             // level loader
             for (int y = 0 ; y < height ; y++) {
+                
                 for (int x = 0 ; x < width ; x++) {
+                    
                     int red = (colorTileSheet[x + y * width] >> 16) & 0xFF;
                     int entityIndex = (colorEntitySheet[x + y * width] >> 16) & 0xFF;
                     int entityAlpha = (colorEntitySheet[x + y * width] >> 24) & 0xFF;
 
                     Tile t;
+                    
                     try {
                         t = Tile.tiles[red];
                     } catch (ArrayIndexOutOfBoundsException e) {
@@ -223,7 +229,6 @@ public class World {
             setFirstEntitiesSpec(game);
         }
 
-        
         Random rand = new Random();
         int x, y;
         double length;
