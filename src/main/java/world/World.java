@@ -34,14 +34,17 @@ import entity.Entity;
 import entity.Transform;
 import entity.FollowerDisplay;
 import entity.InsurgentDisplay;
+import entity.ShiftingVector;
 import game.Game;
 import game.worker.Follower;
+import game.worker.Worker;
 import io.Window;
 import render.Camera;
 import render.Shader;
 
 
 public class World {
+    
     private int viewX;
     private int viewY;
     private int width;
@@ -52,7 +55,7 @@ public class World {
     
     private AABB[] boudingBoxes;
     
-    private HashMap<Entity, Double[]> entitiesBindShiftCoord = new HashMap<Entity, Double[]>();
+    private HashMap<Entity, ShiftingVector> entitiesBindShiftCoord = new HashMap<Entity, ShiftingVector>();
     
     private ArrayList<Entity> alive = new ArrayList<Entity>();
     private ArrayList<Entity> dead = new ArrayList<Entity>();
@@ -71,6 +74,7 @@ public class World {
     private static int SHIFTING_MAX = 300;
     private static int RESIZE_COEF = 32;
     
+
     public World(String world, Camera camera) {
         try {
             BufferedImage tileSheet = ImageIO.read(new File("./levels/" + world + "/tiles.png"));
@@ -88,19 +92,23 @@ public class World {
 
             this.tiles = new byte[width * height];
             this.boudingBoxes = new AABB[width * height];
-            this.entitiesBindShiftCoord = new HashMap<Entity, Double[]>();
+            this.entitiesBindShiftCoord = new HashMap<Entity, ShiftingVector>();
 
             Transform transform;
             List<Integer> tmpBorderCordsX = new LinkedList<>();  
             List<Integer> tmpBorderCordsY = new LinkedList<>();  
+            
             // level loader
             for (int y = 0 ; y < height ; y++) {
+                
                 for (int x = 0 ; x < width ; x++) {
+                    
                     int red = (colorTileSheet[x + y * width] >> 16) & 0xFF;
                     int entityIndex = (colorEntitySheet[x + y * width] >> 16) & 0xFF;
                     int entityAlpha = (colorEntitySheet[x + y * width] >> 24) & 0xFF;
 
                     Tile t;
+                    
                     try {
                         t = Tile.tiles[red];
                     } catch (ArrayIndexOutOfBoundsException e) {
@@ -121,7 +129,7 @@ public class World {
                         switch(entityIndex) {
                             case 1: /* follower */
                                     entity = new FollowerDisplay(transform); 
-                                    entitiesBindShiftCoord.put(entity, new Double[] {0.0, 0.0, 0.0}); 
+                                    entitiesBindShiftCoord.put(entity, new ShiftingVector(0.0, 0.0, 0.0)); 
                                     entities.add(entity);
                                     alive.add(entity);
                                     checkCollisions();
@@ -159,13 +167,13 @@ public class World {
         switch(id) {
             case 1: 
                 entity = new FollowerDisplay(transform);
-                entitiesBindShiftCoord.put(entity, new Double[] {0.0, 0.0, 0.0});
+                entitiesBindShiftCoord.put(entity, new ShiftingVector(0.0, 0.0, 0.0));
                 entities.add(entity);
                 alive.add(entity);
                 break;
             case 2:
                 entity = new InsurgentDisplay(transform);
-                entitiesBindShiftCoord.put(entity, new Double[] {0.0, 0.0, 0.0});
+                entitiesBindShiftCoord.put(entity, new ShiftingVector(0.0, 0.0, 0.0));
                 entities.add(entity);
                 alive.add(entity);
                 break;
@@ -180,7 +188,7 @@ public class World {
     }
 
     private void setFirstEntitiesSpec(Game game) {
-        for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
+        for (HashMap.Entry<Entity, ShiftingVector> entity : entitiesBindShiftCoord.entrySet()) {
             game.defineEntity(entity.getKey());
         }
         firstEntitiesSpecDefined = true;
@@ -209,7 +217,7 @@ public class World {
             }
         }
 
-        for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
+        for (HashMap.Entry<Entity, ShiftingVector> entity : entitiesBindShiftCoord.entrySet()) {
             entity.getKey().render(shader, cam, this);
         }
     }
@@ -221,44 +229,63 @@ public class World {
             setFirstEntitiesSpec(game);
         }
 
-        // parse alive entities list and update their state (position, shifting, animation, etc.)
         Random rand = new Random();
         int x, y;
         double length;
         List<Entity> entitiesToConvert = new ArrayList<Entity>();
-        for (Entity entitiesAlive : alive) {
-            if (!game.getWorkerBindView().get(entitiesAlive).getWanderState()) {
-                entitiesAlive.wanderUpdate(delta, entitiesBindShiftCoord.get(entitiesAlive));
+
+        // for each entity alive
+        for (Entity entityAlive : alive) {
+            
+            // declare stats for initial entities (given by the entities.png)
+            if (!game.getWorkerBindView().get(entityAlive).getWanderState()) {
+                entityAlive.wanderUpdate(delta, entityShiftVector(entityAlive));
             }
-            if (entitiesBindShiftCoord.get(entitiesAlive)[2] <= 0 && entitiesBindShiftCoord.get(entitiesAlive)[0] == 0) {
+
+            // give shifting vector components (coords, translation...)
+            if (entityTranslation(entityAlive) <= 0 && entityShiftX(entityAlive) == 0) {
                 x = rand.nextInt(2);
                 y = rand.nextInt(2);
                 length = SHIFTING_MIN + (SHIFTING_MAX - SHIFTING_MIN) * rand.nextDouble();
                 x = x==0?-2:2;
                 y = y==0?-2:2;
-                entitiesBindShiftCoord.put(entitiesAlive, new Double[] {(double) x, (double) y, length});
+                entitiesBindShiftCoord.put(entityAlive, new ShiftingVector((double) x, (double) y, length));
                 continue;
             }
-            if (entitiesBindShiftCoord.get(entitiesAlive)[2] > 0){
-                entitiesBindShiftCoord.put(entitiesAlive, new Double[] {entitiesBindShiftCoord.get(entitiesAlive)[0], entitiesBindShiftCoord.get(entitiesAlive)[1], entitiesBindShiftCoord.get(entitiesAlive)[2]-1});
+
+            // decrease translation if it's not equals to 0
+            if (entityTranslation(entityAlive) > 0) {
+                entityShiftVector(entityAlive).decreaseTranslation();
             }
-            if (entitiesBindShiftCoord.get(entitiesAlive)[2] <= 0 && entitiesBindShiftCoord.get(entitiesAlive)[0] != 0) {
+
+            // reset coords and define a new translation for shifting vector
+            if (entityTranslation(entityAlive) <= 0 && entityShiftX(entityAlive) != 0) {
                 length = COOLDOWN_MIN + (COOLDOWN_MAX - COOLDOWN_MIN) * rand.nextDouble();
-                entitiesBindShiftCoord.put(entitiesAlive, new Double[] {0.0, 0.0, length});
+                entityShiftVector(entityAlive).resetX();
+                entityShiftVector(entityAlive).resetY();
+                entityShiftVector(entityAlive).setTranslation(length);
             }
-            if (game.getWorkerBindView().get(entitiesAlive) instanceof Follower && game.getWorkerBindView().get(entitiesAlive).getHp() < game.getWorkerBindView().get(entitiesAlive).getWill()) {
-                entitiesToConvert.add(entitiesAlive);
+
+            // if entity hasn't anought anymore, add it to the conversion list
+            if (workerInstanceOfFollower(game, entityAlive) && entityHpLowerThanEntityWill(game, entityAlive)) {
+                entitiesToConvert.add(entityAlive);
             }
-            entitiesAlive.wanderUpdate(delta, entitiesBindShiftCoord.get(entitiesAlive));
+
+            // update entity position and animation
+            entityAlive.wanderUpdate(delta, entitiesBindShiftCoord.get(entityAlive));
+
         }
 
         for (int i = 0 ; i<entitiesToConvert.size() ; i++) {
+
             DebugLogger.print(DebugType.ENTITIES, "CONVERSION");
+
             if (entitiesToConvert.get(i).getCycle(FollowerDisplay.ANIM_CONVERSION)) {
                 game.changeWorkerState(game.removeEntity(entitiesToConvert.get(i)), entityConversion(entitiesToConvert.get(i)));
             } else {
                 ((FollowerDisplay) entitiesToConvert.get(i)).conversionUpdate();
             }
+
         }
 
         // parse dead entities list and update their animation
@@ -270,9 +297,47 @@ public class World {
         checkCollisions();
     }
 
+// -----------
+
+    public boolean workerInstanceOfFollower(Game game, Entity entity) {
+        return entityAlive(game, entity) instanceof Follower;
+    }
+
+    public ShiftingVector entityShiftVector(Entity entity) {
+        return entitiesBindShiftCoord.get(entity);
+    }
+
+    public double entityShiftX(Entity entity) {
+        return entitiesBindShiftCoord.get(entity).getX();
+    }
+
+    public double entityTranslation(Entity entity) {
+        return entitiesBindShiftCoord.get(entity).getTranslation();
+    }    
+
+    public boolean entityHpLowerThanEntityWill(Game game, Entity entity) {
+        return entityHp(game, entity) < entityWill(game, entity);
+    }
+
+    public int entityWill(Game game, Entity entity) {
+        return game.getWorkerBindView().get(entity).getWill();
+    }
+
+    public int entityHp(Game game, Entity entity) {
+        return game.getWorkerBindView().get(entity).getHp();
+    }
+
+    public Worker entityAlive(Game game, Entity entity) {
+        return game.getWorkerBindView().get(entity);
+    }
+
+
+// -----------
+
+
     public void update(float delta, Window window, Camera camera) {
         List<Entity> entities = new ArrayList<Entity>();
-        for (HashMap.Entry<Entity, Double[]> entity : entitiesBindShiftCoord.entrySet()) {
+        for (HashMap.Entry<Entity, ShiftingVector> entity : entitiesBindShiftCoord.entrySet()) {
             entity.getKey().update(delta, window, camera, this);
             entities.add(entity.getKey());
         }
@@ -319,7 +384,7 @@ public class World {
 
     public Entity entityConversion(Entity entity) {
         Entity trans = null;
-        Double[] entityShiftCoords = entitiesBindShiftCoord.get(entity);
+        ShiftingVector entityShiftCoords = entitiesBindShiftCoord.get(entity);
         if (entity instanceof FollowerDisplay) {
             trans = new InsurgentDisplay(entity.getTransform());
         }

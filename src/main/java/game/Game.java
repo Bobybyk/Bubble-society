@@ -12,7 +12,6 @@
  */
 package game;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -30,10 +29,11 @@ import world.World;
 
 public class Game {
     private World gWorld;
-    private HashMap<Entity, Worker> workerBindView = new HashMap<Entity, Worker>();
+    private HashMap<Entity, Worker> workerBindView;
 
     public Game(World gWorld) {
         this.gWorld = gWorld;
+        this.workerBindView = new HashMap<Entity, Worker>();
     }
 
     /*
@@ -77,28 +77,61 @@ public class Game {
      * spawn and init a follower
      */
     public void spawnWorker(int id) {
+        
+        Worker worker = null;
+        Entity wd = null;
+        
+        switch(id) {
+            case 1: 
+                worker = buildRandomFollower();
+                wd = gWorld.spawnEntity(1);
+                workerBindView.put(wd, worker);
+                wd.setWorker(worker);
+                break;
+            case 2:
+                worker = buildRandomInsurgent();
+                wd = gWorld.spawnEntity(2);
+                workerBindView.put(wd, worker);
+                wd.setWorker(worker);
+                break;
+        }
+
+    }
+
+
+    // ---------------
+
+    private Insurgent buildInsurgent(int hp, int will, double radius) {
+        return (Insurgent) new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(true).setLifeState(true).buildInsurgent();
+    }
+    private Insurgent buildRandomInsurgent() {
         int hp = new Random().nextInt((50 - 25) + 1) + 25;
         int will = new Random().nextInt(hp) + 5;
         while(will>hp) will--; 
         double radius = new Random().nextInt(10) + 1;
-
-        Worker worker = null;
-        Entity wd = null;
-
-        switch(id) {
-            case 1: 
-                worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(true).setLifeState(true).buildFollower();
-                wd = gWorld.spawnEntity(1);
-                break;
-            case 2:
-                worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(true).setLifeState(true).buildInsurgent();
-                wd = gWorld.spawnEntity(2);
-                break;
-        }
-
-        workerBindView.put(wd, worker);
-        wd.setWorker(worker);
+        return buildInsurgent(hp, will, radius);
     }
+
+    private Follower buildFollower(int hp, int will, double radius) {
+        return (Follower) new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(true).setLifeState(true).buildFollower();
+    }
+    private Follower buildRandomFollower() {
+        int hp = new Random().nextInt((50 - 25) + 1) + 25;
+        int will = new Random().nextInt(hp) + 5;
+        while(will>hp) will--; 
+        double radius = new Random().nextInt(10) + 1;
+        return buildFollower(hp, will, radius);
+    }
+
+    private Insurgent followerToInsurgent(Follower worker) {
+        return (Insurgent) new WorkerBuilder().setHp(worker.getHp()).setWill(worker.getWill()).setZone(worker.getZone()).setRadius(worker.getRadius()).buildInsurgent();
+    }
+    private Follower insurgentToFollower(Follower worker) {
+        return (Follower) new WorkerBuilder().setHp(worker.getHp()).setWill(worker.getWill()).setZone(worker.getZone()).setRadius(worker.getRadius()).buildFollower();
+    }
+
+    // ---------------
+
 
     // to define entity without graphical part
     public void defineEntity(Entity wd) {
@@ -107,10 +140,10 @@ public class Game {
         double radius = new Random().nextInt(10) + 1;
         Worker worker = null;
         if (wd instanceof FollowerDisplay) {
-            worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(true).setLifeState(true).buildFollower();
+            worker = buildFollower(hp, will, radius);
         }
         if (wd instanceof InsurgentDisplay) {
-            worker = new WorkerBuilder().setHp(hp).setWill(will).setZone(false).setRadius(radius).setWanderState(true).setLifeState(true).buildInsurgent();
+            worker = buildInsurgent(hp, will, radius);
         }
         workerBindView.put(wd, worker);
         wd.setWorker(worker);
@@ -137,9 +170,10 @@ public class Game {
 
     public void changeWorkerState(Worker worker, Entity entity) {
         if (worker instanceof Follower) {
-            workerBindView.put(entity, new WorkerBuilder().setHp(worker.getHp()).setWill(worker.getWill()).setZone(worker.getZone()).setRadius(worker.getRadius()).buildInsurgent());
+            workerBindView.put(entity, followerToInsurgent((Follower) worker));
         } else if (worker instanceof Insurgent) {
-            workerBindView.put(entity, new WorkerBuilder().setHp(worker.getHp()).setWill(worker.getWill()).setZone(worker.getZone()).setRadius(worker.getRadius()).buildFollower());
+            workerBindView.put(entity, insurgentToFollower((Follower) worker));
         }
     }
+
 }
