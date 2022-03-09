@@ -23,5 +23,6 @@ public class DebugType {
     public static int ENTITIES = 4;
     public static int RESIZE = 5;
     public static int ZONE = 6;
+    public static int MOUSE = 7;
     public static VisualEngine gc;
 }

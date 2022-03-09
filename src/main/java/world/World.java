@@ -208,10 +208,13 @@ public class World {
         int cameraPosX = (int)camera.getPosition().x / (scale * 2);
         int cameraPosY = (int)camera.getPosition().y / (scale * 2);
 
-        int mousePositionOnWindowTilesX = (window.getMousePosition()[0]/vid.width()) * cameraPosX;
-        int mousePositionOnWindowTilesY = (window.getMousePosition()[1]/vid.height()) * cameraPosY;
+        int mousePositionOnWorldX = 
+            ( -window.getMousePosition()[0] / (scale * 2) ) + (cameraPosX+29);
+        int mousePositionOnWorldY = ( window.getMousePosition()[1] / (scale * 2) ) + (cameraPosY-16);
 
-        System.out.println("X : " + -window.getMousePosition()[0] / (scale * 2)+ " ; Y : " + window.getMousePosition()[1] / (scale * 2));
+        DebugLogger.print(DebugType.MOUSE, "X MOUSE : " + mousePositionOnWorldX + " ; Y MOUSE : " + mousePositionOnWorldY
+        + "\n"
+        + "X CAMERA : " + cameraPosX + " ; Y CAMERA : " + cameraPosY);
     }
 
     // render Tiles

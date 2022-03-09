@@ -113,6 +113,16 @@ public class CommandDebug extends Command {
                                 DebugLogger.typeMap.replace(DebugType.ZONE, true);
                             }
                             return;
+                        case "MOUSE": 
+                            if (value == 0) {
+                                System.out.println("debug MOUSE mode : disabled");  
+                                DebugLogger.typeMap.replace(DebugType.MOUSE, false);
+                            }
+                            else if (value == 1) {
+                                System.out.println("debug MOUSE mode : enabled");  
+                                DebugLogger.typeMap.replace(DebugType.MOUSE, true);
+                            }
+                            return;
                     }
                 }
             } catch(NumberFormatException e) {}
