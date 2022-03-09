@@ -26,6 +26,7 @@ import java.awt.image.BufferedImage;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFWVidMode;
 
 import application.debug.DebugLogger;
 import application.debug.DebugType;
@@ -201,6 +202,16 @@ public class World {
 
     public Matrix4f getWorldMatrix4f() {
         return world;
+    }
+
+    public void getMousePositionOnWorld(Camera camera, Window window, GLFWVidMode vid) {
+        int cameraPosX = (int)camera.getPosition().x / (scale * 2);
+        int cameraPosY = (int)camera.getPosition().y / (scale * 2);
+
+        int mousePositionOnWindowTilesX = (window.getMousePosition()[0]/vid.width()) * cameraPosX;
+        int mousePositionOnWindowTilesY = (window.getMousePosition()[1]/vid.height()) * cameraPosY;
+
+        System.out.println("X : " + -window.getMousePosition()[0] / (scale * 2)+ " ; Y : " + window.getMousePosition()[1] / (scale * 2));
     }
 
     // render Tiles

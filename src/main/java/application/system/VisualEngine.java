@@ -163,9 +163,12 @@ public class VisualEngine {
 					@Override public void invoke (long win, double dx, double dy) {
 						//System.out.println(dy);
 						world.setScale((int)dy, window, camera);
+						
 						DebugLogger.print(DebugType.RESIZE, "world scale : " + world.getScale());
 					}
 				});
+
+				world.getMousePositionOnWorld(camera, window, vid);
 
 				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
 					camera.getPosition().sub(new Vector3f(-5, 0, 0));
