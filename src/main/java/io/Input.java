@@ -30,6 +30,7 @@ public class Input {
     public boolean isKeyDown(int key) {
         return glfwGetKey(window, key) == GLFW_TRUE;
     }
+
     public boolean isMouseButtonDown(int button) {
         return glfwGetMouseButton(window, button) == GLFW_TRUE;
     }
@@ -38,6 +39,10 @@ public class Input {
     }
     public boolean isKeyReleased(int key) {
         return (!isKeyDown(key) && keys[key]);
+    }
+
+    public boolean isMouseDown(int key) {
+        return glfwGetMouseButton(window, key) == GLFW_TRUE;
     }
 
     public void update() {

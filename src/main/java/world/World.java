@@ -183,6 +183,10 @@ public class World {
         return entity; 
     }
 
+    public void defineZoneBorder(Vector3f pos) {
+        setTile(Tile.zoneTile, (int)-Math.floor(pos.x), (int)Math.floor(pos.y));
+    }
+
     public void killEntity(Entity entity) {
         dead.add(entity);
         alive.remove(entity);
