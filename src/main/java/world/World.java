@@ -204,7 +204,7 @@ public class World {
         return world;
     }
 
-    public void getMousePositionOnWorld(Camera camera, Window window, GLFWVidMode vid) {
+    public Vector3f getMousePositionOnWorld(Camera camera, Window window) {
         int cameraPosX = (int)camera.getPosition().x / (scale * 2);
         int cameraPosY = (int)camera.getPosition().y / (scale * 2);
 
@@ -215,6 +215,8 @@ public class World {
         DebugLogger.print(DebugType.MOUSE, "X MOUSE : " + mousePositionOnWorldX + " ; Y MOUSE : " + mousePositionOnWorldY
         + "\n"
         + "X CAMERA : " + cameraPosX + " ; Y CAMERA : " + cameraPosY);
+
+        return new Vector3f(mousePositionOnWorldX, mousePositionOnWorldY, 0);
     }
 
     // render Tiles
@@ -532,8 +534,9 @@ public class World {
     public void setScale(int coef, Window window, Camera camera) {
         if (scale+coef >= 16) {
             this.scale += coef;
-            this.world = new Matrix4f().setTranslation(new Vector3f(0));
+            this.world = new Matrix4f().setTranslation(new Vector3f());
             this.world.scale(scale);
+            camera.getPosition().set(getMousePositionOnWorld(camera, window));
         }
     }
 
