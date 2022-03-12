@@ -215,8 +215,8 @@ public class World {
         int refX = ((-window.getWidth()/2) + scale) / (scale * 2);
         int refY = ((window.getHeight()/2) - scale) / (scale * 2);
 
-        int mousePositionOnWorldX = (int)Math.floor(( -window.getMousePosition()[0] / (scale * 2) ) + (cameraPosX-refX));
-        int mousePositionOnWorldY = (int)Math.round(( window.getMousePosition()[1] / (scale * 2) ) + (cameraPosY-refY));
+        int mousePositionOnWorldX = (int)Math.round( -window.getMousePosition()[0] / (scale * 2) ) + (cameraPosX-refX);
+        int mousePositionOnWorldY = (int)Math.round( window.getMousePosition()[1] / (scale * 2) ) + (cameraPosY-refY);
 
         DebugLogger.print(DebugType.MOUSE, "X MOUSE : " + mousePositionOnWorldX + " ; Y MOUSE : " + mousePositionOnWorldY
         + "\n"
