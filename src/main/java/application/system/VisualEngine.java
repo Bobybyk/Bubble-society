@@ -180,6 +180,10 @@ public class VisualEngine {
 					camera.getPosition().sub(new Vector3f(0, -5, 0));
 				}
 
+				if (window.getInput().isMouseDown(GLFW.GLFW_MOUSE_BUTTON_1)) {
+					world.defineZoneBorder(world.getMousePositionOnWorld(camera, window));
+				}
+
 				// spawn followers
 				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_F)) {
 					game.spawnWorker(1);

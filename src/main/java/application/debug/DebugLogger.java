@@ -47,9 +47,11 @@ public class DebugLogger {
         typeMap.put(DebugType.ENTITIES, false);
         typeMapDirectory.put(DebugType.ENTITIES, "ENTITIES");
         typeMap.put(DebugType.RESIZE, false);
-        typeMapDirectory.put(DebugType.ENTITIES, "RESIZE");
+        typeMapDirectory.put(DebugType.RESIZE, "RESIZE");
         typeMap.put(DebugType.ZONE, false);
-        typeMapDirectory.put(DebugType.ENTITIES, "ZONE");
+        typeMapDirectory.put(DebugType.ZONE, "ZONE");
+        typeMap.put(DebugType.MOUSE, false);
+        typeMapDirectory.put(DebugType.MOUSE, "ZONE");
     }
 
     public static void destroyGraphicEngine() {

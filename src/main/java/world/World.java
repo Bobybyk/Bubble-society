@@ -26,6 +26,7 @@ import java.awt.image.BufferedImage;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFWVidMode;
 
 import application.debug.DebugLogger;
 import application.debug.DebugType;
@@ -182,6 +183,10 @@ public class World {
         return entity; 
     }
 
+    public void defineZoneBorder(Vector3f pos) {
+        setTile(Tile.zoneTile, (int)-(pos.x), (int)(pos.y));
+    }
+
     public void killEntity(Entity entity) {
         dead.add(entity);
         alive.remove(entity);
@@ -201,6 +206,23 @@ public class World {
 
     public Matrix4f getWorldMatrix4f() {
         return world;
+    }
+
+    public Vector3f getMousePositionOnWorld(Camera camera, Window window) {
+        int cameraPosX = (int)(camera.getPosition().x / (scale * 2));
+        int cameraPosY = (int)(camera.getPosition().y / (scale * 2));
+
+        int refX = ((-window.getWidth()/2) + scale) / (scale * 2);
+        int refY = ((window.getHeight()/2) - scale) / (scale * 2);
+
+        int mousePositionOnWorldX = (int)Math.round( -window.getMousePosition()[0] / (scale * 2) ) + (cameraPosX-refX);
+        int mousePositionOnWorldY = (int)Math.round( window.getMousePosition()[1] / (scale * 2) ) + (cameraPosY-refY);
+
+        DebugLogger.print(DebugType.MOUSE, "X MOUSE : " + mousePositionOnWorldX + " ; Y MOUSE : " + mousePositionOnWorldY
+        + "\n"
+        + "X CAMERA : " + cameraPosX + " ; Y CAMERA : " + cameraPosY);
+
+        return new Vector3f(mousePositionOnWorldX, mousePositionOnWorldY, 0);
     }
 
     // render Tiles
@@ -518,8 +540,9 @@ public class World {
     public void setScale(int coef, Window window, Camera camera) {
         if (scale+coef >= 16) {
             this.scale += coef;
-            this.world = new Matrix4f().setTranslation(new Vector3f(0));
+            this.world = new Matrix4f().setTranslation(new Vector3f());
             this.world.scale(scale);
+            camera.getPosition().set(getMousePositionOnWorld(camera, window));
         }
     }
 
