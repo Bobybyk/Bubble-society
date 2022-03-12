@@ -184,7 +184,7 @@ public class World {
     }
 
     public void defineZoneBorder(Vector3f pos) {
-        setTile(Tile.zoneTile, (int)-Math.floor(pos.x), (int)Math.floor(pos.y));
+        setTile(Tile.zoneTile, (int)-(pos.x), (int)(pos.y));
     }
 
     public void killEntity(Entity entity) {
@@ -209,12 +209,14 @@ public class World {
     }
 
     public Vector3f getMousePositionOnWorld(Camera camera, Window window) {
-        int cameraPosX = (int)camera.getPosition().x / (scale * 2);
-        int cameraPosY = (int)camera.getPosition().y / (scale * 2);
+        int cameraPosX = (int)(camera.getPosition().x / (scale * 2));
+        int cameraPosY = (int)(camera.getPosition().y / (scale * 2));
 
-        int mousePositionOnWorldX = 
-            ( -window.getMousePosition()[0] / (scale * 2) ) + (cameraPosX+29);
-        int mousePositionOnWorldY = ( window.getMousePosition()[1] / (scale * 2) ) + (cameraPosY-16);
+        int refX = ((-window.getWidth()/2) + scale) / (scale * 2);
+        int refY = ((window.getHeight()/2) - scale) / (scale * 2);
+
+        int mousePositionOnWorldX = (int)Math.floor(( -window.getMousePosition()[0] / (scale * 2) ) + (cameraPosX-refX));
+        int mousePositionOnWorldY = (int)Math.round(( window.getMousePosition()[1] / (scale * 2) ) + (cameraPosY-refY));
 
         DebugLogger.print(DebugType.MOUSE, "X MOUSE : " + mousePositionOnWorldX + " ; Y MOUSE : " + mousePositionOnWorldY
         + "\n"
