@@ -209,20 +209,35 @@ public class World {
     }
 
     public Vector3f getMousePositionOnWorld(Camera camera, Window window) {
-        int cameraPosX = (int)(camera.getPosition().x / (scale * 2));
-        int cameraPosY = (int)(camera.getPosition().y / (scale * 2));
+        float cameraPosX = camera.getPosition().x / (scale * 2);
+        float cameraPosY = camera.getPosition().y / (scale * 2);
+
+        double deltaX = cameraPosX-Math.floor(cameraPosX);
+        double deltaY = cameraPosY-Math.floor(cameraPosY);
+
+        double cameraPosXRounded = cameraPosX-Math.floor(cameraPosX)<=0.5?Math.round(cameraPosX-deltaX):Math.floor(cameraPosX+deltaX);
+
+        double cameraPosYRounded = cameraPosY-Math.floor(cameraPosY)<=0.5?Math.round(cameraPosY-deltaY):Math.floor(cameraPosY+deltaY);
 
         int refX = ((-window.getWidth()/2) + scale) / (scale * 2);
         int refY = ((window.getHeight()/2) - scale) / (scale * 2);
 
-        int mousePositionOnWorldX = (int)Math.round( -window.getMousePosition()[0] / (scale * 2) ) + (cameraPosX-refX);
-        int mousePositionOnWorldY = (int)Math.round( window.getMousePosition()[1] / (scale * 2) ) + (cameraPosY-refY);
+        DebugLogger.print(DebugType.MOUSE, "cameraPosX : " + cameraPosX + " ; CameraPosY : " + cameraPosY);
+        DebugLogger.print(DebugType.MOUSE, "deltaX : " + deltaX + " ; deltaY : " + deltaY);
+        DebugLogger.print(DebugType.MOUSE, "cameraPosXRounded : " + cameraPosXRounded);
+        DebugLogger.print(DebugType.MOUSE, "cameraPosYRounded : " + cameraPosYRounded);
+
+        int mousePositionOnWorldX = (int)( (-window.getMousePosition()[0] / (scale * 2) ) + (int)cameraPosXRounded-refX);
+        int mousePositionOnWorldY = (int)( (window.getMousePosition()[1] / (scale * 2) ) + (int)cameraPosYRounded-refY);
 
         DebugLogger.print(DebugType.MOUSE, "X MOUSE : " + mousePositionOnWorldX + " ; Y MOUSE : " + mousePositionOnWorldY
         + "\n"
         + "X CAMERA : " + cameraPosX + " ; Y CAMERA : " + cameraPosY);
 
+        DebugLogger.print(DebugType.MOUSE, "refX : " + refX + DebugType.MOUSE + " ; refY : " + refY);        
+
         return new Vector3f(mousePositionOnWorldX, mousePositionOnWorldY, 0);
+
     }
 
     // render Tiles
