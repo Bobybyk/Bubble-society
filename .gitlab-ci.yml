@@ -1,0 +1,28 @@
+image: gradle:latest
+
+stages:
+  - linting
+  - build
+  - test
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+
+Spotless:
+  stage: linting
+  script:
+    - gradle spotlessCheck
+
+Compilation:
+  stage: build
+  script:
+    - gradle compileJava
+
+JUnit:
+  stage: test
+  script:
+    - gradle test
+  artifacts:
+    when: always
+    reports:
+      junit: app/build/test-results/test/TEST-*.xml
