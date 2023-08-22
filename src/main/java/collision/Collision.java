@@ -14,13 +14,22 @@ package collision;
 
 import org.joml.Vector2f;
 
-
 public class Collision {
+    /**
+     * distance between the two boxes
+     */
     public Vector2f distance;
+    /**
+     * true if the boxes are intersecting
+     */
     public boolean isIntersecting;
-    
+
+    /**
+     * @param distance   distance between the two boxes
+     * @param intersects true if the boxes are intersecting
+     */
     public Collision(Vector2f distance, boolean intersects) {
         this.distance = distance;
         this.isIntersecting = intersects;
     }
-} 
+}

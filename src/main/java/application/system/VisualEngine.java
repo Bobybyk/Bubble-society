@@ -35,30 +35,75 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.util.Arrays;
 
-
 public class VisualEngine {
-	
+
+	/**
+	 * contient les éléments de jeu et agit sur leurs états
+	 */
 	private Game game;
+	/**
+	 * bat la mesure du temps
+	 */
 	private GameTimer spawner;
+	/**
+	 * contient les éléments de position et projection de la caméra
+	 */
 	private Camera camera;
+	/**
+	 * contient les règles du jeu et s'assure de leur respect
+	 */
 	private World world;
+	/**
+	 * contient les éléments de rendu global
+	 */
 	private Window window;
+	/**
+	 * s'occupe de la partie système du rendu
+	 */
 	private GLFWVidMode vid;
+	/**
+	 * s'occupe du rendu de chaque entité visuelle (texture)
+	 */
 	private TileRenderer tiles;
+	/**
+	 * gestion des shaders
+	 */
 	private Shader shader;
 
+	/**
+	 * nombre de frames par seconde
+	 */
 	private double frameCap;
+	/**
+	 * compte le nombre de frames passées jusqu'à frameCap
+	 */
 	private double FrameTime;
+	/**
+	 * première valeur de temps
+	 */
 	private double time;
-	private double unprocessed;
+	/**
+	 * deuxième valeur de temps
+	 */
 	private double time2;
+	/**
+	 * temps écoulé entre time et time2 pour déterminer le nombre de frames à rendre
+	 */
 	private double passed;
-
+	/**
+	 * temps non processé
+	 */
+	private double unprocessed;
+	/**
+	 * nombre de frames rendues
+	 */
 	private int frames;
-
+	/**
+	 * détermine quand le rendu est possible
+	 */
 	private boolean canRender = false;
 
-    public VisualEngine() {
+	public VisualEngine() {
 
 		Window.setCallBacks();
 
@@ -67,6 +112,7 @@ public class VisualEngine {
 			System.exit(1);
 		}
 
+		// Définition des paramètres de la fenêtre
 		window = new Window();
 		vid = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		window.setSize(vid.width(), vid.height());
@@ -75,30 +121,35 @@ public class VisualEngine {
 
 		GL.createCapabilities();
 
-		// for texture transparency
-		glEnable(GL_BLEND); 
+		// initialisation de paramètres pour la transparence
+		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+		// initialisation de la caméra
 		camera = new Camera(window.getWidth(), window.getHeight());
 
 		glEnable(GL_TEXTURE_2D);
 
+		// initialisation des textures
 		tiles = new TileRenderer();
 		Assets.initAsset();
 
+		// initialisation des shaders
 		shader = new Shader("shader");
 
 		DebugType.gc = this;
 
+		// initialisation du monde
 		world = new World("vanilla", camera);
 		world.calculateView(window);
 
+		// initialisation du jeu
 		game = new Game(world);
 		spawner = new GameTimer(game);
 
 		// 60fps
-		frameCap = 1.0/60.0; 
-		
+		frameCap = 1.0 / 60.0;
+
 		FrameTime = 0;
 		frames = 0;
 
@@ -106,67 +157,72 @@ public class VisualEngine {
 
 		unprocessed = 0;
 
-		// time while progam hasn't been processed 
-		while(!window.shouldClose()) {
-			
+		while (!window.shouldClose()) {
+
+			// temps écoulé que le programme n'a pas rendu
 			canRender = false;
 			time2 = Timer.getTime();
 			passed = time2 - time;
-			unprocessed+=passed;
+			unprocessed += passed;
 			FrameTime += passed;
 			time = time2;
 
-			// game calculs (spawn...)
+			// calculs relatifs au jeu (spawn...)
 			spawner.gameProcess();
 
-			// doesn't have to be rendered
-			while(unprocessed >= frameCap) {
+			// frame qui n'ont pas à être rendues
+			while (unprocessed >= frameCap) {
 
 				if (window.hasResized()) {
 					camera.setProjection(window.getWidth(), window.getHeight());
-					//gui.resizeCamera(window);
+					// gui.resizeCamera(window);
 					world.calculateView(window);
 					glViewport(0, 0, window.getWidth(), window.getHeight());
 				}
 
-				unprocessed-=frameCap;
+				unprocessed -= frameCap;
 				canRender = true;
 
-				if(window.getInput().isKeyReleased(GLFW_KEY_ESCAPE)) {
+				if (window.getInput().isKeyReleased(GLFW_KEY_ESCAPE)) {
 					glfwSetWindowShouldClose(window.getWindow(), true);
 					DebugLogger.destroyGraphicEngine();
 				}
-				if(window.getInput().isKeyReleased(GLFW_KEY_F10)) {
+				if (window.getInput().isKeyReleased(GLFW_KEY_F10)) {
 					if (world.getEntityDisplay() != null) {
 						world.getEntityDisplay().changeCameraMod();
 						DebugLogger.print(DebugType.UI, "camera mode has been updated");
 					}
 				}
-				
-				// move with mouse
+
+				// mise à jour de la mosition de la souris
 				if (window.getMousePosition()[0] <= 15) {
 					camera.getPosition().sub(new Vector3f(-5, 0, 0));
 				}
 				if (window.getMousePosition()[1] <= 15) {
 					camera.getPosition().sub(new Vector3f(0, 5, 0));
 				}
-				if (window.getMousePosition()[0] >= vid.width()-15 && window.getMousePosition()[0] <= vid.width()+15) {
+				if (window.getMousePosition()[0] >= vid.width() - 15
+						&& window.getMousePosition()[0] <= vid.width() + 15) {
 					camera.getPosition().sub(new Vector3f(5, 0, 0));
 				}
-				if (window.getMousePosition()[1] >= vid.height()-15 && window.getMousePosition()[0] <= vid.width()+15) {
+				if (window.getMousePosition()[1] >= vid.height() - 15
+						&& window.getMousePosition()[0] <= vid.width() + 15) {
 					camera.getPosition().sub(new Vector3f(0, -5, 0));
 				}
-				DebugLogger.print(DebugType.UIEXT, "mouse cursor position : " + Arrays.toString(window.getMousePosition()));
+				DebugLogger.print(DebugType.UIEXT,
+						"mouse cursor position : " + Arrays.toString(window.getMousePosition()));
 
 				// zoom
 				GLFW.glfwSetScrollCallback(window.getWindow(), new GLFWScrollCallback() {
-					@Override public void invoke (long win, double dx, double dy) {
-						//System.out.println(dy);
-						world.setScale((int)dy, window, camera);
+					@Override
+					public void invoke(long win, double dx, double dy) {
+						// System.out.println(dy);
+						world.setScale((int) dy, window, camera);
 						DebugLogger.print(DebugType.RESIZE, "world scale : " + world.getScale());
 					}
 				});
 
+				// déplacement de la caméra
 				if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
 					camera.getPosition().sub(new Vector3f(-5, 0, 0));
 				}
@@ -193,9 +249,9 @@ public class VisualEngine {
 					game.spawnWorker(2);
 				}
 
-				// blocks camera shifting
-				//world.update((float)frameCap, window, camera);
-				world.entitiesUpdate((float)frameCap, game, window);
+				// bloque le déplacement de la caméra
+				// world.update((float)frameCap, window, camera);
+				world.entitiesUpdate((float) frameCap, game, window);
 				world.correctCamera(camera, window);
 				world.correctMapSize(window);
 
@@ -210,9 +266,9 @@ public class VisualEngine {
 			}
 
 			/*
-			 * Render system
+			 * logique pour le rendu des frames
 			 */
-			if(canRender) {
+			if (canRender) {
 				glClear(GL_COLOR_BUFFER_BIT);
 
 				world.render(tiles, shader, camera);
