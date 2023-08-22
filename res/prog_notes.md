@@ -1,0 +1,1 @@
+ - [x] Quand un Follower devient hostile, son instance est détruite et clonée dans une intance Insurgent 

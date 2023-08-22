@@ -15,3 +15,6 @@
 *.project
 *.settings
 bin/
+
+### VSCode ###
+.vscode
