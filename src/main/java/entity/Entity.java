@@ -26,47 +26,76 @@ import render.Camera;
 import render.Shader;
 import world.World;
 
-
 public abstract class Entity {
+    /**
+     * bounding boxes of the entity
+     */
     protected AABB boudingBoxes;
+    /**
+     * animations of the entity
+     */
     protected Animation[] animations;
+    /**
+     * transform of the entity
+     */
     protected Transform transform;
+    /**
+     * index of the animation to use
+     */
     private int useAnimation;
-    
+
+    /**
+     * @param maxAnimations maximum number of animations
+     * @param transform     transform of the entity
+     */
     public Entity(int maxAnimations, Transform transform) {
         this.animations = new Animation[maxAnimations];
         this.transform = transform;
         this.useAnimation = 0;
-        this.boudingBoxes = new AABB(new Vector2f(transform.pos.x, transform.pos.y), new Vector2f(transform.scale.x, transform.scale.y));
+        this.boudingBoxes = new AABB(new Vector2f(transform.pos.x, transform.pos.y),
+                new Vector2f(transform.scale.x, transform.scale.y));
     }
 
+    /**
+     * @param index     index of the animation
+     * @param animation animation to set
+     */
     protected void setAnimation(int index, Animation animation) {
         animations[index] = animation;
     }
 
+    /**
+     * @param index index of the animation
+     */
     public void useAnimation(int index) {
         this.useAnimation = index;
     }
 
+    /**
+     * @param direction direction to move
+     */
     public void move(Vector2f direction) {
         transform.pos.add(new Vector3f(direction, 0));
         boudingBoxes.getCenter().set(transform.pos.x, transform.pos.y);
     }
 
+    /**
+     * @param world world to collide with
+     */
     public void collideWithTiles(World world) {
-        //set hitboxe : 5*5 around
+        // set hitboxe : 5*5 around
         AABB[] boxes = new AABB[25];
-        for (int i = 0 ; i < 5 ; i++) {
-            for (int j = 0 ; j < 5 ; j++) {
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
                 boxes[i + j * 5] = world.getTileBoundingBox(
-                    (int)(((transform.pos.x / 2) + 0.5f) - (5/2)) + i,
-                    (int)(((-transform.pos.y / 2) + 0.5f) - (5/2)) + j);
+                        (int) (((transform.pos.x / 2) + 0.5f) - (5 / 2)) + i,
+                        (int) (((-transform.pos.y / 2) + 0.5f) - (5 / 2)) + j);
             }
         }
 
         // START OF UNCLIPING SYSTEM
         AABB box = null;
-        for (int i = 0 ; i < boxes.length ; i++) {
+        for (int i = 0; i < boxes.length; i++) {
             if (boxes[i] != null) {
                 if (box == null) {
                     box = boxes[i];
@@ -86,14 +115,14 @@ public abstract class Entity {
                 transform.pos.set(boudingBoxes.getCenter(), 0);
             }
 
-            for (int i = 0 ; i < boxes.length ; i++) {
+            for (int i = 0; i < boxes.length; i++) {
                 if (boxes[i] != null) {
                     if (box == null) {
                         box = boxes[i];
                     }
                     Vector2f length1 = box.getCenter().sub(transform.pos.x, transform.pos.y, new Vector2f());
                     Vector2f length2 = boxes[i].getCenter().sub(transform.pos.x, transform.pos.y, new Vector2f());
-    
+
                     if (length1.lengthSquared() > length2.lengthSquared()) {
                         box = boxes[i];
                     }
@@ -108,11 +137,20 @@ public abstract class Entity {
     }
 
     public abstract void update(float delta, Window window, Camera camera, World world);
+
     public abstract void wanderUpdate(float delta, ShiftingVector coords);
+
     public abstract void deathUpdate();
+
     public abstract void changeCameraMod();
+
     public abstract void setWorker(Worker worker);
 
+    /**
+     * @param shader shader to use
+     * @param camera camera to use
+     * @param world  world to use
+     */
     public void render(Shader shader, Camera camera, World world) {
         Matrix4f target = camera.getProjection();
         target.mul(world.getWorldMatrix4f());
@@ -123,6 +161,9 @@ public abstract class Entity {
         Assets.getModel().render();
     }
 
+    /**
+     * @param entity entity to collide with
+     */
     public void collideWithEntity(Entity entity) {
         Collision collision = boudingBoxes.getCollision(entity.boudingBoxes);
         if (collision.isIntersecting) {
@@ -138,8 +179,8 @@ public abstract class Entity {
     public boolean getCycle(int animConversion) {
         return false;
     }
+
     public Transform getTransform() {
         return transform;
     }
 }
-
