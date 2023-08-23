@@ -36,50 +36,86 @@ public abstract class Worker {
         this.zoneId = worker.getZoneId();
     }
 
+    /**
+     * @return current hp number
+     */
     public int getHp() {
         return this.hp;
     }
 
+    /**
+     * @return current will power value
+     */
     public int getWill() {
         return this.will_power;
     }
 
+    /**
+     * @return is or not in a zone
+     */
     public boolean getZone() {
         return this.zone;
     }
 
+    /**
+     * @return radius val
+     */
     public double getRadius() {
         return this.radius;
     }
 
+    /**
+     * @return max speed val
+     */
     public int getSpeed() {
         return this.speed;
     }
 
+    /**
+     * @return dps val
+     */
     public int getDps() {
         return this.dps;
     }
 
+    /**
+     * @return is wandering or on a target
+     */
     public boolean getWanderState() {
         return this.wanderState;
     }
 
+    /**
+     * @return is alive or dead
+     */
     public boolean getLifeState() {
         return this.lifeState;
     }
 
+    /**
+     * @return zone id
+     */
     public int getZoneId() {
         return this.zoneId;
     }
 
+    /**
+     * @brief decrease hp by 1
+     */
     public void decreaseHp() {
         this.hp--;
     }
 
+    /**
+     * @brief increase hp by 1
+     */
     public void increaseHp() {
         this.hp++;
     }
 
+    /**
+     * @return true if insurgent, false if follower
+     */
     public boolean isInsurgent() {
         if (this instanceof Insurgent) {
             return true;
@@ -88,6 +124,9 @@ public abstract class Worker {
         }
     }
 
+    /**
+     * @return true if follower, false if insurgent
+     */
     public boolean isFollower() {
         if (this instanceof Follower) {
             return true;
@@ -96,14 +135,23 @@ public abstract class Worker {
         }
     }
 
+    /**
+     * @param state new state
+     */
     public void setWanderState(boolean state) {
         wanderState = state;
     }
 
+    /**
+     * @param state new state
+     */
     public void setLifeState(boolean state) {
         lifeState = state;
     }
 
+    /**
+     * @param id new id
+     */
     public void setZoneId(int id) {
         this.zoneId = id;
     }
