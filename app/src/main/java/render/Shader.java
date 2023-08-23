@@ -28,6 +28,10 @@ public class Shader {
     private int vertexShader; // vertices for shader
     private int fragmentShader; // colors/texture for shader
 
+    /**
+     * @brief create a shader
+     * @param filename path to the shader
+     */
     public Shader(String filename) {
         program = glCreateProgram();
 
@@ -65,6 +69,11 @@ public class Shader {
         }
     }
 
+    /**
+     * @brief set a uniform value
+     * @param name uniform name
+     * @param value uniform value
+     */
     public void setUniform(String name, int value) {
         int gcLocation = glGetUniformLocation(program, name); // location in the graphic card
         if (gcLocation != -1) {
@@ -72,6 +81,11 @@ public class Shader {
         }
     }
 
+    /**
+     * @brief set a uniform value
+     * @param name uniform name
+     * @param value uniform value
+     */
     public void setUniform(String uniformName, Vector4f value) {
         int gcLocation = glGetUniformLocation(program, uniformName); // location in the graphic card
         if (gcLocation != -1) {
@@ -79,6 +93,11 @@ public class Shader {
         }
     }
 
+    /**
+     * @brief set a uniform value
+     * @param name uniform name
+     * @param value uniform value
+     */
     public void setUniform(String name, Matrix4f value) {
         int gcLocation = glGetUniformLocation(program, name); // location in the graphic card
         FloatBuffer buffer = BufferUtils.createFloatBuffer(16); // 4*4 colums*rows of data
@@ -88,10 +107,18 @@ public class Shader {
         }
     }
 
+    /**
+     * @brief bind the shader
+     */
     public void bind() {
         glUseProgram(program);
     }
 
+    /**
+     * @brief format filename path
+     * @param filename name of the file
+     * @return formatted filename path
+     */
     private String readFile(String filename) {
         StringBuilder string = new StringBuilder();
         BufferedReader br;
