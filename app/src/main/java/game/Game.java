@@ -34,15 +34,14 @@ public class Game {
         this.workerBindView = new HashMap<Entity, Worker>();
     }
 
-    /*
-     * decrease hp manager
-     * return true if workers exist, else false
+    /**
+     * @brief decrease hp manager return true if workers exist, else false
      */
     public void decreaseWorkersHp() {
         if (getNbrWorkers() == 0) {
             return;
         }
-        // DEBBUG
+
         DebugLogger.print(DebugType.ENTITIES, "WORKERS LIFE");
         for (HashMap.Entry<Entity, Worker> w : workerBindView.entrySet()) {
             // if worker is not in a zone, decrease hp
@@ -54,25 +53,25 @@ public class Game {
                 gWorld.killEntity(w.getKey());
                 w.getValue().setLifeState(false);
             }
-            // DEBBUG
+
             DebugLogger.print(DebugType.ENTITIES, "" + w.getValue().getHp());
         }
     }
 
-    /*
-     * spawn random number of workers (1 to 5)
+    /**
+     * @brief spawn random number of workers (1 to 5)
      */
     public void multiSpawn() {
         int nbr = new Random().nextInt(5) + 1;
         for (int i = 0; i < nbr; i++) {
             spawnWorker(1);
         }
-        // DEBBUG
+
         DebugLogger.print(DebugType.ENTITIES, nbr + " : " + getNbrWorkers());
     }
 
-    /*
-     * spawn and init a follower
+    /**
+     * @brief spawn and init a follower
      */
     public void spawnWorker(int id) {
 
@@ -95,8 +94,13 @@ public class Game {
         }
     }
 
-    // ---------------
-
+    /**
+     * @brief build and return a new insurgent
+     * @param hp max hp
+     * @param will max will
+     * @param radius radius of the insurgent
+     * @return new insurgent
+     */
     private Insurgent buildInsurgent(int hp, int will, double radius) {
         return (Insurgent)
                 new WorkerBuilder()
@@ -109,6 +113,10 @@ public class Game {
                         .buildInsurgent();
     }
 
+    /**
+     * @brief build and return a new insurgent with random stats
+     * @return new insurgent
+     */
     private Insurgent buildRandomInsurgent() {
         int hp = new Random().nextInt((50 - 25) + 1) + 25;
         int will = new Random().nextInt(hp) + 5;
@@ -117,6 +125,13 @@ public class Game {
         return buildInsurgent(hp, will, radius);
     }
 
+    /**
+     * @brief build and return a new follower
+     * @param hp max hp
+     * @param will max will
+     * @param radius radius of the follower
+     * @return new follower
+     */
     private Follower buildFollower(int hp, int will, double radius) {
         return (Follower)
                 new WorkerBuilder()
@@ -129,6 +144,10 @@ public class Game {
                         .buildFollower();
     }
 
+    /**
+     * @brief build and return a new follower with random stats
+     * @return new follower
+     */
     private Follower buildRandomFollower() {
         int hp = new Random().nextInt((50 - 25) + 1) + 25;
         int will = new Random().nextInt(hp) + 5;
@@ -137,6 +156,11 @@ public class Game {
         return buildFollower(hp, will, radius);
     }
 
+    /**
+     * @brief convert follower to insurgent
+     * @param worker follower
+     * @return insurgent
+     */
     private Insurgent followerToInsurgent(Follower worker) {
         return (Insurgent)
                 new WorkerBuilder()
@@ -147,6 +171,12 @@ public class Game {
                         .buildInsurgent();
     }
 
+    /**
+     * convert insurgent to follower
+     *
+     * @param worker insurgent
+     * @return follower
+     */
     private Follower insurgentToFollower(Follower worker) {
         return (Follower)
                 new WorkerBuilder()
@@ -157,9 +187,10 @@ public class Game {
                         .buildFollower();
     }
 
-    // ---------------
-
-    // to define entity without graphical part
+    /**
+     * @brief define entity without graphical part
+     * @param wd entity
+     */
     public void defineEntity(Entity wd) {
         int hp = new Random().nextInt((50 - 25) + 1) + 25;
         int will = hp - (new Random().nextInt((hp - 20) + 1) + 20);
@@ -175,26 +206,46 @@ public class Game {
         wd.setWorker(worker);
     }
 
+    /**
+     * @brief change wander mode of all workers
+     * @param state new state
+     */
     public void changeWanderMode(boolean state) {
         for (HashMap.Entry<Entity, Worker> entity : workerBindView.entrySet()) {
             entity.getValue().setWanderState(state);
         }
     }
 
+    /**
+     * @return number of workers
+     */
     private int getNbrWorkers() {
         return workerBindView.size();
     }
 
+    /**
+     * @return Entities binded to view
+     */
     public HashMap<Entity, Worker> getWorkerBindView() {
         return workerBindView;
     }
 
+    /**
+     * @brief remove entity from binded view
+     * @param entity entity to remove
+     * @return worker binded to entity
+     */
     public Worker removeEntity(Entity entity) {
         Worker tmp = workerBindView.get(entity);
         workerBindView.remove(entity);
         return tmp;
     }
 
+    /**
+     * @brief change worker state
+     * @param worker worker
+     * @param entity entity
+     */
     public void changeWorkerState(Worker worker, Entity entity) {
         if (worker instanceof Follower) {
             workerBindView.put(entity, followerToInsurgent((Follower) worker));
