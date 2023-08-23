@@ -24,6 +24,11 @@ public class Animation {
     private double lastTime;
     private double fps;
 
+    /**
+     * @brief create an animation
+     * @param fps frame per second
+     * @param textureLoaded texture loader
+     */
     public Animation(int fps, TextureLoader textureLoaded) {
         this.pointer = 0;
         this.elapsedTime = 0;
@@ -35,10 +40,17 @@ public class Animation {
         this.madeACycle = false;
     }
 
+    /**
+     * @brief bind the current frame
+     */
     public void bind() {
         bind(0);
     }
 
+    /**
+     * @brief bind the current frame with a sampler
+     * @param sampler sampler
+     */
     public void bind(int sampler) {
         this.currentTime = Timer.getTime();
         this.elapsedTime += currentTime - lastTime;
@@ -60,6 +72,10 @@ public class Animation {
         frames[pointer].bind(sampler);
     }
 
+    /**
+     * @brief tell if the animation has made a cycle
+     * @return true if made a cycle, false otherwise
+     */
     public boolean hasMadeACycle() {
         return madeACycle;
     }
