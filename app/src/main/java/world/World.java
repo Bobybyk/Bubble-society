@@ -71,6 +71,11 @@ public class World {
     private static int SHIFTING_MAX = 300;
     private static int RESIZE_COEF = 32;
 
+    /**
+     * @brief create a world
+     * @param world world
+     * @param camera camera
+     */
     public World(String world, Camera camera) {
         try {
             BufferedImage tileSheet =
@@ -147,6 +152,9 @@ public class World {
         }
     }
 
+    /**
+     * @brief create a world
+     */
     public World() {
         this.width = 128;
         this.height = 128;
@@ -158,6 +166,11 @@ public class World {
         this.world.scale(scale);
     }
 
+    /**
+     * @brief spawn an entity
+     * @param id id of the entity
+     * @return the entity
+     */
     public Entity spawnEntity(int id) {
         Transform transform = new Transform();
         transform.pos.x = 120;
@@ -180,15 +193,27 @@ public class World {
         return entity;
     }
 
+    /**
+     * @brief get the tile at a specific position
+     * @param pos position of the tile
+     */
     public void defineZoneBorder(Vector3f pos) {
         setTile(Tile.zoneTile, (int) -(pos.x), (int) (pos.y));
     }
 
+    /**
+     * @brief kill the specified entity
+     * @param entity entity to kill
+     */
     public void killEntity(Entity entity) {
         dead.add(entity);
         alive.remove(entity);
     }
 
+    /**
+     * @brief define the first entities spec
+     * @param game game
+     */
     private void setFirstEntitiesSpec(Game game) {
         for (HashMap.Entry<Entity, ShiftingVector> entity : entitiesBindShiftCoord.entrySet()) {
             game.defineEntity(entity.getKey());
@@ -196,15 +221,29 @@ public class World {
         firstEntitiesSpecDefined = true;
     }
 
+    /**
+     * @brief calculate view values (x, y) with the window size
+     * @param window
+     */
     public void calculateView(Window window) {
         viewX = (window.getWidth() / (scale * 2)) + 4;
         viewY = (window.getHeight() / (scale * 2)) + 4;
     }
 
+    /**
+     * @brief get the world matrix
+     * @return world matrix
+     */
     public Matrix4f getWorldMatrix4f() {
         return world;
     }
 
+    /**
+     * @brief get the mouse position on the entire world
+     * @param camera camera
+     * @param window window
+     * @return mouse position on the entire world
+     */
     public Vector3f getMousePositionOnWorld(Camera camera, Window window) {
         int cameraPosX = (int) (camera.getPosition().x / (scale * 2));
         int cameraPosY = (int) (camera.getPosition().y / (scale * 2));
@@ -232,7 +271,12 @@ public class World {
         return new Vector3f(mousePositionOnWorldX, mousePositionOnWorldY, 0);
     }
 
-    // render Tiles
+    /**
+     * @brief render tile
+     * @param render tile renderer
+     * @param shader shader
+     * @param cam camera
+     */
     public void render(TileRenderer render, Shader shader, Camera cam) {
         int posX = (int) cam.getPosition().x / (scale * 2);
         int posY = (int) cam.getPosition().y / (scale * 2);
@@ -252,6 +296,12 @@ public class World {
         }
     }
 
+    /**
+     * @brief update entities on the window
+     * @param delta delta between the last update and now
+     * @param game game
+     * @param window window
+     */
     public void entitiesUpdate(float delta, Game game, Window window) {
 
         // define entities spec for those which could be spawned by entities map parsing
@@ -328,42 +378,89 @@ public class World {
         checkCollisions();
     }
 
-    // -----------
-
+    /**
+     * @brief check if the entity is an instance of follower
+     * @param game game
+     * @param entity entity to check
+     * @return true if the entity is an instance of follower, false otherwise
+     */
     public boolean workerInstanceOfFollower(Game game, Entity entity) {
         return entityAlive(game, entity) instanceof Follower;
     }
 
+    /**
+     * @brief get the current shifting vector of an entity
+     * @param entity entity
+     * @return shifting vector of the entity
+     */
     public ShiftingVector entityShiftVector(Entity entity) {
         return entitiesBindShiftCoord.get(entity);
     }
 
+    /**
+     * @brief get the current x coord of the shifting vector of an entity
+     * @param entity entity
+     * @return x coord of the shifting vector of the entity
+     */
     public double entityShiftX(Entity entity) {
         return entitiesBindShiftCoord.get(entity).getX();
     }
 
+    /**
+     * @brief get the current translation of an entity
+     * @param entity entity
+     * @return translation of the entity
+     */
     public double entityTranslation(Entity entity) {
         return entitiesBindShiftCoord.get(entity).getTranslation();
     }
 
+    /**
+     * @brief check if the hp of an entity is lower than its will
+     * @param game game
+     * @param entity entity
+     * @return true if the hp of the entity is lower than its will, false otherwise
+     */
     public boolean entityHpLowerThanEntityWill(Game game, Entity entity) {
         return entityHp(game, entity) < entityWill(game, entity);
     }
 
+    /**
+     * @brief get the will of an entity
+     * @param game game
+     * @param entity entity
+     * @return will of the entity
+     */
     public int entityWill(Game game, Entity entity) {
         return game.getWorkerBindView().get(entity).getWill();
     }
 
+    /**
+     * @brief get the hp of an entity
+     * @param game game
+     * @param entity entity
+     * @return hp of the entity
+     */
     public int entityHp(Game game, Entity entity) {
         return game.getWorkerBindView().get(entity).getHp();
     }
 
+    /**
+     * @brief check if the entity is alive in the game
+     * @param game game
+     * @param entity entity
+     * @return true if the entity is alive in the game, false otherwise
+     */
     public Worker entityAlive(Game game, Entity entity) {
         return game.getWorkerBindView().get(entity);
     }
 
-    // -----------
-
+    /**
+     * @brief update the world
+     * @param delta delta between the last update and now
+     * @param window window
+     * @param camera camera
+     */
     public void update(float delta, Window window, Camera camera) {
         List<Entity> entities = new ArrayList<Entity>();
         for (HashMap.Entry<Entity, ShiftingVector> entity : entitiesBindShiftCoord.entrySet()) {
@@ -380,6 +477,9 @@ public class World {
         }
     }
 
+    /**
+     * @brief check colisions between every entity
+     */
     private void checkCollisions() {
         // collision between tiles and entities
         for (int i = 0; i < entities.size(); i++) {
@@ -391,6 +491,12 @@ public class World {
         }
     }
 
+    /**
+     * @brief check if the specified entity is in a zone
+     * @param entity entity
+     * @param game game
+     * @return true if the entity is in a zone, false otherwise
+     */
     public boolean entityIsInZone(Entity entity, Game game) {
         if (!game.getWorkerBindView().get(entity).getZone()) {
             return false;
@@ -414,6 +520,11 @@ public class World {
         return true;
     }
 
+    /**
+     * @brief convert an entity
+     * @param entity entity to convert
+     * @return the converted entity
+     */
     public Entity entityConversion(Entity entity) {
         Entity trans = null;
         ShiftingVector entityShiftCoords = entitiesBindShiftCoord.get(entity);
@@ -432,13 +543,21 @@ public class World {
         return trans;
     }
 
+    /**
+     * @brief remove an entity of the world
+     * @param entity entity to remove
+     */
     public void removeEntity(Entity entity) {
         entities.remove(entity);
         entitiesBindShiftCoord.remove(entity);
         entity = null;
     }
 
-    // to avoid going out the map
+    /**
+     * @brief to avoid going out the map
+     * @param camera camera
+     * @param window window
+     */
     public void correctCamera(Camera camera, Window window) {
         Vector3f pos = camera.getPosition();
 
@@ -459,6 +578,10 @@ public class World {
         }
     }
 
+    /**
+     * @brief to avoid going out the map
+     * @param window window
+     */
     public void correctMapSize(Window window) {
         Vector3f pos = null;
 
@@ -490,6 +613,9 @@ public class World {
         }
     }
 
+    /**
+     * @brief repaint tiles
+     */
     public void repaintTiles() {
         byte[] tilesBis = this.tiles;
         this.tiles = new byte[width * height];
@@ -504,6 +630,12 @@ public class World {
         }
     }
 
+    /**
+     * @brief set a tile at a specific position
+     * @param tile tile to set
+     * @param x x position
+     * @param y y position
+     */
     public void setTile(Tile tile, int x, int y) {
         tiles[x + y * width] = tile.getId();
         if (tile.isSolid()) {
@@ -513,10 +645,18 @@ public class World {
         }
     }
 
+    /**
+     * @brief set bounding boxes
+     */
     private void setBoundingBoxes() {
         boudingBoxes = new AABB[width * height];
     }
 
+    /**
+     * @brief fill border coords
+     * @param tmpBorderCordsX tmp border coords x
+     * @param tmpBorderCordsY tmp border coords y
+     */
     private void fillBorderCoords(List<Integer> tmpBorderCordsX, List<Integer> tmpBorderCordsY) {
         bordersInterval.put(
                 bordersInterval.size(),
@@ -537,6 +677,12 @@ public class World {
                         + tmpBorderCordsY.get(tmpBorderCordsY.size() - 1));
     }
 
+    /**
+     * @brief get the tile at a specific position
+     * @param x x position
+     * @param y y position
+     * @return tile at the specific position
+     */
     public Tile getTile(int x, int y) {
         try {
             return Tile.tiles[tiles[x + y * width]];
@@ -545,6 +691,12 @@ public class World {
         }
     }
 
+    /**
+     * @brief get the tile bounding box at a specific position
+     * @param x x position
+     * @param y y position
+     * @return tile bounding box at the specific position
+     */
     public AABB getTileBoundingBox(int x, int y) {
         try {
             return boudingBoxes[x + y * width];
@@ -553,10 +705,20 @@ public class World {
         }
     }
 
+    /**
+     * @brief get the world scale
+     * @return world scale
+     */
     public int getScale() {
         return scale;
     }
 
+    /**
+     * @brief set the world scale (zoom in or zoom out)
+     * @param coef coef to add to the scale
+     * @param window window
+     * @param camera camera
+     */
     public void setScale(int coef, Window window, Camera camera) {
         if (scale + coef >= 16) {
             this.scale += coef;
@@ -566,6 +728,10 @@ public class World {
         }
     }
 
+    /**
+     * @brief get the entity display
+     * @return entity display
+     */
     public Entity getEntityDisplay() {
         return entity;
     }
