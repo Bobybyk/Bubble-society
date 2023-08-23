@@ -24,6 +24,9 @@ public class TileRenderer {
     private HashMap<String, Texture> tileTextures;
     private VBO modelTexture;
 
+    /**
+     * @brief create a tile renderer and load all the textures
+     */
     public TileRenderer() {
         tileTextures = new HashMap<String, Texture>();
 
@@ -61,6 +64,15 @@ public class TileRenderer {
         }
     }
 
+    /**
+     * @brief render a tile at a specific position with a specific shader
+     * @param tile tile to render
+     * @param x x position of the tile
+     * @param y y position of the tile
+     * @param shader shader to use
+     * @param world world matrix
+     * @param cam camera
+     */
     public void renderTile(Tile tile, int x, int y, Shader shader, Matrix4f world, Camera cam) {
         shader.bind();
         if (tileTextures.containsKey(tile.getTexture())) {
