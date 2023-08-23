@@ -27,6 +27,10 @@ public class Texture {
     private int width;
     private int height;
 
+    /**
+     * @brief create a texture
+     * @param filename path to the texture
+     */
     public Texture(String filename) {
         BufferedImage bi;
         try {
@@ -61,6 +65,10 @@ public class Texture {
         }
     }
 
+    /**
+     * @brief bind the texture
+     * @param sampler sampler
+     */
     public void bind(int sampler) {
         if (sampler >= 0 && sampler <= 31) {
             glActiveTexture(GL_TEXTURE0 + sampler);
