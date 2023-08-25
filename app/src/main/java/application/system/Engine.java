@@ -20,6 +20,7 @@ import application.debug.DebugType;
 import application.system.timers.GameTimer;
 import assets.Assets;
 import game.Game;
+import io.InputManager;
 import io.Timer;
 import io.Window;
 import java.util.Arrays;
@@ -31,7 +32,7 @@ import render.Shader;
 import world.TileRenderer;
 import world.World;
 
-public class VisualEngine {
+public class Engine {
 
     /** contient les éléments de jeu et agit sur leurs états */
     private Game game;
@@ -49,6 +50,8 @@ public class VisualEngine {
     private TileRenderer tiles;
     /** gestion des shaders */
     private Shader shader;
+    /** gestion des inputs */
+    private InputManager inputManager;
 
     /** nombre de frames par seconde */
     private double frameCap;
@@ -67,7 +70,7 @@ public class VisualEngine {
     /** détermine quand le rendu est possible */
     private boolean canRender = false;
 
-    public VisualEngine() {
+    public Engine() {
 
         Window.setCallBacks();
 

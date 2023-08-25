@@ -15,10 +15,10 @@ package application.system;
 import application.debug.DebugType;
 
 public class EngineCreator extends Thread {
-    public static VisualEngine gcEngine;
+    public static Engine gcEngine;
 
     public void run() {
-        gcEngine = new VisualEngine();
+        gcEngine = new Engine();
         DebugType.gc = gcEngine;
     }
 }
