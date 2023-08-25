@@ -22,6 +22,11 @@ public class TileSheet {
 
     private int amountOfTiles;
 
+    /**
+     * @brief create a tile sheet
+     * @param texture texture of the tile sheet
+     * @param amountOfTiles amount of tiles in the tile sheet
+     */
     public TileSheet(String texture, int amountOfTiles) {
         this.texture = new Texture("sheets/" + texture);
         // up right divide by amountOfTiles
@@ -30,6 +35,12 @@ public class TileSheet {
         this.amountOfTiles = amountOfTiles;
     }
 
+    /**
+     * @brief bind a tile
+     * @param shader shader
+     * @param x x position of the tile
+     * @param y y position of the tile
+     */
     public void bindTile(Shader shader, int x, int y) {
         scale.translate(x, y, 0, translation);
 
@@ -39,6 +50,11 @@ public class TileSheet {
         texture.bind(0);
     }
 
+    /**
+     * @brief bind a tile
+     * @param shader shader
+     * @param tile tile to bind
+     */
     public void bindTile(Shader shader, int tile) {
         int x = tile % amountOfTiles;
         int y = tile / amountOfTiles;

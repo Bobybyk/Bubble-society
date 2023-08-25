@@ -27,6 +27,12 @@ public class VBO {
 
     private int indicesId;
 
+    /**
+     * @brief create a VBO (Vertex Buffer Object)
+     * @param vertices vertices of the VBO
+     * @param textureCoords texture coordinates of the VBO
+     * @param indices indices of the VBO
+     */
     public VBO(float[] vertices, float[] textureCoords, int[] indices) {
         this.drawCount = indices.length;
 
@@ -51,6 +57,9 @@ public class VBO {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
+    /**
+     * @brief render the VBO
+     */
     public void render() {
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
@@ -71,6 +80,11 @@ public class VBO {
         glDisableVertexAttribArray(1);
     }
 
+    /**
+     * @brief create a buffer from an array of float values (vertices, texture coordinates)
+     * @param data array of float values
+     * @return buffer of float values
+     */
     private FloatBuffer createBuffer(float[] data) {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
         buffer.put(data);

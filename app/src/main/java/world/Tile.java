@@ -23,6 +23,10 @@ public class Tile {
     private boolean solid;
     private String texture;
 
+    /**
+     * @brief create a tile
+     * @param texture texture of the tile
+     */
     public Tile(String texture) {
         this.id = numberOfTiles;
         numberOfTiles++;
@@ -34,19 +38,35 @@ public class Tile {
         tiles[id] = this;
     }
 
+    /**
+     * @brief set the tile as solid
+     * @return the tile
+     */
     public Tile setSolid() {
         this.solid = true;
         return this;
     }
 
+    /**
+     * @brief check if the tile is solid
+     * @return true if the tile is solid, false otherwise
+     */
     public boolean isSolid() {
         return solid;
     }
 
+    /**
+     * @brief get the id of the tile
+     * @return id of the tile
+     */
     public byte getId() {
         return this.id;
     }
 
+    /**
+     * @brief get the texture of the tile
+     * @return texture of the tile
+     */
     public String getTexture() {
         return this.texture;
     }
