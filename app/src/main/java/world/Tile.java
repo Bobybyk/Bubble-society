@@ -24,7 +24,8 @@ public class Tile {
     private String texture;
 
     /**
-     * @brief create a tile
+     * create a tile
+     *
      * @param texture texture of the tile
      */
     public Tile(String texture) {
@@ -39,7 +40,8 @@ public class Tile {
     }
 
     /**
-     * @brief set the tile as solid
+     * set the tile as solid
+     *
      * @return the tile
      */
     public Tile setSolid() {
@@ -48,7 +50,8 @@ public class Tile {
     }
 
     /**
-     * @brief check if the tile is solid
+     * check if the tile is solid
+     *
      * @return true if the tile is solid, false otherwise
      */
     public boolean isSolid() {
@@ -56,7 +59,8 @@ public class Tile {
     }
 
     /**
-     * @brief get the id of the tile
+     * get the id of the tile
+     *
      * @return id of the tile
      */
     public byte getId() {
@@ -64,7 +68,8 @@ public class Tile {
     }
 
     /**
-     * @brief get the texture of the tile
+     * get the texture of the tile
+     *
      * @return texture of the tile
      */
     public String getTexture() {

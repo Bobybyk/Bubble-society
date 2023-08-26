@@ -72,7 +72,8 @@ public class World {
     private static int RESIZE_COEF = 32;
 
     /**
-     * @brief create a world
+     * create a world
+     *
      * @param world world
      * @param camera camera
      */
@@ -152,9 +153,7 @@ public class World {
         }
     }
 
-    /**
-     * @brief create a world
-     */
+    /** create a world */
     public World() {
         this.width = 128;
         this.height = 128;
@@ -167,7 +166,8 @@ public class World {
     }
 
     /**
-     * @brief spawn an entity
+     * spawn an entity
+     *
      * @param id id of the entity
      * @return the entity
      */
@@ -194,7 +194,8 @@ public class World {
     }
 
     /**
-     * @brief get the tile at a specific position
+     * get the tile at a specific position
+     *
      * @param pos position of the tile
      */
     public void defineZoneBorder(Vector3f pos) {
@@ -202,7 +203,8 @@ public class World {
     }
 
     /**
-     * @brief kill the specified entity
+     * kill the specified entity
+     *
      * @param entity entity to kill
      */
     public void killEntity(Entity entity) {
@@ -211,7 +213,8 @@ public class World {
     }
 
     /**
-     * @brief define the first entities spec
+     * define the first entities spec
+     *
      * @param game game
      */
     private void setFirstEntitiesSpec(Game game) {
@@ -222,7 +225,8 @@ public class World {
     }
 
     /**
-     * @brief calculate view values (x, y) with the window size
+     * calculate view values (x, y) with the window size
+     *
      * @param window
      */
     public void calculateView(Window window) {
@@ -231,7 +235,8 @@ public class World {
     }
 
     /**
-     * @brief get the world matrix
+     * get the world matrix
+     *
      * @return world matrix
      */
     public Matrix4f getWorldMatrix4f() {
@@ -239,7 +244,8 @@ public class World {
     }
 
     /**
-     * @brief get the mouse position on the entire world
+     * get the mouse position on the entire world
+     *
      * @param camera camera
      * @param window window
      * @return mouse position on the entire world
@@ -272,7 +278,8 @@ public class World {
     }
 
     /**
-     * @brief render tile
+     * render tile
+     *
      * @param render tile renderer
      * @param shader shader
      * @param cam camera
@@ -297,7 +304,8 @@ public class World {
     }
 
     /**
-     * @brief update entities on the window
+     * update entities on the window
+     *
      * @param delta delta between the last update and now
      * @param game game
      * @param window window
@@ -379,7 +387,8 @@ public class World {
     }
 
     /**
-     * @brief check if the entity is an instance of follower
+     * check if the entity is an instance of follower
+     *
      * @param game game
      * @param entity entity to check
      * @return true if the entity is an instance of follower, false otherwise
@@ -389,7 +398,8 @@ public class World {
     }
 
     /**
-     * @brief get the current shifting vector of an entity
+     * get the current shifting vector of an entity
+     *
      * @param entity entity
      * @return shifting vector of the entity
      */
@@ -398,7 +408,8 @@ public class World {
     }
 
     /**
-     * @brief get the current x coord of the shifting vector of an entity
+     * get the current x coord of the shifting vector of an entity
+     *
      * @param entity entity
      * @return x coord of the shifting vector of the entity
      */
@@ -407,7 +418,8 @@ public class World {
     }
 
     /**
-     * @brief get the current translation of an entity
+     * get the current translation of an entity
+     *
      * @param entity entity
      * @return translation of the entity
      */
@@ -416,7 +428,8 @@ public class World {
     }
 
     /**
-     * @brief check if the hp of an entity is lower than its will
+     * check if the hp of an entity is lower than its will
+     *
      * @param game game
      * @param entity entity
      * @return true if the hp of the entity is lower than its will, false otherwise
@@ -426,7 +439,8 @@ public class World {
     }
 
     /**
-     * @brief get the will of an entity
+     * get the will of an entity
+     *
      * @param game game
      * @param entity entity
      * @return will of the entity
@@ -436,7 +450,8 @@ public class World {
     }
 
     /**
-     * @brief get the hp of an entity
+     * get the hp of an entity
+     *
      * @param game game
      * @param entity entity
      * @return hp of the entity
@@ -446,7 +461,8 @@ public class World {
     }
 
     /**
-     * @brief check if the entity is alive in the game
+     * check if the entity is alive in the game
+     *
      * @param game game
      * @param entity entity
      * @return true if the entity is alive in the game, false otherwise
@@ -456,7 +472,8 @@ public class World {
     }
 
     /**
-     * @brief update the world
+     * update the world
+     *
      * @param delta delta between the last update and now
      * @param window window
      * @param camera camera
@@ -477,9 +494,7 @@ public class World {
         }
     }
 
-    /**
-     * @brief check colisions between every entity
-     */
+    /** check colisions between every entity */
     private void checkCollisions() {
         // collision between tiles and entities
         for (int i = 0; i < entities.size(); i++) {
@@ -492,7 +507,8 @@ public class World {
     }
 
     /**
-     * @brief check if the specified entity is in a zone
+     * check if the specified entity is in a zone
+     *
      * @param entity entity
      * @param game game
      * @return true if the entity is in a zone, false otherwise
@@ -521,7 +537,8 @@ public class World {
     }
 
     /**
-     * @brief convert an entity
+     * convert an entity
+     *
      * @param entity entity to convert
      * @return the converted entity
      */
@@ -544,7 +561,8 @@ public class World {
     }
 
     /**
-     * @brief remove an entity of the world
+     * remove an entity of the world
+     *
      * @param entity entity to remove
      */
     public void removeEntity(Entity entity) {
@@ -554,7 +572,8 @@ public class World {
     }
 
     /**
-     * @brief to avoid going out the map
+     * to avoid going out the map
+     *
      * @param camera camera
      * @param window window
      */
@@ -579,7 +598,8 @@ public class World {
     }
 
     /**
-     * @brief to avoid going out the map
+     * to avoid going out the map
+     *
      * @param window window
      */
     public void correctMapSize(Window window) {
@@ -613,9 +633,7 @@ public class World {
         }
     }
 
-    /**
-     * @brief repaint tiles
-     */
+    /** repaint tiles */
     public void repaintTiles() {
         byte[] tilesBis = this.tiles;
         this.tiles = new byte[width * height];
@@ -631,7 +649,8 @@ public class World {
     }
 
     /**
-     * @brief set a tile at a specific position
+     * set a tile at a specific position
+     *
      * @param tile tile to set
      * @param x x position
      * @param y y position
@@ -645,15 +664,14 @@ public class World {
         }
     }
 
-    /**
-     * @brief set bounding boxes
-     */
+    /** set bounding boxes */
     private void setBoundingBoxes() {
         boudingBoxes = new AABB[width * height];
     }
 
     /**
-     * @brief fill border coords
+     * fill border coords
+     *
      * @param tmpBorderCordsX tmp border coords x
      * @param tmpBorderCordsY tmp border coords y
      */
@@ -678,7 +696,8 @@ public class World {
     }
 
     /**
-     * @brief get the tile at a specific position
+     * get the tile at a specific position
+     *
      * @param x x position
      * @param y y position
      * @return tile at the specific position
@@ -692,7 +711,8 @@ public class World {
     }
 
     /**
-     * @brief get the tile bounding box at a specific position
+     * get the tile bounding box at a specific position
+     *
      * @param x x position
      * @param y y position
      * @return tile bounding box at the specific position
@@ -706,7 +726,8 @@ public class World {
     }
 
     /**
-     * @brief get the world scale
+     * get the world scale
+     *
      * @return world scale
      */
     public int getScale() {
@@ -714,7 +735,8 @@ public class World {
     }
 
     /**
-     * @brief set the world scale (zoom in or zoom out)
+     * set the world scale (zoom in or zoom out)
+     *
      * @param coef coef to add to the scale
      * @param window window
      * @param camera camera
@@ -729,7 +751,8 @@ public class World {
     }
 
     /**
-     * @brief get the entity display
+     * get the entity display
+     *
      * @return entity display
      */
     public Entity getEntityDisplay() {

@@ -20,7 +20,8 @@ public class Camera {
     private Matrix4f projection;
 
     /**
-     * @brief create a camera
+     * create a camera
+     *
      * @param width
      * @param height
      */
@@ -30,7 +31,8 @@ public class Camera {
     }
 
     /**
-     * @brief set the projection of the camera
+     * set the projection of the camera
+     *
      * @param width
      * @param height
      */
@@ -39,7 +41,8 @@ public class Camera {
     }
 
     /**
-     * @brief set the position of the camera with a vector position
+     * set the position of the camera with a vector position
+     *
      * @param position vector position
      */
     public void setPosition(Vector3f position) {
@@ -47,7 +50,8 @@ public class Camera {
     }
 
     /**
-     * @brief set the position of the camera with a x, y, z position
+     * set the position of the camera with a x, y, z position
+     *
      * @param position x, y, z position
      */
     public void addPosition(Vector3f position) {
@@ -55,7 +59,8 @@ public class Camera {
     }
 
     /**
-     * @brief get the current camera position
+     * get the current camera position
+     *
      * @return current camera position as a vector
      */
     public Vector3f getPosition() {
@@ -63,7 +68,8 @@ public class Camera {
     }
 
     /**
-     * @brief get the current camera projection
+     * get the current camera projection
+     *
      * @return current camera projection as a matrix
      */
     public Matrix4f getUntransformedProjection() {
@@ -71,7 +77,8 @@ public class Camera {
     }
 
     /**
-     * @brief get the current camera projection translated by the camera position
+     * get the current camera projection translated by the camera position
+     *
      * @return current camera projection as a matrix
      */
     public Matrix4f getProjection() {

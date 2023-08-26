@@ -25,7 +25,8 @@ public class Animation {
     private double fps;
 
     /**
-     * @brief create an animation
+     * create an animation
+     *
      * @param fps frame per second
      * @param textureLoaded texture loader
      */
@@ -40,15 +41,14 @@ public class Animation {
         this.madeACycle = false;
     }
 
-    /**
-     * @brief bind the current frame
-     */
+    /** bind the current frame */
     public void bind() {
         bind(0);
     }
 
     /**
-     * @brief bind the current frame with a sampler
+     * bind the current frame with a sampler
+     *
      * @param sampler sampler
      */
     public void bind(int sampler) {
@@ -73,7 +73,8 @@ public class Animation {
     }
 
     /**
-     * @brief tell if the animation has made a cycle
+     * tell if the animation has made a cycle
+     *
      * @return true if made a cycle, false otherwise
      */
     public boolean hasMadeACycle() {

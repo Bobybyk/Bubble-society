@@ -99,16 +99,12 @@ public abstract class Worker {
         return this.zoneId;
     }
 
-    /**
-     * @brief decrease hp by 1
-     */
+    /** decrease hp by 1 */
     public void decreaseHp() {
         this.hp--;
     }
 
-    /**
-     * @brief increase hp by 1
-     */
+    /** increase hp by 1 */
     public void increaseHp() {
         this.hp++;
     }

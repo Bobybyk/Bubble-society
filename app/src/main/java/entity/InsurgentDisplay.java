@@ -1,6 +1,5 @@
 package entity;
 
-import game.worker.Worker;
 import render.Animation;
 import render.TextureLoader;
 
@@ -16,10 +15,6 @@ public class InsurgentDisplay extends Entity {
     private Animation movment;
     private Animation dying;
     private Animation dead;
-
-    private boolean cameraOnWorker;
-
-    private Worker worker;
 
     public InsurgentDisplay(Transform transform) {
         super(ANIM_SIZE, transform);
