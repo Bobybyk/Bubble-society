@@ -24,12 +24,6 @@ import render.TextureLoader;
 import world.World;
 
 public class FollowerDisplay extends Entity {
-    public static final int ANIM_IDLE = 0;
-    public static final int ANIM_MOVE = 1;
-    public static final int ANIM_DYING = 2;
-    public static final int ANIM_DEAD = 3;
-    public static final int ANIM_CONVERSION = 4;
-    public static final int ANIM_SIZE = 5;
 
     private HashMap<Integer, Animation> animationBindId = new HashMap<Integer, Animation>();
 

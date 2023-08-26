@@ -26,6 +26,13 @@ import render.Shader;
 import world.World;
 
 public abstract class Entity {
+    public static final int ANIM_IDLE = 0;
+    public static final int ANIM_MOVE = 1;
+    public static final int ANIM_DYING = 2;
+    public static final int ANIM_DEAD = 3;
+    public static final int ANIM_CONVERSION = 4;
+    public static final int ANIM_SIZE = 5;
+
     /** bounding boxes of the entity */
     protected AABB boudingBoxes;
     /** animations of the entity */
