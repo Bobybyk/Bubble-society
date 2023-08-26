@@ -20,7 +20,6 @@ import application.debug.DebugType;
 import application.system.timers.GameTimer;
 import assets.Assets;
 import game.Game;
-import io.InputManager;
 import io.Timer;
 import io.Window;
 import java.util.Arrays;
@@ -50,8 +49,6 @@ public class Engine {
     private TileRenderer tiles;
     /** gestion des shaders */
     private Shader shader;
-    /** gestion des inputs */
-    private InputManager inputManager;
 
     /** nombre de frames par seconde */
     private double frameCap;

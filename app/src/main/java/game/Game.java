@@ -83,13 +83,13 @@ public class Game {
                 worker = buildRandomFollower();
                 wd = gWorld.spawnEntity(1);
                 workerBindView.put(wd, worker);
-                wd.setWorker(worker);
+                // wd.setWorker(worker);
                 break;
             case 2:
                 worker = buildRandomInsurgent();
                 wd = gWorld.spawnEntity(2);
                 workerBindView.put(wd, worker);
-                wd.setWorker(worker);
+                // wd.setWorker(worker);
                 break;
         }
     }
@@ -203,7 +203,7 @@ public class Game {
             worker = buildInsurgent(hp, will, radius);
         }
         workerBindView.put(wd, worker);
-        wd.setWorker(worker);
+        // wd.setWorker(worker);
     }
 
     /**

@@ -15,11 +15,12 @@ package entity;
 import assets.Assets;
 import collision.AABB;
 import collision.Collision;
-import game.worker.Worker;
 import io.Window;
+import java.util.HashMap;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFW;
 import render.Animation;
 import render.Camera;
 import render.Shader;
@@ -33,6 +34,13 @@ public abstract class Entity {
     public static final int ANIM_CONVERSION = 4;
     public static final int ANIM_SIZE = 5;
 
+    protected HashMap<Integer, Animation> animationBindId = new HashMap<Integer, Animation>();
+    protected Animation idle;
+    protected Animation movment;
+    protected Animation dying;
+    protected Animation dead;
+    protected Animation conversion;
+
     /** bounding boxes of the entity */
     protected AABB boudingBoxes;
     /** animations of the entity */
@@ -41,6 +49,8 @@ public abstract class Entity {
     protected Transform transform;
     /** index of the animation to use */
     private int useAnimation;
+
+    private boolean cameraOnWorker;
 
     /**
      * @param maxAnimations maximum number of animations
@@ -139,15 +149,79 @@ public abstract class Entity {
         } // END OF UNCLIPING SYSTEM
     }
 
-    public abstract void update(float delta, Window window, Camera camera, World world);
+    public void update(float delta, Window window, Camera camera, World world) {
+        Vector2f movement = new Vector2f();
 
-    public abstract void wanderUpdate(float delta, ShiftingVector coords);
+        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_LEFT)) {
+            movement.add(-20 * delta, 0);
+        }
+        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_RIGHT)) {
+            movement.add(20 * delta, 0);
+        }
+        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_UP)) {
+            movement.add(0, 20 * delta);
+        }
+        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_DOWN)) {
+            movement.add(0, -20 * delta);
+        }
 
-    public abstract void deathUpdate();
+        move(movement);
 
-    public abstract void changeCameraMod();
+        if (movement.x != 0 || movement.y != 0) {
+            useAnimation(ANIM_MOVE);
+        } else {
+            useAnimation(ANIM_IDLE);
+        }
 
-    public abstract void setWorker(Worker worker);
+        followWorker(world, camera);
+    }
+
+    public void followWorker(World world, Camera camera) {
+        if (cameraOnWorker) {
+            camera.getPosition().lerp(transform.pos.mul(-world.getScale(), new Vector3f()), 0.01f);
+        }
+    }
+
+    public void changeCameraMod() {
+        if (cameraOnWorker) {
+            cameraOnWorker = false;
+        } else {
+            cameraOnWorker = true;
+        }
+    }
+
+    public void wanderUpdate(float delta, ShiftingVector coords) {
+        Vector2f movement = new Vector2f();
+
+        movement.add((int) (double) coords.getX() * delta, (int) (double) coords.getY() * delta);
+        move(movement);
+
+        casualAnimUpdate(movement);
+    }
+
+    public void casualAnimUpdate(Vector2f movement) {
+        if (movement.x != 0 || movement.y != 0) {
+            useAnimation(ANIM_MOVE);
+        } else {
+            useAnimation(ANIM_IDLE);
+        }
+    }
+
+    public void deathUpdate() {
+        if (dying.hasMadeACycle()) {
+            useAnimation(ANIM_DEAD);
+        } else {
+            useAnimation(ANIM_DYING);
+        }
+    }
+
+    public void conversionUpdate() {
+        useAnimation(ANIM_CONVERSION);
+    }
+
+    public boolean getCycle(int id) {
+        return animationBindId.get(id).hasMadeACycle();
+    }
 
     /**
      * @param shader shader to use
@@ -178,10 +252,6 @@ public abstract class Entity {
             entity.transform.pos.set(
                     entity.boudingBoxes.getCenter().x, entity.boudingBoxes.getCenter().y, 0);
         }
-    }
-
-    public boolean getCycle(int animConversion) {
-        return false;
     }
 
     public Transform getTransform() {
