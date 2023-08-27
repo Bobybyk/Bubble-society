@@ -11,17 +11,12 @@ public class InsurgentDisplay extends Entity {
     private static TextureLoader dyingTexures = new TextureLoader(21, "insurgent/dying");
     private static TextureLoader deadTexures = new TextureLoader(1, "insurgent/dead");
 
-    private Animation idle;
-    private Animation movment;
-    private Animation dying;
-    private Animation dead;
-
     public InsurgentDisplay(Transform transform) {
         super(ANIM_SIZE, transform);
-        this.idle = new Animation(9, idleTexures);
-        this.movment = new Animation(8, movmentTexures);
-        this.dying = new Animation(10, dyingTexures);
-        this.dead = new Animation(1, deadTexures);
+        idle = new Animation(9, idleTexures);
+        movment = new Animation(8, movmentTexures);
+        dying = new Animation(10, dyingTexures);
+        dead = new Animation(1, deadTexures);
 
         setAnimation(ANIM_IDLE, idle);
         setAnimation(ANIM_MOVE, movment);

@@ -15,6 +15,7 @@ package entity;
 import assets.Assets;
 import collision.AABB;
 import collision.Collision;
+import game.worker.Worker;
 import io.Window;
 import java.util.HashMap;
 import org.joml.Matrix4f;
@@ -63,6 +64,8 @@ public abstract class Entity {
     private int useAnimation;
 
     private boolean cameraOnWorker;
+
+    private Worker worker;
 
     /**
      * @param maxAnimations maximum number of animations
@@ -309,5 +312,9 @@ public abstract class Entity {
 
     public Transform getTransform() {
         return transform;
+    }
+
+    public void setWorker(Worker worker) {
+        this.worker = worker;
     }
 }
