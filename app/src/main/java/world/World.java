@@ -239,22 +239,51 @@ public class World {
     }
 
     /**
-     * @brief get the mouse position on the entire world
-     * @param camera camera
-     * @param window window
-     * @return mouse position on the entire world
+     * Returns the tile on which the player clicked regardless of where the camera is positioned
+     *
+     * @param camera The camera object which must be used as reference for placement
+     * @param window The window (which the player clicks onto) in which the tile must be placed
+     * @return The coordinates of the tile the player clicked onto
      */
     public Vector3f getMousePositionOnWorld(Camera camera, Window window) {
-        int cameraPosX = (int) (camera.getPosition().x / (scale * 2));
-        int cameraPosY = (int) (camera.getPosition().y / (scale * 2));
 
-        int refX = ((-window.getWidth() / 2) + scale) / (scale * 2);
-        int refY = ((window.getHeight() / 2) - scale) / (scale * 2);
+        /*
+         * The horizontal position of the Top-left corner of the camera in the world
+         *
+         * Obtained by subtracting half of the width of the window to position of the center of the window
+         */
+        float cameraPosX = camera.getPosition().x + (window.getWidth() / 2);
 
-        int mousePositionOnWorldX =
-                (int) Math.round(-window.getMousePosition()[0] / (scale * 2)) + (cameraPosX - refX);
-        int mousePositionOnWorldY =
-                (int) Math.round(window.getMousePosition()[1] / (scale * 2)) + (cameraPosY - refY);
+        /*
+         * The vertical position of the Top-left corner of the camera in the world
+         *
+         * Obtained by subtracting half of the height of the window to position of the center of the window
+         */
+        float cameraPosY = camera.getPosition().y - (window.getHeight() / 2);
+
+        /**
+         * The horizontal coordinate of the mouse click location on the whole map
+         *
+         * <p>Obtained by adding (the camera position) to (the mouse click position relative to the
+         * window)
+         */
+        float clickPosX = (-window.getMousePosition()[0] + cameraPosX);
+
+        /**
+         * The vertical coordinate of the mouse click location on the whole map
+         *
+         * <p>Obtained by adding (the camera position) to (the mouse click position relative to the
+         * window)
+         */
+        float clickPosY = (window.getMousePosition()[1] + cameraPosY);
+
+        /** Scale coordinates to fit zoom level */
+        float scaledPosX = clickPosX / (scale * 2);
+        float scaledPosY = clickPosY / (scale * 2);
+
+        /** Round coordinates to obtain integer values */
+        int mousePositionOnWorldX = Math.round(scaledPosX);
+        int mousePositionOnWorldY = Math.round(scaledPosY);
 
         DebugLogger.print(
                 DebugType.MOUSE,
