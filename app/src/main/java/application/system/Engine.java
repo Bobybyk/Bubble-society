@@ -80,7 +80,7 @@ public class Engine {
         window = new Window();
         vid = glfwGetVideoMode(glfwGetPrimaryMonitor());
         window.setSize(vid.width(), vid.height());
-        window.setFullScreen(true);
+        window.setFullScreen(false);
         window.createWindow("Society");
 
         GL.createCapabilities();
