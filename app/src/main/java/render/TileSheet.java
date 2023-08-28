@@ -23,7 +23,8 @@ public class TileSheet {
     private int amountOfTiles;
 
     /**
-     * @brief create a tile sheet
+     * create a tile sheet
+     *
      * @param texture texture of the tile sheet
      * @param amountOfTiles amount of tiles in the tile sheet
      */
@@ -36,7 +37,8 @@ public class TileSheet {
     }
 
     /**
-     * @brief bind a tile
+     * bind a tile
+     *
      * @param shader shader
      * @param x x position of the tile
      * @param y y position of the tile
@@ -51,7 +53,8 @@ public class TileSheet {
     }
 
     /**
-     * @brief bind a tile
+     * bind a tile
+     *
      * @param shader shader
      * @param tile tile to bind
      */

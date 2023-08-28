@@ -28,7 +28,8 @@ public class Texture {
     private int height;
 
     /**
-     * @brief create a texture
+     * create a texture
+     *
      * @param filename path to the texture
      */
     public Texture(String filename) {
@@ -66,7 +67,8 @@ public class Texture {
     }
 
     /**
-     * @brief bind the texture
+     * bind the texture
+     *
      * @param sampler sampler
      */
     public void bind(int sampler) {

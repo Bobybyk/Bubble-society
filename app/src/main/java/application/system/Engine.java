@@ -31,7 +31,7 @@ import render.Shader;
 import world.TileRenderer;
 import world.World;
 
-public class VisualEngine {
+public class Engine {
 
     /** contient les éléments de jeu et agit sur leurs états */
     private Game game;
@@ -67,7 +67,7 @@ public class VisualEngine {
     /** détermine quand le rendu est possible */
     private boolean canRender = false;
 
-    public VisualEngine() {
+    public Engine() {
 
         Window.setCallBacks();
 

@@ -17,15 +17,43 @@ import collision.AABB;
 import collision.Collision;
 import game.worker.Worker;
 import io.Window;
+import java.util.HashMap;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFW;
 import render.Animation;
 import render.Camera;
 import render.Shader;
 import world.World;
 
 public abstract class Entity {
+    /** id de l'animation de l'entité qui ne bouge pas */
+    public static final int ANIM_IDLE = 0;
+    /** id de l'Animation de l'entité qui bouge */
+    public static final int ANIM_MOVE = 1;
+    /** id de l'Animation de l'entité qui meurt */
+    public static final int ANIM_DYING = 2;
+    /** id de l'Animation de l'entité qui est morte */
+    public static final int ANIM_DEAD = 3;
+    /** id de l'Animation de l'entité qui est en train de se convertir */
+    public static final int ANIM_CONVERSION = 4;
+    /** id de l'Nombre d'animations */
+    public static final int ANIM_SIZE = 5;
+
+    /** Liste des animations */
+    protected HashMap<Integer, Animation> animationBindId = new HashMap<Integer, Animation>();
+    /** Animation de l'entité qui ne bouge pas */
+    protected Animation idle;
+    /** Animation de l'entité qui bouge */
+    protected Animation movment;
+    /** Animation de l'entité qui meurt */
+    protected Animation dying;
+    /** Animation de l'entité qui est morte */
+    protected Animation dead;
+    /** Animation de l'entité qui est en train de se convertir */
+    protected Animation conversion;
+
     /** bounding boxes of the entity */
     protected AABB boudingBoxes;
     /** animations of the entity */
@@ -34,6 +62,10 @@ public abstract class Entity {
     protected Transform transform;
     /** index of the animation to use */
     private int useAnimation;
+
+    private boolean cameraOnWorker;
+
+    private Worker worker;
 
     /**
      * @param maxAnimations maximum number of animations
@@ -65,6 +97,8 @@ public abstract class Entity {
     }
 
     /**
+     * permet de déplacer l'entité dans une direction donnée
+     *
      * @param direction direction to move
      */
     public void move(Vector2f direction) {
@@ -73,6 +107,8 @@ public abstract class Entity {
     }
 
     /**
+     * permet de gérer les collisions avec les tiles
+     *
      * @param world world to collide with
      */
     public void collideWithTiles(World world) {
@@ -132,17 +168,117 @@ public abstract class Entity {
         } // END OF UNCLIPING SYSTEM
     }
 
-    public abstract void update(float delta, Window window, Camera camera, World world);
+    /**
+     * permet de déplacer l'entité avec les touches du clavier
+     *
+     * @param delta
+     * @param window
+     * @param camera
+     * @param world
+     */
+    public void update(float delta, Window window, Camera camera, World world) {
+        Vector2f movement = new Vector2f();
 
-    public abstract void wanderUpdate(float delta, ShiftingVector coords);
+        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_LEFT)) {
+            movement.add(-20 * delta, 0);
+        }
+        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_RIGHT)) {
+            movement.add(20 * delta, 0);
+        }
+        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_UP)) {
+            movement.add(0, 20 * delta);
+        }
+        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_DOWN)) {
+            movement.add(0, -20 * delta);
+        }
 
-    public abstract void deathUpdate();
+        move(movement);
 
-    public abstract void changeCameraMod();
+        if (movement.x != 0 || movement.y != 0) {
+            useAnimation(ANIM_MOVE);
+        } else {
+            useAnimation(ANIM_IDLE);
+        }
 
-    public abstract void setWorker(Worker worker);
+        followWorker(world, camera);
+    }
 
     /**
+     * permet de suivre l'entité avec la caméra
+     *
+     * @param world
+     * @param camera
+     */
+    public void followWorker(World world, Camera camera) {
+        if (cameraOnWorker) {
+            camera.getPosition().lerp(transform.pos.mul(-world.getScale(), new Vector3f()), 0.01f);
+        }
+    }
+
+    /** permet de changer le mode de la caméra (suivre ou non l'entité) */
+    public void changeCameraMod() {
+        if (cameraOnWorker) {
+            cameraOnWorker = false;
+        } else {
+            cameraOnWorker = true;
+        }
+    }
+
+    /**
+     * change la direction de l'entité en fonction des coordonnées données
+     *
+     * @param delta temps écoulé depuis le dernier update
+     * @param coords coordonnées de la direction à prendre
+     */
+    public void wanderUpdate(float delta, ShiftingVector coords) {
+        Vector2f movement = new Vector2f();
+
+        movement.add((int) (double) coords.getX() * delta, (int) (double) coords.getY() * delta);
+        move(movement);
+
+        casualAnimUpdate(movement);
+    }
+
+    /**
+     * change l'animation de l'entité en fonction de son mouvement
+     *
+     * @param movement
+     */
+    public void casualAnimUpdate(Vector2f movement) {
+        if (movement.x != 0 || movement.y != 0) {
+            useAnimation(ANIM_MOVE);
+        } else {
+            useAnimation(ANIM_IDLE);
+        }
+    }
+
+    /** change l'animation de l'entité en fonction de son état de vie */
+    public void deathUpdate() {
+        if (dying.hasMadeACycle()) {
+            useAnimation(ANIM_DEAD);
+        } else {
+            useAnimation(ANIM_DYING);
+        }
+    }
+
+    /** change l'animation de l'entité en fonction de son état de conversion */
+    public void conversionUpdate() {
+        useAnimation(ANIM_CONVERSION);
+    }
+
+    /**
+     * permet de savoir si l'animation a fait un cycle
+     *
+     * @param id
+     * @return true si l'animation a fait un cycle, false sinon
+     */
+    public boolean getCycle(int id) {
+        return animationBindId.get(id).hasMadeACycle();
+    }
+
+    /**
+     * permet de rendre graphiquement l'entité
+     *
      * @param shader shader to use
      * @param camera camera to use
      * @param world world to use
@@ -158,6 +294,7 @@ public abstract class Entity {
     }
 
     /**
+     * @biref permet de gérer les collisions entre entités
      * @param entity entity to collide with
      */
     public void collideWithEntity(Entity entity) {
@@ -173,11 +310,11 @@ public abstract class Entity {
         }
     }
 
-    public boolean getCycle(int animConversion) {
-        return false;
-    }
-
     public Transform getTransform() {
         return transform;
+    }
+
+    public void setWorker(Worker worker) {
+        this.worker = worker;
     }
 }

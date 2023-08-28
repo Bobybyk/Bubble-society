@@ -19,6 +19,7 @@ import render.Camera;
 import render.Shader;
 import render.TileSheet;
 
+/** Interface d'intéraction pour l'utilisateur (sélectionner un item, etc.) */
 public class Gui {
     private Shader shader;
     private Camera camera;

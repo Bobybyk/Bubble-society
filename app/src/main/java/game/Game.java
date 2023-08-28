@@ -34,9 +34,7 @@ public class Game {
         this.workerBindView = new HashMap<Entity, Worker>();
     }
 
-    /**
-     * @brief decrease hp manager return true if workers exist, else false
-     */
+    /** decrease hp manager return true if workers exist, else false */
     public void decreaseWorkersHp() {
         if (getNbrWorkers() == 0) {
             return;
@@ -58,9 +56,7 @@ public class Game {
         }
     }
 
-    /**
-     * @brief spawn random number of workers (1 to 5)
-     */
+    /** spawn random number of workers (1 to 5) */
     public void multiSpawn() {
         int nbr = new Random().nextInt(5) + 1;
         for (int i = 0; i < nbr; i++) {
@@ -70,9 +66,7 @@ public class Game {
         DebugLogger.print(DebugType.ENTITIES, nbr + " : " + getNbrWorkers());
     }
 
-    /**
-     * @brief spawn and init a follower
-     */
+    /** spawn and init a follower */
     public void spawnWorker(int id) {
 
         Worker worker = null;
@@ -95,7 +89,8 @@ public class Game {
     }
 
     /**
-     * @brief build and return a new insurgent
+     * build and return a new insurgent
+     *
      * @param hp max hp
      * @param will max will
      * @param radius radius of the insurgent
@@ -114,7 +109,8 @@ public class Game {
     }
 
     /**
-     * @brief build and return a new insurgent with random stats
+     * build and return a new insurgent with random stats
+     *
      * @return new insurgent
      */
     private Insurgent buildRandomInsurgent() {
@@ -126,7 +122,8 @@ public class Game {
     }
 
     /**
-     * @brief build and return a new follower
+     * build and return a new follower
+     *
      * @param hp max hp
      * @param will max will
      * @param radius radius of the follower
@@ -145,7 +142,8 @@ public class Game {
     }
 
     /**
-     * @brief build and return a new follower with random stats
+     * build and return a new follower with random stats
+     *
      * @return new follower
      */
     private Follower buildRandomFollower() {
@@ -157,7 +155,8 @@ public class Game {
     }
 
     /**
-     * @brief convert follower to insurgent
+     * convert follower to insurgent
+     *
      * @param worker follower
      * @return insurgent
      */
@@ -188,7 +187,8 @@ public class Game {
     }
 
     /**
-     * @brief define entity without graphical part
+     * define entity without graphical part
+     *
      * @param wd entity
      */
     public void defineEntity(Entity wd) {
@@ -207,7 +207,8 @@ public class Game {
     }
 
     /**
-     * @brief change wander mode of all workers
+     * change wander mode of all workers
+     *
      * @param state new state
      */
     public void changeWanderMode(boolean state) {
@@ -231,7 +232,8 @@ public class Game {
     }
 
     /**
-     * @brief remove entity from binded view
+     * remove entity from binded view
+     *
      * @param entity entity to remove
      * @return worker binded to entity
      */
@@ -242,7 +244,8 @@ public class Game {
     }
 
     /**
-     * @brief change worker state
+     * change worker state
+     *
      * @param worker worker
      * @param entity entity
      */

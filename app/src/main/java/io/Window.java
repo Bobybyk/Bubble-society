@@ -29,9 +29,7 @@ public class Window {
     private GLFWWindowSizeCallback windowSizeCallback;
     private Input input;
 
-    /**
-     * @brief set the callbacks for the window
-     */
+    /** set the callbacks for the window */
     public static void setCallBacks() {
         glfwSetErrorCallback(
                 new GLFWErrorCallback() {
@@ -42,9 +40,7 @@ public class Window {
                 });
     }
 
-    /**
-     * @brief set the callbacks for the window
-     */
+    /** set the callbacks for the window */
     private void setLocalCallbacks() {
         windowSizeCallback =
                 new GLFWWindowSizeCallback() {
@@ -65,7 +61,8 @@ public class Window {
     }
 
     /**
-     * @brief create the window
+     * create the window
+     *
      * @param title window title
      */
     public void createWindow(String title) {
@@ -88,30 +85,28 @@ public class Window {
         setLocalCallbacks();
     }
 
-    /**
-     * @brief clean up the window
-     */
+    /** clean up the window */
     public void cleanUp() {
         windowSizeCallback.close();
     }
 
     /**
-     * @brief check if the window should close
+     * check if the window should close
+     *
      * @return true if the window should close, false otherwise
      */
     public boolean shouldClose() {
         return glfwWindowShouldClose(window);
     }
 
-    /**
-     * @brief swap the buffers
-     */
+    /** swap the buffers */
     public void swapBuffers() {
         glfwSwapBuffers(window);
     }
 
     /**
-     * @brief set the size of the window
+     * set the size of the window
+     *
      * @param width new width
      * @param height new height
      */
@@ -121,16 +116,15 @@ public class Window {
     }
 
     /**
-     * @brief set the fullscreen state of the window
+     * set the fullscreen state of the window
+     *
      * @param fullscreen new fullscreen state
      */
     public void setFullScreen(boolean fullscreen) {
         this.fullscreen = fullscreen;
     }
 
-    /**
-     * @brief change the screen mode (fullscreen/windowed)
-     */
+    /** change the screen mode (fullscreen/windowed) */
     public void changeScreenMode() {
         if (fullscreen) {
             fullscreen = false;
@@ -139,9 +133,7 @@ public class Window {
         }
     }
 
-    /**
-     * @brief update the window and the input
-     */
+    /** update the window and the input */
     public void update() {
         hasResized = false;
         input.update();
@@ -149,7 +141,8 @@ public class Window {
     }
 
     /**
-     * @brief get the width of the window
+     * get the width of the window
+     *
      * @return width of the window
      */
     public int getWidth() {
@@ -157,7 +150,8 @@ public class Window {
     }
 
     /**
-     * @brief get the height of the window
+     * get the height of the window
+     *
      * @return height of the window
      */
     public int getHeight() {
@@ -165,7 +159,8 @@ public class Window {
     }
 
     /**
-     * @brief check if the window has been resized
+     * check if the window has been resized
+     *
      * @return true if the window has been resized, false otherwise
      */
     public boolean hasResized() {
@@ -173,7 +168,8 @@ public class Window {
     }
 
     /**
-     * @brief check if the window is fullscreen
+     * check if the window is fullscreen
+     *
      * @return true if the window is fullscreen, false otherwise
      */
     public boolean isFullScreen() {
@@ -181,7 +177,8 @@ public class Window {
     }
 
     /**
-     * @brief get the window
+     * get the window
+     *
      * @return window
      */
     public long getWindow() {
@@ -189,7 +186,8 @@ public class Window {
     }
 
     /**
-     * @brief get the input
+     * get the input
+     *
      * @return input
      */
     public Input getInput() {
@@ -197,7 +195,8 @@ public class Window {
     }
 
     /**
-     * @brief get the mouse position
+     * get the mouse position
+     *
      * @return mouse position as an array of int (x, y)
      */
     public int[] getMousePosition() {

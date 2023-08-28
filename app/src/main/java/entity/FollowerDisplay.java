@@ -12,26 +12,10 @@
  */
 package entity;
 
-import game.worker.Worker;
-import io.Window;
-import java.util.HashMap;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFW;
 import render.Animation;
-import render.Camera;
 import render.TextureLoader;
-import world.World;
 
 public class FollowerDisplay extends Entity {
-    public static final int ANIM_IDLE = 0;
-    public static final int ANIM_MOVE = 1;
-    public static final int ANIM_DYING = 2;
-    public static final int ANIM_DEAD = 3;
-    public static final int ANIM_CONVERSION = 4;
-    public static final int ANIM_SIZE = 5;
-
-    private HashMap<Integer, Animation> animationBindId = new HashMap<Integer, Animation>();
 
     private static TextureLoader idleTexures =
             new TextureLoader(20, "follower/idle"); // Animation(number of frames, fps, name without id)
@@ -40,22 +24,13 @@ public class FollowerDisplay extends Entity {
     private static TextureLoader deadTexures = new TextureLoader(1, "follower/dead");
     private static TextureLoader conversionTexures = new TextureLoader(20, "follower/conversion");
 
-    private Animation idle;
-    private Animation movment;
-    private Animation dying;
-    private Animation dead;
-    private Animation conversion;
-
-    private boolean cameraOnWorker;
-    private Worker worker;
-
     public FollowerDisplay(Transform transform) {
         super(ANIM_SIZE, transform);
-        this.idle = new Animation(9, idleTexures);
-        this.movment = new Animation(8, movmentTexures);
-        this.dying = new Animation(10, dyingTexures);
-        this.dead = new Animation(1, deadTexures);
-        this.conversion = new Animation(9, conversionTexures);
+        idle = new Animation(9, idleTexures);
+        movment = new Animation(8, movmentTexures);
+        dying = new Animation(10, dyingTexures);
+        dead = new Animation(1, deadTexures);
+        conversion = new Animation(9, conversionTexures);
 
         setAnimation(ANIM_IDLE, idle);
         setAnimation(ANIM_MOVE, movment);
@@ -68,87 +43,5 @@ public class FollowerDisplay extends Entity {
         animationBindId.put(ANIM_DYING, dying);
         animationBindId.put(ANIM_DEAD, dead);
         animationBindId.put(ANIM_CONVERSION, conversion);
-    }
-
-    @Override
-    public void wanderUpdate(float delta, ShiftingVector coords) {
-        Vector2f movement = new Vector2f();
-
-        movement.add((int) (double) coords.getX() * delta, (int) (double) coords.getY() * delta);
-        move(movement);
-
-        casualAnimUpdate(movement);
-    }
-
-    public void casualAnimUpdate(Vector2f movement) {
-        if (movement.x != 0 || movement.y != 0) {
-            useAnimation(ANIM_MOVE);
-        } else {
-            useAnimation(ANIM_IDLE);
-        }
-    }
-
-    @Override
-    public void deathUpdate() {
-        if (dying.hasMadeACycle()) {
-            useAnimation(ANIM_DEAD);
-        } else {
-            useAnimation(ANIM_DYING);
-        }
-    }
-
-    public void conversionUpdate() {
-        useAnimation(ANIM_CONVERSION);
-    }
-
-    @Override
-    public void update(float delta, Window window, Camera camera, World world) {
-        Vector2f movement = new Vector2f();
-
-        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_LEFT)) {
-            movement.add(-20 * delta, 0);
-        }
-        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_RIGHT)) {
-            movement.add(20 * delta, 0);
-        }
-        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_UP)) {
-            movement.add(0, 20 * delta);
-        }
-        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_DOWN)) {
-            movement.add(0, -20 * delta);
-        }
-
-        move(movement);
-
-        if (movement.x != 0 || movement.y != 0) {
-            useAnimation(ANIM_MOVE);
-        } else {
-            useAnimation(ANIM_IDLE);
-        }
-
-        followWorker(world, camera);
-    }
-
-    public void followWorker(World world, Camera camera) {
-        if (cameraOnWorker) {
-            camera.getPosition().lerp(transform.pos.mul(-world.getScale(), new Vector3f()), 0.01f);
-        }
-    }
-
-    @Override
-    public void changeCameraMod() {
-        if (cameraOnWorker) {
-            cameraOnWorker = false;
-        } else {
-            cameraOnWorker = true;
-        }
-    }
-
-    public boolean getCycle(int id) {
-        return animationBindId.get(id).hasMadeACycle();
-    }
-
-    public void setWorker(Worker worker) {
-        this.worker = worker;
     }
 }

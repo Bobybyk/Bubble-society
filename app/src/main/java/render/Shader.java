@@ -29,7 +29,8 @@ public class Shader {
     private int fragmentShader; // colors/texture for shader
 
     /**
-     * @brief create a shader
+     * create a shader
+     *
      * @param filename path to the shader
      */
     public Shader(String filename) {
@@ -70,7 +71,8 @@ public class Shader {
     }
 
     /**
-     * @brief set a uniform value
+     * set a uniform value
+     *
      * @param name uniform name
      * @param value uniform value
      */
@@ -82,7 +84,8 @@ public class Shader {
     }
 
     /**
-     * @brief set a uniform value
+     * set a uniform value
+     *
      * @param name uniform name
      * @param value uniform value
      */
@@ -94,7 +97,8 @@ public class Shader {
     }
 
     /**
-     * @brief set a uniform value
+     * set a uniform value
+     *
      * @param name uniform name
      * @param value uniform value
      */
@@ -107,15 +111,14 @@ public class Shader {
         }
     }
 
-    /**
-     * @brief bind the shader
-     */
+    /** bind the shader */
     public void bind() {
         glUseProgram(program);
     }
 
     /**
-     * @brief format filename path
+     * format filename path
+     *
      * @param filename name of the file
      * @return formatted filename path
      */
