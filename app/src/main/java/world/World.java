@@ -774,7 +774,10 @@ public class World {
             this.scale += coef;
             this.world = new Matrix4f().setTranslation(new Vector3f());
             this.world.scale(scale);
-            camera.getPosition().set(getMousePositionOnWorld(camera, window));
+
+            Vector3f mousePos = getMousePositionOnWorld(camera, window);
+            int xPos = (int) (mousePos.x * (scale * 2));
+            int yPos = (int) (mousePos.y * (scale * 2));
         }
     }
 

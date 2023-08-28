@@ -165,12 +165,12 @@ public class Engine {
                 if (window.getMousePosition()[1] <= 15) {
                     camera.getPosition().sub(new Vector3f(0, 5, 0));
                 }
-                if (window.getMousePosition()[0] >= vid.width() - 15
-                        && window.getMousePosition()[0] <= vid.width() + 15) {
+                if (window.getMousePosition()[0] >= window.getWidth() - 15
+                        && window.getMousePosition()[0] <= window.getWidth() + 15) {
                     camera.getPosition().sub(new Vector3f(5, 0, 0));
                 }
-                if (window.getMousePosition()[1] >= vid.height() - 15
-                        && window.getMousePosition()[0] <= vid.width() + 15) {
+                if (window.getMousePosition()[1] >= window.getHeight() - 15
+                        && window.getMousePosition()[0] <= window.getHeight() + 15) {
                     camera.getPosition().sub(new Vector3f(0, -5, 0));
                 }
                 DebugLogger.print(
