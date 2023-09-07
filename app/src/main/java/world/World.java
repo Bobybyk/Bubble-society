@@ -23,6 +23,7 @@ import entity.Transform;
 import game.Game;
 import game.worker.Follower;
 import game.worker.Worker;
+import io.NewWindow;
 import io.Window;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -229,7 +230,7 @@ public class World {
      *
      * @param window
      */
-    public void calculateView(Window window) {
+    public void calculateView(NewWindow window) {
         viewX = (window.getWidth() / (scale * 2)) + 4;
         viewY = (window.getHeight() / (scale * 2)) + 4;
     }
@@ -250,7 +251,7 @@ public class World {
      * @param window The window (which the player clicks onto) in which the tile must be placed
      * @return The coordinates of the tile the player clicked onto
      */
-    public Vector3f getMousePositionOnWorld(Camera camera, Window window) {
+    public Vector3f getMousePositionOnWorld(Camera camera, NewWindow window) {
 
         /*
          * The horizontal position of the Top-left corner of the camera in the world
@@ -326,8 +327,8 @@ public class World {
             }
         }
 
-        for (HashMap.Entry<Entity, ShiftingVector> entity : entitiesBindShiftCoord.entrySet()) {
-            entity.getKey().render(shader, cam, this);
+        for (Entity e : entitiesBindShiftCoord.keySet()) {
+            e.render(shader, cam, this);
         }
     }
 
@@ -338,7 +339,7 @@ public class World {
      * @param game game
      * @param window window
      */
-    public void entitiesUpdate(float delta, Game game, Window window) {
+    public void entitiesUpdate(float delta, Game game, NewWindow window) {
 
         // define entities spec for those which could be spawned by entities map parsing
         if (firstEntitiesSpecDefined == false) {
@@ -397,9 +398,9 @@ public class World {
             DebugLogger.print(DebugType.ENTITIES, "CONVERSION");
 
             if (entitiesToConvert.get(i).getCycle(FollowerDisplay.ANIM_CONVERSION)) {
-                game.changeWorkerState(
-                        game.removeEntity(entitiesToConvert.get(i)),
-                        entityConversion(entitiesToConvert.get(i)));
+                // game.changeWorkerState(
+                //         game.removeEntity(entitiesToConvert.get(i)),
+                //         entityConversion(entitiesToConvert.get(i)));
             } else {
                 ((FollowerDisplay) entitiesToConvert.get(i)).conversionUpdate();
             }
@@ -605,7 +606,7 @@ public class World {
      * @param camera camera
      * @param window window
      */
-    public void correctCamera(Camera camera, Window window) {
+    public void correctCamera(Camera camera, NewWindow window) {
         Vector3f pos = camera.getPosition();
 
         int w = -width * scale * 2;
@@ -630,7 +631,7 @@ public class World {
      *
      * @param window window
      */
-    public void correctMapSize(Window window) {
+    public void correctMapSize(NewWindow window) {
         Vector3f pos = null;
 
         for (int i = 0; i < entities.size(); i++) {
@@ -769,7 +770,7 @@ public class World {
      * @param window window
      * @param camera camera
      */
-    public void setScale(int coef, Window window, Camera camera) {
+    public void setScale(int coef, NewWindow window, Camera camera) {
         if (scale + coef >= 16) {
             this.scale += coef;
             this.world = new Matrix4f().setTranslation(new Vector3f());

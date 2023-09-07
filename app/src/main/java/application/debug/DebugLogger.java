@@ -14,6 +14,7 @@ package application.debug;
 
 import application.shell.Console;
 import application.system.EngineCreator;
+import io.NewWindow;
 import java.util.HashMap;
 
 public class DebugLogger {
@@ -26,10 +27,14 @@ public class DebugLogger {
     private static String previousDebugMessage = "";
 
     public static void createGraphicEngine() {
-        if (EngineCreator.gcEngine == null) {
-            engine = new EngineCreator();
-            engine.start();
-        }
+        new Thread(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                new NewWindow();
+                            }
+                        })
+                .start();
     }
 
     public static void setTypeMap() {

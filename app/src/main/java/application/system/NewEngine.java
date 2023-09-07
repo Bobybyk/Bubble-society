@@ -1,54 +1,23 @@
-/*
- *
- * Copyright (c) 2022 Matthieu Le Franc
- *
- * You are prohibited from sharing and distributing this creation without our prior authorization, more specifically:
- *
- * TO PROVIDE A COPY OF OUR GAME TO ANY THIRD PARTY;
- * TO USE THIS CREATION FOR COMMERCIAL PURPOSES;
- * TO USE THIS CREATIONS FOR PROFIT;
- * TO ALLOW ANY THIRD PARTY TO ACCESS TO THIS CREATION IN AN UNFAIR OR ABUSIVE MANNER;
- *
- */
 package application.system;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_F10;
-import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
-import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
 
 import application.debug.DebugLogger;
 import application.debug.DebugType;
 import application.system.timers.GameTimer;
-import assets.Assets;
 import game.Game;
-import gui.Gui;
+import io.NewWindow;
 import io.Timer;
-import io.Window;
 import java.util.Arrays;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GL;
 import render.Camera;
-import render.Shader;
-import world.TileRenderer;
 import world.World;
 
-public class Engine {
+public class NewEngine extends Thread {
 
     /** contient les éléments de jeu et agit sur leurs états */
     private Game game;
@@ -59,13 +28,9 @@ public class Engine {
     /** contient les règles du jeu et s'assure de leur respect */
     private World world;
     /** contient les éléments de rendu global */
-    private Window window;
+    private NewWindow window;
     /** s'occupe de la partie système du rendu */
     private GLFWVidMode vid;
-    /** s'occupe du rendu de chaque entité visuelle (texture) */
-    private TileRenderer tiles;
-    /** gestion des shaders */
-    private Shader shader;
 
     /** nombre de frames par seconde */
     private double frameCap;
@@ -81,56 +46,22 @@ public class Engine {
     private double unprocessed;
     /** nombre de frames rendues */
     private int frames;
-    /** détermine quand le rendu est possible */
-    private boolean canRender = false;
 
-    Gui gui;
+    public NewEngine(World w, Camera c, GLFWVidMode v, NewWindow win) {
 
-    public Engine() {
+        world = w;
+        camera = c;
+        vid = v;
 
-        Window.setCallBacks();
+        window = win;
 
-        if (!glfwInit()) {
-            System.err.println("Failed to initialize GLFW");
-            System.exit(1);
-        }
-
-        // Définition des paramètres de la fenêtre
-        window = new Window();
-        vid = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        window.setSize(vid.width(), vid.height());
-        window.setFullScreen(false);
-        window.createWindow("Society");
-
-        GL.createCapabilities();
-
-        // initialisation de paramètres pour la transparence
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        // initialisation de la caméra
-        camera = new Camera(window.getWidth(), window.getHeight());
-
-        glEnable(GL_TEXTURE_2D);
-
-        // initialisation des textures
-        tiles = new TileRenderer();
-        Assets.initAsset();
-
-        // initialisation des shaders
-        shader = new Shader("shader");
-
-        DebugType.gc = this;
-
-        // initialisation du monde
-        world = new World("vanilla", camera);
-        // world.calculateView(window);
-
-        // initialisation du jeu
         game = new Game(world);
-        spawner = new GameTimer(game);
 
-        gui = new Gui(window);
+        spawner = new GameTimer(game);
+    }
+
+    @Override
+    public void run() {
 
         // 60fps
         frameCap = 1.0 / 60.0;
@@ -143,9 +74,6 @@ public class Engine {
         unprocessed = 0;
 
         while (!window.shouldClose()) {
-
-            // temps écoulé que le programme n'a pas rendu
-            canRender = false;
             time2 = Timer.getTime();
             passed = time2 - time;
             unprocessed += passed;
@@ -166,10 +94,9 @@ public class Engine {
                 }
 
                 unprocessed -= frameCap;
-                canRender = true;
 
                 if (window.getInput().isKeyReleased(GLFW_KEY_ESCAPE)) {
-                    glfwSetWindowShouldClose(window.getWindow(), true);
+                    glfwSetWindowShouldClose(window.getHandle(), true);
                     DebugLogger.destroyGraphicEngine();
                 }
                 if (window.getInput().isKeyReleased(GLFW_KEY_F10)) {
@@ -200,12 +127,12 @@ public class Engine {
 
                 // zoom
                 GLFW.glfwSetScrollCallback(
-                        window.getWindow(),
+                        window.getHandle(),
                         new GLFWScrollCallback() {
                             @Override
                             public void invoke(long win, double dx, double dy) {
                                 // System.out.println(dy);
-                                // world.setScale((int) dy, window, camera);
+                                world.setScale((int) dy, window, camera);
                                 DebugLogger.print(DebugType.RESIZE, "world scale : " + world.getScale());
                             }
                         });
@@ -225,7 +152,7 @@ public class Engine {
                 }
 
                 if (window.getInput().isMouseDown(GLFW.GLFW_MOUSE_BUTTON_1)) {
-                    // world.defineZoneBorder(world.getMousePositionOnWorld(camera, window));
+                    world.defineZoneBorder(world.getMousePositionOnWorld(camera, window));
                 }
 
                 // spawn followers
@@ -239,9 +166,9 @@ public class Engine {
 
                 // bloque le déplacement de la caméra
                 // world.update((float)frameCap, window, camera);
-                // world.entitiesUpdate((float) frameCap, game, window);
-                // world.correctCamera(camera, window);
-                // world.correctMapSize(window);
+                world.entitiesUpdate((float) frameCap, game, window);
+                world.correctCamera(camera, window);
+                world.correctMapSize(window);
 
                 window.update();
 
@@ -251,26 +178,6 @@ public class Engine {
                     frames = 0;
                 }
             }
-
-            /*
-             * logique pour le rendu des frames
-             */
-            if (canRender) {
-                glClear(GL_COLOR_BUFFER_BIT);
-
-                world.render(tiles, shader, camera);
-                gui.render();
-
-                window.swapBuffers();
-                frames++;
-            }
         }
-
-        Assets.deleteAsset();
-        glfwTerminate();
-    }
-
-    public Game getGame() {
-        return game;
     }
 }

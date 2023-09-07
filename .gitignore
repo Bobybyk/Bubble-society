@@ -1,6 +1,7 @@
 *.backup
 ./*.png
 *.log
+*.ini
 
 ### Java ###
 *.class
