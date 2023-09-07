@@ -86,7 +86,7 @@ public class NewEngine extends Thread {
 
                 if (window.getInput().isKeyReleased(GLFW_KEY_ESCAPE)) {
                     glfwSetWindowShouldClose(window.getHandle(), true);
-                    DebugLogger.destroyGraphicEngine();
+                    // DebugLogger.destroyGraphicEngine();
                 }
                 if (window.getInput().isKeyReleased(GLFW_KEY_F10)) {
                     if (world.getEntityDisplay() != null) {

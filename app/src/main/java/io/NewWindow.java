@@ -46,21 +46,11 @@ public class NewWindow extends imgui.app.Window {
 
     private Input input;
 
-    private boolean hasResized = false;
-
     public NewWindow() {
 
         config = new Configuration();
         this.init(config);
-        GLFW.glfwSetWindowSizeCallback(
-                handle,
-                new GLFWWindowSizeCallback() {
-                    @Override
-                    public void invoke(final long window, final int width, final int height) {
-                        hasResized = true;
-                        runFrame();
-                    }
-                });
+        this.setCallBacks();
 
         camera = new Camera(this.getWidth(), this.getHeight());
 
@@ -85,6 +75,33 @@ public class NewWindow extends imgui.app.Window {
         this.launch();
     }
 
+    public void setCallBacks() {
+        NewWindow nWin = this;
+        GLFW.glfwSetScrollCallback(
+                this.getHandle(),
+                new GLFWScrollCallback() {
+                    @Override
+                    public void invoke(long win, double dx, double dy) {
+                        // System.out.println(dy);
+                        world.setScale((int) dy, nWin, camera);
+                        DebugLogger.print(DebugType.RESIZE, "world scale : " + world.getScale());
+                    }
+                });
+
+        GLFW.glfwSetWindowSizeCallback(
+                handle,
+                new GLFWWindowSizeCallback() {
+                    @Override
+                    public void invoke(final long window, final int width, final int height) {
+                        camera.setProjection(width, height);
+                        glViewport(0, 0, width, height);
+                        world.calculateView(nWin);
+                        config.setWidth(width);
+                        config.setHeight(height);
+                    }
+                });
+    }
+
     public int getWidth() {
         return config.getWidth();
     }
@@ -105,12 +122,7 @@ public class NewWindow extends imgui.app.Window {
         glfwSwapBuffers(this.getHandle());
     }
 
-    public boolean hasResized() {
-        return hasResized;
-    }
-
     public void update() {
-        hasResized = false;
         input.update();
         glfwPollEvents();
     }
@@ -130,6 +142,7 @@ public class NewWindow extends imgui.app.Window {
 
         this.run();
         this.dispose();
+        Assets.deleteAsset();
     }
 
     private int count = 0;
@@ -141,13 +154,6 @@ public class NewWindow extends imgui.app.Window {
          * All renders must be done here
          * ==============================
          */
-
-        if (this.hasResized()) {
-            camera.setProjection(this.getWidth(), this.getHeight());
-            // gui.resizeCamera(this);
-            // world.calculateView(this);
-            glViewport(0, 0, this.getWidth(), this.getHeight());
-        }
 
         world.calculateView(this);
         world.render(tiles, shader, camera);
@@ -171,17 +177,6 @@ public class NewWindow extends imgui.app.Window {
          * Detect inputs
          * =====================
          */
-        NewWindow nWin = this;
-        GLFW.glfwSetScrollCallback(
-                this.getHandle(),
-                new GLFWScrollCallback() {
-                    @Override
-                    public void invoke(long win, double dx, double dy) {
-                        // System.out.println(dy);
-                        world.setScale((int) dy, nWin, camera);
-                        DebugLogger.print(DebugType.RESIZE, "world scale : " + world.getScale());
-                    }
-                });
 
         // déplacement de la caméra
         if (this.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
@@ -214,10 +209,5 @@ public class NewWindow extends imgui.app.Window {
         }
 
         ImGui.end();
-    }
-
-    @Override
-    public void dispose() {
-        Assets.deleteAsset();
     }
 }
