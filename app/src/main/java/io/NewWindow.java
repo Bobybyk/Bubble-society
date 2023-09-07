@@ -1,16 +1,32 @@
 package io;
 
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
+import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
+import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glViewport;
 
+import application.debug.DebugLogger;
+import application.debug.DebugType;
 import application.system.NewEngine;
 import assets.Assets;
+import game.Game;
 import imgui.ImGui;
 import imgui.app.Configuration;
 import imgui.flag.ImGuiWindowFlags;
 import java.nio.DoubleBuffer;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import render.Camera;
 import render.Shader;
 import world.TileRenderer;
@@ -24,6 +40,7 @@ public class NewWindow extends imgui.app.Window {
     private Camera camera;
     private TileRenderer tiles;
     private Shader shader;
+    private Game game;
     private NewEngine engine;
     private GLFWVidMode vid;
 
@@ -35,6 +52,15 @@ public class NewWindow extends imgui.app.Window {
 
         config = new Configuration();
         this.init(config);
+        GLFW.glfwSetWindowSizeCallback(
+                handle,
+                new GLFWWindowSizeCallback() {
+                    @Override
+                    public void invoke(final long window, final int width, final int height) {
+                        hasResized = true;
+                        runFrame();
+                    }
+                });
 
         camera = new Camera(this.getWidth(), this.getHeight());
 
@@ -45,11 +71,16 @@ public class NewWindow extends imgui.app.Window {
 
         world = new World("vanilla", camera);
 
+        game = new Game(world);
+
         input = new Input(this.getHandle());
 
         vid = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-        engine = new NewEngine(world, camera, vid, this);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        engine = new NewEngine(world, camera, vid, this, game);
 
         this.launch();
     }
@@ -110,13 +141,22 @@ public class NewWindow extends imgui.app.Window {
          * All renders must be done here
          * ==============================
          */
+
+        if (this.hasResized()) {
+            camera.setProjection(this.getWidth(), this.getHeight());
+            // gui.resizeCamera(this);
+            // world.calculateView(this);
+            glViewport(0, 0, this.getWidth(), this.getHeight());
+        }
+
         world.calculateView(this);
         world.render(tiles, shader, camera);
+        this.update();
 
         /*
-         * ===============================
+         * ImGui window
+         * ====================
          */
-
         if (ImGui.begin("Demo", ImGuiWindowFlags.AlwaysAutoResize)) {
             ImGui.text("Hello, World!");
             if (ImGui.button("Save")) {
@@ -125,6 +165,52 @@ public class NewWindow extends imgui.app.Window {
             }
             ImGui.sameLine();
             ImGui.text(String.valueOf(count));
+        }
+
+        /*
+         * Detect inputs
+         * =====================
+         */
+        NewWindow nWin = this;
+        GLFW.glfwSetScrollCallback(
+                this.getHandle(),
+                new GLFWScrollCallback() {
+                    @Override
+                    public void invoke(long win, double dx, double dy) {
+                        // System.out.println(dy);
+                        world.setScale((int) dy, nWin, camera);
+                        DebugLogger.print(DebugType.RESIZE, "world scale : " + world.getScale());
+                    }
+                });
+
+        // déplacement de la caméra
+        if (this.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
+            camera.getPosition().sub(new Vector3f(-5, 0, 0));
+        }
+        if (this.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
+            camera.getPosition().sub(new Vector3f(5, 0, 0));
+        }
+        if (this.getInput().isKeyDown(GLFW.GLFW_KEY_W)) {
+            camera.getPosition().sub(new Vector3f(0, 5, 0));
+        }
+        if (this.getInput().isKeyDown(GLFW.GLFW_KEY_S)) {
+            camera.getPosition().sub(new Vector3f(0, -5, 0));
+        }
+        // spawn followers
+        if (this.getInput().isKeyDown(GLFW.GLFW_KEY_F)) {
+            game.spawnWorker(1);
+        }
+        // spawn insurgents
+        if (this.getInput().isKeyDown(GLFW.GLFW_KEY_I)) {
+            game.spawnWorker(2);
+        }
+
+        /* If the click is not on an ImGui window */
+        if (!ImGui.isWindowHovered()) {
+
+            if (this.getInput().isMouseDown(GLFW.GLFW_MOUSE_BUTTON_1)) {
+                world.defineZoneBorder(world.getMousePositionOnWorld(camera, this));
+            }
         }
 
         ImGui.end();

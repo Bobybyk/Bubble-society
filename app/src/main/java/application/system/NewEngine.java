@@ -1,7 +1,6 @@
 package application.system;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
 
 import application.debug.DebugLogger;
 import application.debug.DebugType;
@@ -11,8 +10,6 @@ import io.NewWindow;
 import io.Timer;
 import java.util.Arrays;
 import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import render.Camera;
 import world.World;
@@ -47,15 +44,14 @@ public class NewEngine extends Thread {
     /** nombre de frames rendues */
     private int frames;
 
-    public NewEngine(World w, Camera c, GLFWVidMode v, NewWindow win) {
+    public NewEngine(World w, Camera c, GLFWVidMode v, NewWindow win, Game g) {
 
         world = w;
         camera = c;
         vid = v;
+        game = g;
 
         window = win;
-
-        game = new Game(world);
 
         spawner = new GameTimer(game);
     }
@@ -85,13 +81,6 @@ public class NewEngine extends Thread {
 
             // frame qui n'ont pas à être rendues
             while (unprocessed >= frameCap) {
-
-                if (window.hasResized()) {
-                    camera.setProjection(window.getWidth(), window.getHeight());
-                    // gui.resizeCamera(window);
-                    // world.calculateView(window);
-                    glViewport(0, 0, window.getWidth(), window.getHeight());
-                }
 
                 unprocessed -= frameCap;
 
@@ -125,52 +114,11 @@ public class NewEngine extends Thread {
                         DebugType.UIEXT,
                         "mouse cursor position : " + Arrays.toString(window.getMousePosition()));
 
-                // zoom
-                GLFW.glfwSetScrollCallback(
-                        window.getHandle(),
-                        new GLFWScrollCallback() {
-                            @Override
-                            public void invoke(long win, double dx, double dy) {
-                                // System.out.println(dy);
-                                world.setScale((int) dy, window, camera);
-                                DebugLogger.print(DebugType.RESIZE, "world scale : " + world.getScale());
-                            }
-                        });
-
-                // déplacement de la caméra
-                if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
-                    camera.getPosition().sub(new Vector3f(-5, 0, 0));
-                }
-                if (window.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
-                    camera.getPosition().sub(new Vector3f(5, 0, 0));
-                }
-                if (window.getInput().isKeyDown(GLFW.GLFW_KEY_W)) {
-                    camera.getPosition().sub(new Vector3f(0, 5, 0));
-                }
-                if (window.getInput().isKeyDown(GLFW.GLFW_KEY_S)) {
-                    camera.getPosition().sub(new Vector3f(0, -5, 0));
-                }
-
-                if (window.getInput().isMouseDown(GLFW.GLFW_MOUSE_BUTTON_1)) {
-                    world.defineZoneBorder(world.getMousePositionOnWorld(camera, window));
-                }
-
-                // spawn followers
-                if (window.getInput().isKeyDown(GLFW.GLFW_KEY_F)) {
-                    game.spawnWorker(1);
-                }
-                // spawn insurgents
-                if (window.getInput().isKeyDown(GLFW.GLFW_KEY_I)) {
-                    game.spawnWorker(2);
-                }
-
                 // bloque le déplacement de la caméra
                 // world.update((float)frameCap, window, camera);
                 world.entitiesUpdate((float) frameCap, game, window);
                 world.correctCamera(camera, window);
                 world.correctMapSize(window);
-
-                window.update();
 
                 if (FrameTime >= 1.0) {
                     FrameTime = 0;
