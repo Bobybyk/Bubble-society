@@ -51,8 +51,7 @@ public class World {
 
     private AABB[] boudingBoxes;
 
-    private HashMap<Entity, ShiftingVector> entitiesBindShiftCoord =
-            new HashMap<Entity, ShiftingVector>();
+    private HashMap<Entity, ShiftingVector> entitiesBindShiftCoord;
 
     private ArrayList<Entity> alive = new ArrayList<Entity>();
     private ArrayList<Entity> dead = new ArrayList<Entity>();
@@ -140,7 +139,9 @@ public class World {
                         switch (entityIndex) {
                             case 1: /* follower */
                                 entity = new FollowerDisplay(transform);
-                                entitiesBindShiftCoord.put(entity, new ShiftingVector(0.0, 0.0, 0.0));
+                                synchronized (entitiesBindShiftCoord) {
+                                    entitiesBindShiftCoord.put(entity, new ShiftingVector(0.0, 0.0, 0.0));
+                                }
                                 entities.add(entity);
                                 alive.add(entity);
                                 checkCollisions();
@@ -230,9 +231,12 @@ public class World {
      * @param game game
      */
     private void setFirstEntitiesSpec(Game game) {
-        for (HashMap.Entry<Entity, ShiftingVector> entity : entitiesBindShiftCoord.entrySet()) {
-            game.defineEntity(entity.getKey());
+        synchronized (this) {
+            for (Entity e : entitiesBindShiftCoord.keySet()) {
+                game.defineEntity(e);
+            }
         }
+
         firstEntitiesSpecDefined = true;
     }
 
@@ -380,8 +384,10 @@ public class World {
                     length = SHIFTING_MIN + (SHIFTING_MAX - SHIFTING_MIN) * rand.nextDouble();
                     x = x == 0 ? -2 : 2;
                     y = y == 0 ? -2 : 2;
-                    entitiesBindShiftCoord.put(
-                            entityAlive, new ShiftingVector((double) x, (double) y, length));
+                    synchronized (entitiesBindShiftCoord) {
+                        entitiesBindShiftCoord.put(
+                                entityAlive, new ShiftingVector((double) x, (double) y, length));
+                    }
                     continue;
                 }
 
@@ -405,7 +411,9 @@ public class World {
                 }
 
                 // update entity position and animation
-                entityAlive.wanderUpdate(delta, entitiesBindShiftCoord.get(entityAlive));
+                synchronized (entitiesBindShiftCoord) {
+                    entityAlive.wanderUpdate(delta, entitiesBindShiftCoord.get(entityAlive));
+                }
             }
         }
 
@@ -449,7 +457,9 @@ public class World {
      * @return shifting vector of the entity
      */
     public ShiftingVector entityShiftVector(Entity entity) {
-        return entitiesBindShiftCoord.get(entity);
+        synchronized (entitiesBindShiftCoord) {
+            return entitiesBindShiftCoord.get(entity);
+        }
     }
 
     /**
@@ -459,7 +469,9 @@ public class World {
      * @return x coord of the shifting vector of the entity
      */
     public double entityShiftX(Entity entity) {
-        return entitiesBindShiftCoord.get(entity).getX();
+        synchronized (entitiesBindShiftCoord) {
+            return entitiesBindShiftCoord.get(entity).getX();
+        }
     }
 
     /**
@@ -469,7 +481,9 @@ public class World {
      * @return translation of the entity
      */
     public double entityTranslation(Entity entity) {
-        return entitiesBindShiftCoord.get(entity).getTranslation();
+        synchronized (entitiesBindShiftCoord) {
+            return entitiesBindShiftCoord.get(entity).getTranslation();
+        }
     }
 
     /**
@@ -525,9 +539,11 @@ public class World {
      */
     public void update(float delta, NewWindow window, Camera camera) {
         List<Entity> entities = new ArrayList<Entity>();
-        for (HashMap.Entry<Entity, ShiftingVector> entity : entitiesBindShiftCoord.entrySet()) {
-            entity.getKey().update(delta, window, camera, this);
-            entities.add(entity.getKey());
+        synchronized (entitiesBindShiftCoord) {
+            for (Entity e : entitiesBindShiftCoord.keySet()) {
+                e.update(delta, window, camera, this);
+                entities.add(e);
+            }
         }
         // collision between tiles and entities
         for (int i = 0; i < entities.size(); i++) {
@@ -589,19 +605,24 @@ public class World {
      */
     public Entity entityConversion(Entity entity) {
         Entity trans = null;
-        ShiftingVector entityShiftCoords = entitiesBindShiftCoord.get(entity);
-        if (entity instanceof FollowerDisplay) {
-            trans = new InsurgentDisplay(entity.getTransform());
+        synchronized (entitiesBindShiftCoord) {
+            ShiftingVector entityShiftCoords = entitiesBindShiftCoord.get(entity);
+            if (entity instanceof FollowerDisplay) {
+                trans = new InsurgentDisplay(entity.getTransform());
+            }
+            if (entity instanceof InsurgentDisplay) {
+                trans = new FollowerDisplay(entity.getTransform());
+            }
+            entities.remove(entity);
+            entities.add(trans);
+            alive.remove(entity);
+            alive.add(trans);
+            entitiesBindShiftCoord.remove(entity);
+            synchronized (entitiesBindShiftCoord) {
+                entitiesBindShiftCoord.put(trans, entityShiftCoords);
+            }
         }
-        if (entity instanceof InsurgentDisplay) {
-            trans = new FollowerDisplay(entity.getTransform());
-        }
-        entities.remove(entity);
-        entities.add(trans);
-        alive.remove(entity);
-        alive.add(trans);
-        entitiesBindShiftCoord.remove(entity);
-        entitiesBindShiftCoord.put(trans, entityShiftCoords);
+
         return trans;
     }
 
@@ -611,9 +632,11 @@ public class World {
      * @param entity entity to remove
      */
     public void removeEntity(Entity entity) {
-        entities.remove(entity);
-        entitiesBindShiftCoord.remove(entity);
-        entity = null;
+        synchronized (entitiesBindShiftCoord) {
+            entities.remove(entity);
+            entitiesBindShiftCoord.remove(entity);
+            entity = null;
+        }
     }
 
     /**

@@ -220,8 +220,10 @@ public class NewWindow extends imgui.app.Window {
          * ImGui window
          * ====================
          */
-        if (ImGui.begin("Display controls", ImGuiWindowFlags.AlwaysAutoResize)) {
-            ImGui.checkbox("GUI", displayGUI);
+        if (ImGui.begin("Display controls", ImGuiWindowFlags.None)) {
+            String title = "GUI";
+            ImGui.checkbox(title, displayGUI);
+            ImGui.setCursorPosX(ImGui.calcTextSize(title).x);
         }
         ImGui.end();
 
@@ -237,13 +239,6 @@ public class NewWindow extends imgui.app.Window {
             if (this.getInput().isMouseDown(GLFW.GLFW_MOUSE_BUTTON_1)) {
                 world.defineZoneBorder(world.getMousePositionOnWorld(camera, this));
             }
-        }
-
-        try {
-            Thread.sleep(1 / 60);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
     }
 }
