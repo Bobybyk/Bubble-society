@@ -41,6 +41,18 @@ public class Animation {
         this.madeACycle = false;
     }
 
+    public Animation(Texture[] textures) {
+
+        this.pointer = 0;
+        this.elapsedTime = 0;
+        this.currentTime = 0;
+        this.lastTime = Timer.getTime();
+        this.fps = 1.0 / (double) textures.length;
+
+        this.frames = textures;
+        this.madeACycle = false;
+    }
+
     /** bind the current frame */
     public void bind() {
         bind(0);

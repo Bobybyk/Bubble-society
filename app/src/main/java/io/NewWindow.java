@@ -29,9 +29,13 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import render.Camera;
 import render.Shader;
+import render.TextureManager;
 import world.TileRenderer;
 import world.World;
 
+/**The window displayed by the OS to render the game in
+ * 
+ */
 public class NewWindow extends imgui.app.Window {
 
     private Configuration config;
@@ -58,6 +62,8 @@ public class NewWindow extends imgui.app.Window {
         tiles = new TileRenderer();
         Assets.initAsset();
 
+        TextureManager.init();
+
         shader = new Shader("shader");
 
         world = new World("vanilla", camera);
@@ -70,12 +76,20 @@ public class NewWindow extends imgui.app.Window {
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        GLFW.glfwSwapInterval(1/60);
 
         engine = new NewEngine(world, camera, vid, this, game);
 
         this.launch();
     }
 
+    /**Configures the action to perform when:
+     * <ul>
+     * <li>the mouse wheel is scrolled</li>
+     * <li>the window is resized</li>
+     * </ul>
+     * 
+     */
     public void setCallBacks() {
         NewWindow nWin = this;
         GLFW.glfwSetScrollCallback(
@@ -83,7 +97,6 @@ public class NewWindow extends imgui.app.Window {
                 new GLFWScrollCallback() {
                     @Override
                     public void invoke(long win, double dx, double dy) {
-                        // System.out.println(dy);
                         world.setScale((int) dy, nWin, camera);
                         DebugLogger.print(DebugType.RESIZE, "world scale : " + world.getScale());
                     }
@@ -171,13 +184,9 @@ public class NewWindow extends imgui.app.Window {
     }
 
     private int count = 0;
-    private double start = 0;
-    private double end = 0;
 
     @Override
     public void process() {
-
-        start = Timer.getTime();
 
         /*
          * All renders must be done here
@@ -223,6 +232,5 @@ public class NewWindow extends imgui.app.Window {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        end = Timer.getTime();
     }
 }

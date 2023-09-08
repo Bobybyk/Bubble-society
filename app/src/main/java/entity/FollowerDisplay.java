@@ -13,24 +13,25 @@
 package entity;
 
 import render.Animation;
-import render.TextureLoader;
+import render.Texture;
+import render.TextureManager;
+import render.TextureName;
 
 public class FollowerDisplay extends Entity {
 
-    private static TextureLoader idleTexures =
-            new TextureLoader(20, "follower/idle"); // Animation(number of frames, fps, name without id)
-    private static TextureLoader movmentTexures = new TextureLoader(15, "follower/movement");
-    private static TextureLoader dyingTexures = new TextureLoader(20, "follower/dying");
-    private static TextureLoader deadTexures = new TextureLoader(1, "follower/dead");
-    private static TextureLoader conversionTexures = new TextureLoader(20, "follower/conversion");
+    private Texture[] idleTexture = TextureManager.getTexture(TextureName.FOLLOWER_IDLE);
+    private Texture[] movementTexture = TextureManager.getTexture(TextureName.FOLLOWER_MOVEMENT);
+    private Texture[] dyingTexture = TextureManager.getTexture(TextureName.FOLLOWER_DYING);
+    private Texture[] deadTexture = TextureManager.getTexture(TextureName.FOLLOWER_DEAD);
+    private Texture[] conversionTextures = TextureManager.getTexture(TextureName.FOLLOWER_CONVERSION);
 
     public FollowerDisplay(Transform transform) {
         super(ANIM_SIZE, transform);
-        idle = new Animation(9, idleTexures);
-        movment = new Animation(8, movmentTexures);
-        dying = new Animation(10, dyingTexures);
-        dead = new Animation(1, deadTexures);
-        conversion = new Animation(9, conversionTexures);
+        idle = new Animation(idleTexture);
+        movment = new Animation(movementTexture);
+        dying = new Animation(dyingTexture);
+        dead = new Animation(deadTexture);
+        conversion = new Animation(conversionTextures);
 
         setAnimation(ANIM_IDLE, idle);
         setAnimation(ANIM_MOVE, movment);

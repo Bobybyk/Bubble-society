@@ -26,13 +26,10 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.ByteBuffer;
-
 import javax.imageio.ImageIO;
-
 import org.lwjgl.BufferUtils;
 
 public class Texture {

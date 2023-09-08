@@ -26,7 +26,6 @@ import game.worker.Worker;
 import io.NewWindow;
 import io.Window;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -82,12 +81,16 @@ public class World {
     public World(String world, Camera camera) {
         try {
 
-            URL tilePath = Thread.currentThread().getContextClassLoader().getResource("levels/" + world + "/tiles.png");
-            URL entityPath = Thread.currentThread().getContextClassLoader().getResource("levels/" + world + "/entities.png");
-            BufferedImage tileSheet =
-                    ImageIO.read(tilePath);
-            BufferedImage entitySheet =
-                    ImageIO.read(entityPath);
+            URL tilePath =
+                    Thread.currentThread()
+                            .getContextClassLoader()
+                            .getResource("levels/" + world + "/tiles.png");
+            URL entityPath =
+                    Thread.currentThread()
+                            .getContextClassLoader()
+                            .getResource("levels/" + world + "/entities.png");
+            BufferedImage tileSheet = ImageIO.read(tilePath);
+            BufferedImage entitySheet = ImageIO.read(entityPath);
 
             this.width = tileSheet.getWidth();
             this.height = tileSheet.getHeight();
@@ -412,9 +415,9 @@ public class World {
             DebugLogger.print(DebugType.ENTITIES, "CONVERSION");
 
             if (entitiesToConvert.get(i).getCycle(FollowerDisplay.ANIM_CONVERSION)) {
-                // game.changeWorkerState(
-                //         game.removeEntity(entitiesToConvert.get(i)),
-                //         entityConversion(entitiesToConvert.get(i)));
+                game.changeWorkerState(
+                        game.removeEntity(entitiesToConvert.get(i)),
+                        entityConversion(entitiesToConvert.get(i)));
             } else {
                 ((FollowerDisplay) entitiesToConvert.get(i)).conversionUpdate();
             }
