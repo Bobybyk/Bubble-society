@@ -31,7 +31,7 @@ public class DebugLogger {
                         new Runnable() {
                             @Override
                             public void run() {
-                                new NewWindow();
+                                new NewWindow("Society");
                             }
                         })
                 .start();

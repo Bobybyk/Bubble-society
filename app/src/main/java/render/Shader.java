@@ -18,6 +18,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.nio.FloatBuffer;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
@@ -127,7 +129,8 @@ public class Shader {
         BufferedReader br;
 
         try {
-            br = new BufferedReader(new FileReader(new File("src/main/resources/shaders/" + filename)));
+            URL path = Thread.currentThread().getContextClassLoader().getResource("shaders/" + filename);
+            br = new BufferedReader(new InputStreamReader(path.openStream()));
             String line;
             while ((line = br.readLine()) != null) {
                 string.append(line);

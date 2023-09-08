@@ -28,6 +28,7 @@ import io.Window;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -80,10 +81,13 @@ public class World {
      */
     public World(String world, Camera camera) {
         try {
+
+            URL tilePath = Thread.currentThread().getContextClassLoader().getResource("levels/" + world + "/tiles.png");
+            URL entityPath = Thread.currentThread().getContextClassLoader().getResource("levels/" + world + "/entities.png");
             BufferedImage tileSheet =
-                    ImageIO.read(new File("src/main/resources/levels/" + world + "/tiles.png"));
+                    ImageIO.read(tilePath);
             BufferedImage entitySheet =
-                    ImageIO.read(new File("src/main/resources/levels/" + world + "/entities.png"));
+                    ImageIO.read(entityPath);
 
             this.width = tileSheet.getWidth();
             this.height = tileSheet.getHeight();
@@ -183,7 +187,9 @@ public class World {
                     entitiesBindShiftCoord.put(entity, new ShiftingVector(0.0, 0.0, 0.0));
                 }
                 entities.add(entity);
-                alive.add(entity);
+                synchronized (alive) {
+                    alive.add(entity);
+                }
                 break;
             case 2:
                 entity = new InsurgentDisplay(transform);
@@ -191,7 +197,6 @@ public class World {
                     entitiesBindShiftCoord.put(entity, new ShiftingVector(0.0, 0.0, 0.0));
                 }
                 entities.add(entity);
-                alive.add(entity);
                 break;
         }
 
@@ -358,45 +363,48 @@ public class World {
         List<Entity> entitiesToConvert = new ArrayList<Entity>();
 
         // for each entity alive
-        for (Entity entityAlive : alive) {
+        synchronized (alive) {
+            for (Entity entityAlive : alive) {
 
-            // declare stats for initial entities (given by the entities.png)
-            if (!game.getWorkerBindView().get(entityAlive).getWanderState()) {
-                entityAlive.wanderUpdate(delta, entityShiftVector(entityAlive));
+                // declare stats for initial entities (given by the entities.png)
+                if (!game.getWorkerBindView().get(entityAlive).getWanderState()) {
+                    entityAlive.wanderUpdate(delta, entityShiftVector(entityAlive));
+                }
+
+                // give shifting vector components (coords, translation...)
+                if (entityTranslation(entityAlive) <= 0 && entityShiftX(entityAlive) == 0) {
+                    x = rand.nextInt(2);
+                    y = rand.nextInt(2);
+                    length = SHIFTING_MIN + (SHIFTING_MAX - SHIFTING_MIN) * rand.nextDouble();
+                    x = x == 0 ? -2 : 2;
+                    y = y == 0 ? -2 : 2;
+                    entitiesBindShiftCoord.put(
+                            entityAlive, new ShiftingVector((double) x, (double) y, length));
+                    continue;
+                }
+
+                // decrease translation if it's not equals to 0
+                if (entityTranslation(entityAlive) > 0) {
+                    entityShiftVector(entityAlive).decreaseTranslation();
+                }
+
+                // reset coords and define a new translation for shifting vector
+                if (entityTranslation(entityAlive) <= 0 && entityShiftX(entityAlive) != 0) {
+                    length = COOLDOWN_MIN + (COOLDOWN_MAX - COOLDOWN_MIN) * rand.nextDouble();
+                    entityShiftVector(entityAlive).resetX();
+                    entityShiftVector(entityAlive).resetY();
+                    entityShiftVector(entityAlive).setTranslation(length);
+                }
+
+                // if entity hasn't anought anymore, add it to the conversion list
+                if (workerInstanceOfFollower(game, entityAlive)
+                        && entityHpLowerThanEntityWill(game, entityAlive)) {
+                    entitiesToConvert.add(entityAlive);
+                }
+
+                // update entity position and animation
+                entityAlive.wanderUpdate(delta, entitiesBindShiftCoord.get(entityAlive));
             }
-
-            // give shifting vector components (coords, translation...)
-            if (entityTranslation(entityAlive) <= 0 && entityShiftX(entityAlive) == 0) {
-                x = rand.nextInt(2);
-                y = rand.nextInt(2);
-                length = SHIFTING_MIN + (SHIFTING_MAX - SHIFTING_MIN) * rand.nextDouble();
-                x = x == 0 ? -2 : 2;
-                y = y == 0 ? -2 : 2;
-                entitiesBindShiftCoord.put(entityAlive, new ShiftingVector((double) x, (double) y, length));
-                continue;
-            }
-
-            // decrease translation if it's not equals to 0
-            if (entityTranslation(entityAlive) > 0) {
-                entityShiftVector(entityAlive).decreaseTranslation();
-            }
-
-            // reset coords and define a new translation for shifting vector
-            if (entityTranslation(entityAlive) <= 0 && entityShiftX(entityAlive) != 0) {
-                length = COOLDOWN_MIN + (COOLDOWN_MAX - COOLDOWN_MIN) * rand.nextDouble();
-                entityShiftVector(entityAlive).resetX();
-                entityShiftVector(entityAlive).resetY();
-                entityShiftVector(entityAlive).setTranslation(length);
-            }
-
-            // if entity hasn't anought anymore, add it to the conversion list
-            if (workerInstanceOfFollower(game, entityAlive)
-                    && entityHpLowerThanEntityWill(game, entityAlive)) {
-                entitiesToConvert.add(entityAlive);
-            }
-
-            // update entity position and animation
-            entityAlive.wanderUpdate(delta, entitiesBindShiftCoord.get(entityAlive));
         }
 
         for (int i = 0; i < entitiesToConvert.size(); i++) {

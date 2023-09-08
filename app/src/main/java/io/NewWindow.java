@@ -46,9 +46,10 @@ public class NewWindow extends imgui.app.Window {
 
     private Input input;
 
-    public NewWindow() {
+    public NewWindow(String title) {
 
         config = new Configuration();
+        config.setTitle(title);
         this.init(config);
         this.setCallBacks();
 
@@ -95,9 +96,9 @@ public class NewWindow extends imgui.app.Window {
                     public void invoke(final long window, final int width, final int height) {
                         camera.setProjection(width, height);
                         glViewport(0, 0, width, height);
-                        world.calculateView(nWin);
                         config.setWidth(width);
                         config.setHeight(height);
+                        world.calculateView(nWin);
                     }
                 });
     }
@@ -170,9 +171,13 @@ public class NewWindow extends imgui.app.Window {
     }
 
     private int count = 0;
+    private double start = 0;
+    private double end = 0;
 
     @Override
     public void process() {
+
+        start = Timer.getTime();
 
         /*
          * All renders must be done here
@@ -196,6 +201,7 @@ public class NewWindow extends imgui.app.Window {
             ImGui.sameLine();
             ImGui.text(String.valueOf(count));
         }
+        ImGui.end();
 
         /*
          * Detect inputs
@@ -211,6 +217,12 @@ public class NewWindow extends imgui.app.Window {
             }
         }
 
-        ImGui.end();
+        try {
+            Thread.sleep(1 / 60);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        end = Timer.getTime();
     }
 }
