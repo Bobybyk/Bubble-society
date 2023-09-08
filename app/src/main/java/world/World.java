@@ -179,13 +179,17 @@ public class World {
         switch (id) {
             case 1:
                 entity = new FollowerDisplay(transform);
-                entitiesBindShiftCoord.put(entity, new ShiftingVector(0.0, 0.0, 0.0));
+                synchronized (entitiesBindShiftCoord) {
+                    entitiesBindShiftCoord.put(entity, new ShiftingVector(0.0, 0.0, 0.0));
+                }
                 entities.add(entity);
                 alive.add(entity);
                 break;
             case 2:
                 entity = new InsurgentDisplay(transform);
-                entitiesBindShiftCoord.put(entity, new ShiftingVector(0.0, 0.0, 0.0));
+                synchronized (entitiesBindShiftCoord) {
+                    entitiesBindShiftCoord.put(entity, new ShiftingVector(0.0, 0.0, 0.0));
+                }
                 entities.add(entity);
                 alive.add(entity);
                 break;
@@ -327,8 +331,10 @@ public class World {
             }
         }
 
-        for (Entity e : entitiesBindShiftCoord.keySet()) {
-            e.render(shader, cam, this);
+        synchronized (entitiesBindShiftCoord) {
+            for (Entity e : entitiesBindShiftCoord.keySet()) {
+                e.render(shader, cam, this);
+            }
         }
     }
 

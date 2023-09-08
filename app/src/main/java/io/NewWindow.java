@@ -145,6 +145,30 @@ public class NewWindow extends imgui.app.Window {
         Assets.deleteAsset();
     }
 
+    public void checkInputs() {
+        // déplacement de la caméra
+        if (this.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
+            camera.getPosition().sub(new Vector3f(-5, 0, 0));
+        }
+        if (this.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
+            camera.getPosition().sub(new Vector3f(5, 0, 0));
+        }
+        if (this.getInput().isKeyDown(GLFW.GLFW_KEY_W)) {
+            camera.getPosition().sub(new Vector3f(0, 5, 0));
+        }
+        if (this.getInput().isKeyDown(GLFW.GLFW_KEY_S)) {
+            camera.getPosition().sub(new Vector3f(0, -5, 0));
+        }
+        // spawn followers
+        if (this.getInput().isKeyDown(GLFW.GLFW_KEY_F)) {
+            game.spawnWorker(1);
+        }
+        // spawn insurgents
+        if (this.getInput().isKeyDown(GLFW.GLFW_KEY_I)) {
+            game.spawnWorker(2);
+        }
+    }
+
     private int count = 0;
 
     @Override
@@ -177,28 +201,7 @@ public class NewWindow extends imgui.app.Window {
          * Detect inputs
          * =====================
          */
-
-        // déplacement de la caméra
-        if (this.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
-            camera.getPosition().sub(new Vector3f(-5, 0, 0));
-        }
-        if (this.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
-            camera.getPosition().sub(new Vector3f(5, 0, 0));
-        }
-        if (this.getInput().isKeyDown(GLFW.GLFW_KEY_W)) {
-            camera.getPosition().sub(new Vector3f(0, 5, 0));
-        }
-        if (this.getInput().isKeyDown(GLFW.GLFW_KEY_S)) {
-            camera.getPosition().sub(new Vector3f(0, -5, 0));
-        }
-        // spawn followers
-        if (this.getInput().isKeyDown(GLFW.GLFW_KEY_F)) {
-            game.spawnWorker(1);
-        }
-        // spawn insurgents
-        if (this.getInput().isKeyDown(GLFW.GLFW_KEY_I)) {
-            game.spawnWorker(2);
-        }
+        this.checkInputs();
 
         /* If the click is not on an ImGui window */
         if (!ImGui.isWindowHovered()) {
