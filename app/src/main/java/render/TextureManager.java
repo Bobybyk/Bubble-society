@@ -17,7 +17,7 @@ public class TextureManager {
     /** Initializes the texture bank and loads all textures into memory */
     public static void init() {
 
-        //for all existing textures
+        // for all existing textures
         for (int i = 0; i < TextureName.values().length; i++) {
             try {
 

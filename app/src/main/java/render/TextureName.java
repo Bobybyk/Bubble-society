@@ -1,8 +1,6 @@
 package render;
 
-/**All usable textures names
- * 
- */
+/** All usable textures names */
 public enum TextureName {
     FOLLOWER_CONVERSION,
     FOLLOWER_DEAD,

@@ -16,7 +16,7 @@ import assets.Assets;
 import collision.AABB;
 import collision.Collision;
 import game.worker.Worker;
-import io.Window;
+import io.NewWindow;
 import java.util.HashMap;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -176,7 +176,7 @@ public abstract class Entity {
      * @param camera
      * @param world
      */
-    public void update(float delta, Window window, Camera camera, World world) {
+    public void update(float delta, NewWindow window, Camera camera, World world) {
         Vector2f movement = new Vector2f();
 
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_LEFT)) {

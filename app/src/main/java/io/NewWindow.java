@@ -17,13 +17,16 @@ import application.debug.DebugType;
 import application.system.NewEngine;
 import assets.Assets;
 import game.Game;
+import gui.Gui;
 import imgui.ImGui;
 import imgui.app.Configuration;
 import imgui.flag.ImGuiWindowFlags;
+import imgui.type.ImBoolean;
 import java.nio.DoubleBuffer;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
@@ -33,9 +36,7 @@ import render.TextureManager;
 import world.TileRenderer;
 import world.World;
 
-/**The window displayed by the OS to render the game in
- * 
- */
+/** The window displayed by the OS to render the game in */
 public class NewWindow extends imgui.app.Window {
 
     private Configuration config;
@@ -47,6 +48,9 @@ public class NewWindow extends imgui.app.Window {
     private Game game;
     private NewEngine engine;
     private GLFWVidMode vid;
+    private Gui gui;
+
+    private ImBoolean displayGUI = new ImBoolean(true);
 
     private Input input;
 
@@ -74,21 +78,24 @@ public class NewWindow extends imgui.app.Window {
 
         vid = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
+        gui = new Gui(this);
+
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        GLFW.glfwSwapInterval(1/60);
+        GLFW.glfwSwapInterval(1 / 60);
 
         engine = new NewEngine(world, camera, vid, this, game);
 
         this.launch();
     }
 
-    /**Configures the action to perform when:
+    /**
+     * Configures the action to perform when:
+     *
      * <ul>
-     * <li>the mouse wheel is scrolled</li>
-     * <li>the window is resized</li>
+     *   <li>the mouse wheel is scrolled
+     *   <li>the window is resized
      * </ul>
-     * 
      */
     public void setCallBacks() {
         NewWindow nWin = this;
@@ -112,6 +119,15 @@ public class NewWindow extends imgui.app.Window {
                         config.setWidth(width);
                         config.setHeight(height);
                         world.calculateView(nWin);
+                    }
+                });
+
+        GLFW.glfwSetKeyCallback(
+                handle,
+                new GLFWKeyCallback() {
+                    @Override
+                    public void invoke(long window, int key, int scancode, int action, int mods) {
+                        // Do nothing but defining to avoid exceptions
                     }
                 });
     }
@@ -183,8 +199,6 @@ public class NewWindow extends imgui.app.Window {
         }
     }
 
-    private int count = 0;
-
     @Override
     public void process() {
 
@@ -195,20 +209,19 @@ public class NewWindow extends imgui.app.Window {
 
         world.calculateView(this);
         world.render(tiles, shader, camera);
+
+        if (displayGUI.get()) {
+            gui.render();
+        }
+
         this.update();
 
         /*
          * ImGui window
          * ====================
          */
-        if (ImGui.begin("Demo", ImGuiWindowFlags.AlwaysAutoResize)) {
-            ImGui.text("Hello, World!");
-            if (ImGui.button("Save")) {
-                count++;
-                System.out.println("button clicked");
-            }
-            ImGui.sameLine();
-            ImGui.text(String.valueOf(count));
+        if (ImGui.begin("Display controls", ImGuiWindowFlags.AlwaysAutoResize)) {
+            ImGui.checkbox("GUI", displayGUI);
         }
         ImGui.end();
 

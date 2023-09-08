@@ -12,7 +12,7 @@
  */
 package application.debug;
 
-import application.system.Engine;
+import application.system.NewEngine;
 
 public class DebugType {
     public static int ERROR = -1;
@@ -24,5 +24,5 @@ public class DebugType {
     public static int RESIZE = 5;
     public static int ZONE = 6;
     public static int MOUSE = 7;
-    public static Engine gc;
+    public static NewEngine gc;
 }

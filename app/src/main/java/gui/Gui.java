@@ -13,7 +13,7 @@
 package gui;
 
 import assets.Assets;
-import io.Window;
+import io.NewWindow;
 import org.joml.Matrix4f;
 import render.Camera;
 import render.Shader;
@@ -25,13 +25,13 @@ public class Gui {
     private Camera camera;
     private TileSheet sheet;
 
-    public Gui(Window window) {
+    public Gui(NewWindow window) {
         this.shader = new Shader("gui");
         this.camera = new Camera(window.getWidth(), window.getHeight());
         this.sheet = new TileSheet("sheet_test_3d.png", 3);
     }
 
-    public void resizeCamera(Window window) {
+    public void resizeCamera(NewWindow window) {
         camera.setProjection(window.getWidth(), window.getHeight());
     }
 

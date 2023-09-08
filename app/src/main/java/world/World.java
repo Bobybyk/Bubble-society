@@ -24,7 +24,6 @@ import game.Game;
 import game.worker.Follower;
 import game.worker.Worker;
 import io.NewWindow;
-import io.Window;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -524,7 +523,7 @@ public class World {
      * @param window window
      * @param camera camera
      */
-    public void update(float delta, Window window, Camera camera) {
+    public void update(float delta, NewWindow window, Camera camera) {
         List<Entity> entities = new ArrayList<Entity>();
         for (HashMap.Entry<Entity, ShiftingVector> entity : entitiesBindShiftCoord.entrySet()) {
             entity.getKey().update(delta, window, camera, this);

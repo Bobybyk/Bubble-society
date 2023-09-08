@@ -12,13 +12,11 @@
  */
 package application.system;
 
-import application.debug.DebugType;
-
 public class EngineCreator extends Thread {
-    public static Engine gcEngine;
+    // public static Engine gcEngine;
 
-    public void run() {
-        gcEngine = new Engine();
-        DebugType.gc = gcEngine;
-    }
+    // public void run() {
+    //     gcEngine = new Engine();
+    //     DebugType.gc = gcEngine;
+    // }
 }

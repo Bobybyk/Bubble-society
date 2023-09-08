@@ -21,11 +21,11 @@ public class CommandSetWander extends Command {
                 }
                 if (value == 0) {
 
-                    DebugType.gc.getGame().changeWanderMode(false);
+                    // DebugType.gc.getGame().changeWanderMode(false);
                     return;
                 }
                 if (value == 1) {
-                    DebugType.gc.getGame().changeWanderMode(true);
+                    // DebugType.gc.getGame().changeWanderMode(true);
                     return;
                 }
             } catch (NumberFormatException e) {

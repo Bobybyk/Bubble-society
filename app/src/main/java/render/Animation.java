@@ -24,23 +24,6 @@ public class Animation {
     private double lastTime;
     private double fps;
 
-    /**
-     * create an animation
-     *
-     * @param fps frame per second
-     * @param textureLoaded texture loader
-     */
-    public Animation(int fps, TextureLoader textureLoaded) {
-        this.pointer = 0;
-        this.elapsedTime = 0;
-        this.currentTime = 0;
-        this.lastTime = Timer.getTime();
-        this.fps = 1.0 / (double) fps;
-
-        this.frames = textureLoaded.getTextures();
-        this.madeACycle = false;
-    }
-
     public Animation(Texture[] textures) {
 
         this.pointer = 0;
